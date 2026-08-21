@@ -23,15 +23,15 @@
         <div id="topbar" class="border-b transition-all duration-400" style="background-color:#f8fafc; border-color:#e2e8f0;">
             <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-10 text-xs" style="color:#64748b;">
                 <div class="hidden md:flex items-center gap-6">
-                    <a href="mailto:{{ site_setting('site_email', 'anwar@buildcares.com') }}" class="flex items-center gap-2 transition-colors hover:text-blue-600">
+                    <a href="mailto:{{ \App\Models\Setting::get('site_email', 'anwar@buildcares.com') }}" class="flex items-center gap-2 transition-colors hover:text-blue-600">
                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-                        {{ site_setting('site_email', 'anwar@buildcares.com') }}
+                        {{ \App\Models\Setting::get('site_email', 'anwar@buildcares.com') }}
                     </a>
-                    <a href="https://wa.me/{{ site_setting('whatsapp_number', config('contact.whatsapp_number')) }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 transition-colors hover:text-green-600" style="color:#25D366;">
+                    <a href="https://wa.me/{{ \App\Models\Setting::get('whatsapp_number', config('contact.whatsapp_number')) }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 transition-colors hover:text-green-600" style="color:#25D366;">
                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M20.52 3.48A11.85 11.85 0 0012.07 0C5.4 0 .01 5.37 0 12.02c0 2.12.56 4.19 1.62 6l-1.7 6.21 6.38-1.67a12.02 12.02 0 005.75 1.47h.01c6.65 0 12.04-5.38 12.05-12.02a11.92 11.92 0 00-3.59-8.53zM12.06 21.3h-.01a9.95 9.95 0 01-5.07-1.39l-.36-.21-3.79 1 1.01-3.69-.24-.38a9.92 9.92 0 01-1.53-5.31c0-5.5 4.48-9.97 9.98-9.97a9.86 9.86 0 016.99 2.9 9.9 9.9 0 012.91 7.08c0 5.5-4.48 9.97-9.99 9.97zm5.7-7.34c-.31-.16-1.84-.91-2.13-1.02-.29-.11-.5-.16-.7.16-.2.31-.81 1.02-.99 1.23-.18.2-.37.23-.68.08-.31-.16-1.29-.48-2.46-1.53-.91-.81-1.52-1.82-1.7-2.13-.18-.31-.02-.48.14-.64.15-.15.31-.37.47-.55.16-.18.21-.31.32-.52.11-.2.05-.39-.02-.55-.08-.16-.7-1.7-.96-2.32-.25-.6-.5-.52-.7-.53h-.59c-.2 0-.52.08-.79.39-.27.31-1.02 1-1.02 2.46 0 1.45 1.05 2.86 1.2 3.06.16.2 2.08 3.18 5.04 4.46.71.31 1.26.49 1.69.62.71.23 1.35.2 1.86.12.57-.08 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.08-.13-.29-.2-.61-.36z"/>
                         </svg>
-                        {{ site_setting('site_phone', '+44 7586 750755') }}
+                        {{ \App\Models\Setting::get('site_phone', '+44 7586 750755') }}
                     </a>
                 </div>
             </div>
@@ -92,15 +92,15 @@
                     <div class="space-y-2 text-sm" style="color:#64748b;">
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 flex-shrink-0" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-                            <a href="mailto:{{ site_setting('site_email', 'anwar@buildcares.com') }}" class="hover:text-white transition-colors">{{ site_setting('site_email', 'anwar@buildcares.com') }}</a>
+                            <a href="mailto:{{ \App\Models\Setting::get('site_email', 'anwar@buildcares.com') }}" class="hover:text-white transition-colors">{{ \App\Models\Setting::get('site_email', 'anwar@buildcares.com') }}</a>
                         </div>
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 flex-shrink-0" style="color:#25D366;" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.48A11.85 11.85 0 0012.07 0C5.4 0 .01 5.37 0 12.02c0 2.12.56 4.19 1.62 6l-1.7 6.21 6.38-1.67a12.02 12.02 0 005.75 1.47h.01c6.65 0 12.04-5.38 12.05-12.02a11.92 11.92 0 00-3.59-8.53zM12.06 21.3h-.01a9.95 9.95 0 01-5.07-1.39l-.36-.21-3.79 1 1.01-3.69-.24-.38a9.92 9.92 0 01-1.53-5.31c0-5.5 4.48-9.97 9.98-9.97a9.86 9.86 0 016.99 2.9 9.9 9.9 0 012.91 7.08c0 5.5-4.48 9.97-9.99 9.97zm5.7-7.34c-.31-.16-1.84-.91-2.13-1.02-.29-.11-.5-.16-.7.16-.2.31-.81 1.02-.99 1.23-.18.2-.37.23-.68.08-.31-.16-1.29-.48-2.46-1.53-.91-.81-1.52-1.82-1.7-2.13-.18-.31-.02-.48.14-.64.15-.15.31-.37.47-.55.16-.18.21-.31.32-.52.11-.2.05-.39-.02-.55-.08-.16-.7-1.7-.96-2.32-.25-.6-.5-.52-.7-.53h-.59c-.2 0-.52.08-.79.39-.27.31-1.02 1-1.02 2.46 0 1.45 1.05 2.86 1.2 3.06.16.2 2.08 3.18 5.04 4.46.71.31 1.26.49 1.69.62.71.23 1.35.2 1.86.12.57-.08 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.08-.13-.29-.2-.61-.36z"/></svg>
-                            <a href="https://wa.me/{{ site_setting('whatsapp_number', config('contact.whatsapp_number')) }}" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" style="color:#f8fafc;">{{ site_setting('site_phone', '+44 7586 750755') }}</a>
+                            <a href="https://wa.me/{{ \App\Models\Setting::get('whatsapp_number', config('contact.whatsapp_number')) }}" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" style="color:#f8fafc;">{{ \App\Models\Setting::get('site_phone', '+44 7586 750755') }}</a>
                         </div>
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 flex-shrink-0" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
-                            {{ site_setting('working_hours', 'Mon–Sun 9AM – 10PM') }}
+                            {{ \App\Models\Setting::get('working_hours', 'Mon–Sun 9AM – 10PM') }}
                         </div>
                     </div>
                 </div>

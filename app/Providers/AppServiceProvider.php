@@ -3,21 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\Setting;
-use Illuminate\Support\Facades\Schema;
 
-if (!function_exists('site_setting')) {
-    function site_setting(string $key, mixed $default = null): mixed
-    {
-        try {
-            if (Schema::hasTable('settings')) {
-                return Setting::get($key, $default);
-            }
-        } catch (\Throwable $e) {
-            // Fallback before migrations are run
-        }
-        return $default;
-    }
+// Require helpers file to guarantee availability even before composer autoload is dumped
+if (file_exists(__DIR__ . '/../helpers.php')) {
+    require_once __DIR__ . '/../helpers.php';
 }
 
 class AppServiceProvider extends ServiceProvider
