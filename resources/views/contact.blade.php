@@ -68,6 +68,17 @@
                             <span class="text-sm font-semibold" style="color:#1e293b;">{{ \App\Models\Setting::get('working_hours', 'Mon–Sun 9AM – 10PM') }}</span>
                         </div>
                     </div>
+                    @if(\App\Models\Setting::get('site_address', 'Pakistan'))
+                    <div class="flex items-start gap-4 bg-white p-4 border" style="border-color:#e2e8f0; border-left:2px solid #2563eb;">
+                        <div class="w-9 h-9 flex items-center justify-center flex-shrink-0" style="background:#eff6ff;">
+                            <svg class="w-4 h-4" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#94a3b8;">Location</div>
+                            <span class="text-sm font-semibold" style="color:#1e293b;">{{ \App\Models\Setting::get('site_address', 'Pakistan') }}</span>
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
             </div>

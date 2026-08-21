@@ -33,6 +33,12 @@
                         </svg>
                         {{ \App\Models\Setting::get('site_phone', '+44 7586 750755') }}
                     </a>
+                    @if(\App\Models\Setting::get('site_address', 'Pakistan'))
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                        <span>{{ \App\Models\Setting::get('site_address', 'Pakistan') }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -102,6 +108,12 @@
                             <svg class="w-4 h-4 flex-shrink-0" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
                             {{ \App\Models\Setting::get('working_hours', 'Mon–Sun 9AM – 10PM') }}
                         </div>
+                        @if(\App\Models\Setting::get('site_address', 'Pakistan'))
+                        <div class="flex items-center gap-3">
+                            <svg class="w-4 h-4 flex-shrink-0" style="color:#2563eb;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                            <span>{{ \App\Models\Setting::get('site_address', 'Pakistan') }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
