@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\MessageController as AdminMessageController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -42,5 +43,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('messages/{message}', [AdminMessageController::class, 'show'])->name('messages.show');
         Route::patch('messages/{message}/read', [AdminMessageController::class, 'toggleRead'])->name('messages.toggleRead');
         Route::delete('messages/{message}', [AdminMessageController::class, 'destroy'])->name('messages.destroy');
+
+        Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::put('settings/profile', [AdminSettingController::class, 'updateProfile'])->name('settings.profile');
+        Route::put('settings/site', [AdminSettingController::class, 'updateSiteInfo'])->name('settings.site');
     });
 });

@@ -31,7 +31,8 @@ class ContactController extends Controller
         // Notify the site owner. If mail isn't configured we still keep the DB record;
         // the admin will see it in the panel.
         try {
-            Mail::to(config('contact.recipient_email'))->send(new ContactMessageMail($contact));
+            $recipientEmail = site_setting('site_email', config('contact.recipient_email'));
+            Mail::to($recipientEmail)->send(new ContactMessageMail($contact));
         } catch (\Throwable $e) {
             Log::warning('Contact email send failed: ' . $e->getMessage());
         }

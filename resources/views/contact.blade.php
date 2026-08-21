@@ -47,7 +47,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#94a3b8;">Email</div>
-                            <a href="mailto:anwar@buildcares.com" class="text-sm font-semibold transition-colors hover:text-blue-600" style="color:#1e293b;">anwar@buildcares.com</a>
+                            <a href="mailto:{{ site_setting('site_email', 'anwar@buildcares.com') }}" class="text-sm font-semibold transition-colors hover:text-blue-600" style="color:#1e293b;">{{ site_setting('site_email', 'anwar@buildcares.com') }}</a>
                         </div>
                     </div>
                     <div class="flex items-start gap-4 bg-white p-4 border" style="border-color:#e2e8f0; border-left:2px solid #2563eb;">
@@ -56,7 +56,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#94a3b8;">Phone</div>
-                            <a href="https://wa.me/{{ config('contact.whatsapp_number') }}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold transition-colors hover:text-green-600" style="color:#1e293b;">+44 7586 750755</a>
+                            <a href="https://wa.me/{{ site_setting('whatsapp_number', config('contact.whatsapp_number')) }}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold transition-colors hover:text-green-600" style="color:#1e293b;">{{ site_setting('site_phone', '+44 7586 750755') }}</a>
                         </div>
                     </div>
                     <div class="flex items-start gap-4 bg-white p-4 border" style="border-color:#e2e8f0; border-left:2px solid #2563eb;">
@@ -65,7 +65,7 @@
                         </div>
                         <div>
                             <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#94a3b8;">Working Hours</div>
-                            <span class="text-sm font-semibold" style="color:#1e293b;">Mon–Sun &nbsp; 9AM – 10PM</span>
+                            <span class="text-sm font-semibold" style="color:#1e293b;">{{ site_setting('working_hours', 'Mon–Sun 9AM – 10PM') }}</span>
                         </div>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
     const btn = document.getElementById('whatsapp-send');
     if (!btn) return;
 
-    const WA_NUMBER = '{{ config('contact.whatsapp_number') }}';
+    const WA_NUMBER = '{{ site_setting('whatsapp_number', config('contact.whatsapp_number')) }}';
 
     btn.addEventListener('click', () => {
         const v = (id) => (document.getElementById(id)?.value || '').trim();
