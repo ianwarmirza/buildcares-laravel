@@ -32,4 +32,22 @@ class MessageController extends Controller
         $message->delete();
         return redirect()->route('admin.messages.index')->with('success', 'Message deleted.');
     }
+
+    public function bulkDestroy(\Illuminate\Http\Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->route('admin.messages.index')->with('error', 'No messages selected.');
+        }
+
+        $count = ContactMessage::whereIn('id', $ids)->delete();
+        return redirect()->route('admin.messages.index')->with('success', "{$count} messages deleted.");
+    }
+
+    public function deleteAll()
+    {
+        $count = ContactMessage::count();
+        ContactMessage::query()->delete();
+        return redirect()->route('admin.messages.index')->with('success', "All {$count} messages deleted.");
+    }
 }
