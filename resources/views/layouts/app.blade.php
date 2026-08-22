@@ -198,7 +198,7 @@
                         Quick Links
                     </h4>
                     <ul class="space-y-2.5 pt-1">
-                        @foreach([['Home',route('home')],['Portfolio',route('portfolio.index')],['Services',route('services.index')],['Contact',route('contact')],['Admin Portal',route('admin.dashboard')]] as [$label,$href])
+                        @foreach([['Home',route('home')],['Portfolio',route('portfolio.index')],['Services',route('services.index')],['Contact',route('contact')]] as [$label,$href])
                         <li>
                             <a href="{{ $href }}" class="group inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-all">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500 group-hover:w-3 group-hover:bg-blue-400 transition-all"></span>
