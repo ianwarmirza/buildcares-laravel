@@ -49,8 +49,7 @@
                 </button>
             </form>
 
-            <form action="{{ route('admin.messages.destroy', $message) }}" method="POST" class="inline ml-auto"
-                  onsubmit="return confirm('Delete this message?')">
+            <form action="{{ route('admin.messages.destroy', $message) }}" method="POST" class="inline ml-auto">
                 @csrf @method('DELETE')
                 <button type="submit" class="text-red-500 hover:text-red-700 text-xs uppercase tracking-widest font-semibold">
                     Delete
