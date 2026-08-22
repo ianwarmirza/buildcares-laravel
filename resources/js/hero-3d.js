@@ -29,7 +29,22 @@ function solidEdges(geometry, color, opacity = 1) {
         transparent: true,
         opacity,
     });
-    return new THREE.LineSegments(edges, mat);
+    const seg = new THREE.LineSegments(edges, mat);
+    seg.userData.targetOpacity = opacity;
+    return seg;
+}
+
+function solidMesh(geometry, color, opacity = 0.85) {
+    const mat = new THREE.MeshPhongMaterial({
+        color,
+        transparent: true,
+        opacity,
+        side: THREE.DoubleSide,
+        shininess: 35,
+    });
+    const mesh = new THREE.Mesh(geometry, mat);
+    mesh.userData.targetOpacity = opacity;
+    return mesh;
 }
 
 function dashedEdges(geometry, color, opacity = 1, dashSize = 0.08, gapSize = 0.06) {
@@ -147,7 +162,11 @@ function buildHouseStages() {
 
     // Stage 1: walls (main box)
     const walls = new THREE.Group();
-    const wallBox = solidEdges(new THREE.BoxGeometry(4, 2.2, 3), PRIMARY, 0);
+    const wallGeo = new THREE.BoxGeometry(4, 2.2, 3);
+    const wallMesh = solidMesh(wallGeo, 0xebf2fa, 0.88);
+    wallMesh.position.y = 1.1;
+    walls.add(wallMesh);
+    const wallBox = solidEdges(wallGeo, PRIMARY, 0);
     wallBox.position.y = 1.1;
     walls.add(wallBox);
     walls.userData.targetOpacity = 0.95;
@@ -162,6 +181,8 @@ function buildHouseStages() {
     roofShape.closePath();
     const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 3.15, bevelEnabled: false });
     roofGeo.translate(0, 2.2, -1.575);
+    const roofMesh = solidMesh(roofGeo, 0x3b82f6, 0.80);
+    roof.add(roofMesh);
     const roofEdges = solidEdges(roofGeo, PRIMARY, 0);
     roof.add(roofEdges);
 
@@ -171,21 +192,27 @@ function buildHouseStages() {
         new THREE.Vector3(0, 3.6,  1.575),
     ], PRIMARY, 0));
 
-    // Chimney removed — not shown on front elevation per design request
-
     roof.userData.targetOpacity = 0.95;
     stages.push(roof);
 
     // Stage 3: openings — door + windows (different color)
     const openings = new THREE.Group();
 
-    const door = solidEdges(new THREE.BoxGeometry(0.6, 1.2, 0.02), ACCENT, 0);
+    const doorGeo = new THREE.BoxGeometry(0.6, 1.2, 0.02);
+    const doorMesh = solidMesh(doorGeo, 0x0284c7, 0.9);
+    doorMesh.position.set(0, 0.6, 1.501);
+    openings.add(doorMesh);
+    const door = solidEdges(doorGeo, ACCENT, 0);
     door.position.set(0, 0.6, 1.501);
     openings.add(door);
 
     // Front windows + mullion crosses
     [-1.2, 1.2].forEach((x) => {
-        const w = solidEdges(new THREE.BoxGeometry(0.7, 0.7, 0.02), ACCENT, 0);
+        const winGeo = new THREE.BoxGeometry(0.7, 0.7, 0.02);
+        const winMesh = solidMesh(winGeo, 0x38bdf8, 0.75);
+        winMesh.position.set(x, 1.4, 1.501);
+        openings.add(winMesh);
+        const w = solidEdges(winGeo, ACCENT, 0);
         w.position.set(x, 1.4, 1.501);
         openings.add(w);
 
@@ -202,7 +229,12 @@ function buildHouseStages() {
 
     // Side windows
     [[-2.001, 1.4, 0], [2.001, 1.4, 0]].forEach(([x, y, z]) => {
-        const sideWin = solidEdges(new THREE.BoxGeometry(0.9, 0.6, 0.02), ACCENT, 0);
+        const sideWinGeo = new THREE.BoxGeometry(0.9, 0.6, 0.02);
+        const sideWinMesh = solidMesh(sideWinGeo, 0x38bdf8, 0.75);
+        sideWinMesh.position.set(x, y, z);
+        sideWinMesh.rotation.y = Math.PI / 2;
+        openings.add(sideWinMesh);
+        const sideWin = solidEdges(sideWinGeo, ACCENT, 0);
         sideWin.position.set(x, y, z);
         sideWin.rotation.y = Math.PI / 2;
         openings.add(sideWin);
@@ -237,15 +269,24 @@ function buildHouseStages() {
 
     // Stage 6: Loft conversion — rear dormer on the +X roof slope
     const loft = new THREE.Group();
-    const dormer = solidEdges(new THREE.BoxGeometry(0.8, 0.7, 0.9), LOFT_C, 0);
+    const dormerGeo = new THREE.BoxGeometry(0.8, 0.7, 0.9);
+    const dormerMesh = solidMesh(dormerGeo, LOFT_C, 0.75);
+    dormerMesh.position.set(2.05, 2.95, -0.5);
+    loft.add(dormerMesh);
+    const dormer = solidEdges(dormerGeo, LOFT_C, 0);
     dormer.position.set(2.05, 2.95, -0.5);
     loft.add(dormer);
+
     // Dormer window face (facing +X)
-    const dormerWin = solidEdges(new THREE.BoxGeometry(0.02, 0.45, 0.6), LOFT_C, 0);
+    const dormerWinGeo = new THREE.BoxGeometry(0.02, 0.45, 0.6);
+    const dormerWinMesh = solidMesh(dormerWinGeo, 0x38bdf8, 0.85);
+    dormerWinMesh.position.set(2.46, 2.95, -0.5);
+    loft.add(dormerWinMesh);
+    const dormerWin = solidEdges(dormerWinGeo, LOFT_C, 0);
     dormerWin.position.set(2.46, 2.95, -0.5);
     loft.add(dormerWin);
-    // Internal "new loft floor" line — dashed, suggesting added storey within roof.
-    // Sized to fit under the pitched roof envelope at y=2.6.
+
+    // Internal "new loft floor" line
     const loftFloor = dashedEdges(
         new THREE.PlaneGeometry(3.0, 2.6).rotateX(-Math.PI / 2),
         LOFT_C, 0, 0.12, 0.08
@@ -257,10 +298,15 @@ function buildHouseStages() {
 
     // Stage 7: Double-storey side extension (extends +X)
     const sideExt = new THREE.Group();
-    const sideBox = solidEdges(new THREE.BoxGeometry(2.5, 2.2, 3), SIDE_C, 0);
+    const sideBoxGeo = new THREE.BoxGeometry(2.5, 2.2, 3);
+    const sideBoxMesh = solidMesh(sideBoxGeo, SIDE_C, 0.75);
+    sideBoxMesh.position.set(3.25, 1.1, 0);
+    sideExt.add(sideBoxMesh);
+    const sideBox = solidEdges(sideBoxGeo, SIDE_C, 0);
     sideBox.position.set(3.25, 1.1, 0);
     sideExt.add(sideBox);
-    // First-floor slab line — visualises the second storey inside
+
+    // First-floor slab line
     sideExt.add(lineFromPoints([
         new THREE.Vector3(2.0, 1.2, -1.5), new THREE.Vector3(4.5, 1.2, -1.5),
         new THREE.Vector3(4.5, 1.2, -1.5), new THREE.Vector3(4.5, 1.2,  1.5),
@@ -269,7 +315,11 @@ function buildHouseStages() {
     // Two windows per floor on the outer (+X) face
     [-0.7, 0.7].forEach((z) => {
         [0.5, 1.65].forEach((y) => {
-            const w = solidEdges(new THREE.BoxGeometry(0.02, 0.55, 0.55), SIDE_C, 0);
+            const sideWindowGeo = new THREE.BoxGeometry(0.02, 0.55, 0.55);
+            const sideWindowMesh = solidMesh(sideWindowGeo, 0x38bdf8, 0.85);
+            sideWindowMesh.position.set(4.51, y + 0.15, z);
+            sideExt.add(sideWindowMesh);
+            const w = solidEdges(sideWindowGeo, SIDE_C, 0);
             w.position.set(4.51, y + 0.15, z);
             sideExt.add(w);
         });
@@ -279,13 +329,23 @@ function buildHouseStages() {
 
     // Stage 8: Single-storey rear extension (extends -Z)
     const rearExt = new THREE.Group();
-    const rearBox = solidEdges(new THREE.BoxGeometry(4, 1.0, 2), REAR_C, 0);
+    const rearBoxGeo = new THREE.BoxGeometry(4, 1.0, 2);
+    const rearBoxMesh = solidMesh(rearBoxGeo, REAR_C, 0.75);
+    rearBoxMesh.position.set(0, 0.5, -2.5);
+    rearExt.add(rearBoxMesh);
+    const rearBox = solidEdges(rearBoxGeo, REAR_C, 0);
     rearBox.position.set(0, 0.5, -2.5);
     rearExt.add(rearBox);
+
     // Large glazed rear opening (e.g. bi-fold doors) on -Z face
-    const rearGlass = solidEdges(new THREE.BoxGeometry(3.0, 0.7, 0.02), REAR_C, 0);
+    const rearGlassGeo = new THREE.BoxGeometry(3.0, 0.7, 0.02);
+    const rearGlassMesh = solidMesh(rearGlassGeo, 0x38bdf8, 0.85);
+    rearGlassMesh.position.set(0, 0.55, -3.51);
+    rearExt.add(rearGlassMesh);
+    const rearGlass = solidEdges(rearGlassGeo, REAR_C, 0);
     rearGlass.position.set(0, 0.55, -3.51);
     rearExt.add(rearGlass);
+
     // Mullion divisions
     [-1.0, 0, 1.0].forEach((x) => {
         rearExt.add(lineFromPoints([
@@ -370,6 +430,16 @@ export function initHeroHouse(container) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = 'width:100%;height:100%;display:block;';
+
+    // Ambient and directional lighting for 3D rendered surfaces
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    scene.add(ambientLight);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.75);
+    dirLight1.position.set(12, 18, 14);
+    scene.add(dirLight1);
+    const dirLight2 = new THREE.DirectionalLight(0xbfdbfe, 0.35);
+    dirLight2.position.set(-10, -5, -10);
+    scene.add(dirLight2);
 
     // Build stages (base house + dimensions + 3 extension types)
     const houseGroup = new THREE.Group();
@@ -532,6 +602,12 @@ export function initHeroHouse(container) {
     function setStageOpacity(stage, p) {
         const tgt = stage.userData.targetOpacity ?? 1;
         stage.traverse((obj) => {
+            if (obj.isMesh) {
+                if (obj.material) {
+                    obj.material.opacity = (obj.userData.targetOpacity ?? tgt) * p;
+                    obj.material.transparent = true;
+                }
+            }
             if (obj.isLine || obj.isLineSegments || obj.isLine2) {
                 if (obj.material) {
                     obj.material.opacity = (obj.userData.targetOpacity ?? tgt) * p;
