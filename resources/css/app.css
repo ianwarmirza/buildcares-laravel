@@ -291,30 +291,47 @@
     }
     .portfolio-card:hover .overlay { opacity: 1; }
 
-    /* Nav links (white navbar) */
-    .nav-link {
-        position: relative;
+    /* Modern Navigation Pill Tabs */
+    .nav-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 1.1rem;
+        border-radius: 9999px;
         font-family: var(--font-sans);
-        font-size: 0.75rem;
+        font-size: 0.8125rem;
         font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        letter-spacing: 0.03em;
         color: #475569;
-        transition: color 0.2s ease;
-        padding-bottom: 0.25rem;
+        background-color: transparent;
+        border: 1px solid transparent;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -2px; left: 0;
-        width: 0; height: 2px;
-        background-color: #2563eb;
-        transition: width 0.25s ease;
+    .nav-tab svg {
+        color: #94a3b8;
+        transition: color 0.2s ease, transform 0.2s ease;
     }
-    .nav-link:hover,
-    .nav-link.active { color: #0f172a; }
-    .nav-link:hover::after,
-    .nav-link.active::after { width: 100%; }
+    .nav-tab:hover {
+        color: #2563eb;
+        background-color: #ffffff;
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        transform: translateY(-1px);
+    }
+    .nav-tab:hover svg {
+        color: #2563eb;
+        transform: scale(1.1);
+    }
+    .nav-tab.active {
+        color: #1e40af;
+        background-color: #ffffff;
+        border-color: rgba(37, 99, 235, 0.35);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+        font-weight: 700;
+    }
+    .nav-tab.active svg {
+        color: #2563eb;
+    }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 4px; }

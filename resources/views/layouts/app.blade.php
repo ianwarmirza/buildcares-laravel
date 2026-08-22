@@ -50,15 +50,39 @@
                     <img src="/images/logo.jpeg" alt="BuildCares" class="h-12 w-auto">
                 </a>
 
-                <div class="hidden lg:flex items-center gap-8">
-                    <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-                    <a href="{{ route('services.index') }}" class="nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">Services</a>
-                    <a href="{{ route('portfolio.index') }}" class="nav-link {{ request()->routeIs('portfolio.*') ? 'active' : '' }}">Portfolio</a>
-                    <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">Contact</a>
+                <div class="hidden lg:flex items-center gap-1.5 p-1 rounded-full bg-slate-100/80 border border-slate-200/80">
+                    <a href="{{ route('home') }}" class="nav-tab {{ request()->routeIs('home') ? 'active' : '' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Home</span>
+                        @if(request()->routeIs('home'))
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        @endif
+                    </a>
+                    <a href="{{ route('services.index') }}" class="nav-tab {{ request()->routeIs('services.*') ? 'active' : '' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Services</span>
+                        @if(request()->routeIs('services.*'))
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        @endif
+                    </a>
+                    <a href="{{ route('portfolio.index') }}" class="nav-tab {{ request()->routeIs('portfolio.*') ? 'active' : '' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Portfolio</span>
+                        @if(request()->routeIs('portfolio.*'))
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        @endif
+                    </a>
+                    <a href="{{ route('contact') }}" class="nav-tab {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <span>Contact</span>
+                        @if(request()->routeIs('contact*'))
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        @endif
+                    </a>
                 </div>
 
                 <div class="hidden lg:flex items-center gap-3">
-                    <a href="{{ route('contact') }}" class="btn-gold text-xs py-2.5 px-5">
+                    <a href="{{ route('contact') }}" class="btn-gold text-xs py-2.5 px-5 shadow-sm hover:shadow-md transition-shadow">
                         Get a Quote
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
@@ -71,12 +95,24 @@
             </div>
 
             <div id="mobile-menu" class="hidden lg:hidden border-t" style="background-color:#f8fafc; border-color:#e2e8f0;">
-                <div class="px-6 py-4 space-y-1">
-                    <a href="{{ route('home') }}" class="block py-3 text-xs font-semibold uppercase tracking-widest border-b transition-colors hover:text-blue-600" style="color:#475569; border-color:#e2e8f0;">Home</a>
-                    <a href="{{ route('services.index') }}" class="block py-3 text-xs font-semibold uppercase tracking-widest border-b transition-colors hover:text-blue-600" style="color:#475569; border-color:#e2e8f0;">Services</a>
-                    <a href="{{ route('portfolio.index') }}" class="block py-3 text-xs font-semibold uppercase tracking-widest border-b transition-colors hover:text-blue-600" style="color:#475569; border-color:#e2e8f0;">Portfolio</a>
-                    <a href="{{ route('contact') }}" class="block py-3 text-xs font-semibold uppercase tracking-widest transition-colors hover:text-blue-600" style="color:#475569;">Contact</a>
-                    <div class="pt-4"><a href="{{ route('contact') }}" class="btn-gold w-full text-center justify-center text-xs py-3">Get a Quote</a></div>
+                <div class="px-6 py-4 space-y-2">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors {{ request()->routeIs('home') ? 'bg-blue-600/10 text-blue-600 font-bold border border-blue-200' : 'text-slate-700 hover:bg-slate-100' }}">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ route('services.index') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors {{ request()->routeIs('services.*') ? 'bg-blue-600/10 text-blue-600 font-bold border border-blue-200' : 'text-slate-700 hover:bg-slate-100' }}">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Services</span>
+                    </a>
+                    <a href="{{ route('portfolio.index') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors {{ request()->routeIs('portfolio.*') ? 'bg-blue-600/10 text-blue-600 font-bold border border-blue-200' : 'text-slate-700 hover:bg-slate-100' }}">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Portfolio</span>
+                    </a>
+                    <a href="{{ route('contact') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors {{ request()->routeIs('contact*') ? 'bg-blue-600/10 text-blue-600 font-bold border border-blue-200' : 'text-slate-700 hover:bg-slate-100' }}">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <span>Contact</span>
+                    </a>
+                    <div class="pt-3"><a href="{{ route('contact') }}" class="btn-gold w-full text-center justify-center text-xs py-3">Get a Quote</a></div>
                 </div>
             </div>
         </nav>
