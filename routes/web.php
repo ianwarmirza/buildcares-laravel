@@ -41,7 +41,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('services', AdminServiceController::class)->except(['show']);
 
         Route::get('messages', [AdminMessageController::class, 'index'])->name('messages.index');
-        Route::post('messages/bulk-delete', [AdminMessageController::class, 'bulkDestroy'])->name('messages.bulkDestroy');
+        Route::match(['post', 'delete', 'patch'], 'messages/bulk-delete', [AdminMessageController::class, 'bulkDestroy'])->name('messages.bulkDestroy');
         Route::delete('messages/delete-all', [AdminMessageController::class, 'deleteAll'])->name('messages.deleteAll');
         Route::get('messages/{message}', [AdminMessageController::class, 'show'])->name('messages.show');
         Route::patch('messages/{message}/read', [AdminMessageController::class, 'toggleRead'])->name('messages.toggleRead');
