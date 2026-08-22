@@ -7,10 +7,16 @@
 
 <div class="flex items-center justify-between mb-6">
     <p class="text-slate-400 text-sm">{{ $items->total() }} items total</p>
-    <a href="{{ route('admin.portfolio.create') }}" class="btn-gold text-xs py-2.5 px-4">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Add Item
-    </a>
+    <div class="flex items-center gap-2">
+        <button type="button" onclick="openQuickUploadModal()" class="px-3.5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            ⚡ Quick Upload (Photo/PDF)
+        </button>
+        <a href="{{ route('admin.portfolio.create') }}" class="btn-gold text-xs py-2 px-3.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Full Item
+        </a>
+    </div>
 </div>
 
 <div class="card-dark rounded-xl overflow-hidden">
@@ -30,12 +36,25 @@
             <tr class="hover:bg-light-warm transition-colors">
                 <td class="py-3 px-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-9 rounded overflow-hidden bg-slate-100 flex-shrink-0">
-                            <img src="{{ Storage::url($item->cover_image) }}" alt="{{ $item->title }}"
-                                 class="w-full h-full object-cover">
+                        <div class="w-12 h-9 rounded overflow-hidden bg-slate-100 flex-shrink-0 relative border border-slate-200 flex items-center justify-center">
+                            @if($item->is_pdf)
+                            <div class="flex flex-col items-center justify-center text-red-600 bg-red-50 w-full h-full">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                                <span class="text-[8px] font-black uppercase tracking-tighter leading-none mt-0.5">PDF</span>
+                            </div>
+                            @else
+                            <img src="{{ $item->cover_url }}" alt="{{ $item->title }}"
+                                 class="w-full h-full object-cover"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'flex items-center justify-center text-slate-400 bg-slate-100 w-full h-full\'><svg class=\'w-4 h-4\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'/></svg></div>'">
+                            @endif
                         </div>
                         <div>
-                            <div class="text-dark-900 font-medium leading-snug">{{ $item->title }}</div>
+                            <div class="text-dark-900 font-medium leading-snug flex items-center gap-1.5">
+                                {{ $item->title }}
+                                @if($item->is_pdf)
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-red-600 bg-red-100 px-1.5 py-0.5 rounded border border-red-200">PDF</span>
+                                @endif
+                            </div>
                             <div class="text-slate-500 text-xs">{{ $item->slug }}</div>
                         </div>
                     </div>
@@ -91,5 +110,7 @@
     {{ $items->links() }}
 </div>
 @endif
+
+@include('admin.portfolio._quick_upload_modal')
 
 @endsection

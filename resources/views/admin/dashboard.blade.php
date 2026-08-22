@@ -32,9 +32,13 @@
     <div class="card-dark rounded-xl p-6">
         <h2 class="font-display font-semibold text-dark-900 mb-4">Quick Actions</h2>
         <div class="space-y-3">
+            <button type="button" onclick="openQuickUploadModal()" class="w-full flex items-center gap-3 p-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium transition-all text-sm shadow-sm">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                ⚡ Quick Upload (Photo or PDF)
+            </button>
             <a href="{{ route('admin.portfolio.create') }}" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors text-sm text-slate-700 hover:text-dark-900">
                 <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                Add Portfolio Item
+                Add Detailed Portfolio Item
             </a>
             <a href="{{ route('admin.services.create') }}" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors text-sm text-slate-700 hover:text-dark-900">
                 <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -50,6 +54,8 @@
             </a>
         </div>
     </div>
+
+@include('admin.portfolio._quick_upload_modal')
 
     {{-- Recent messages --}}
     <div class="card-dark rounded-xl p-6">

@@ -31,8 +31,8 @@ class PortfolioController extends Controller
             'location'     => 'nullable|string|max:255',
             'year'         => 'nullable|integer|min:2000|max:2030',
             'client'       => 'nullable|string|max:255',
-            'cover_image'  => 'required|image|max:4096',
-            'gallery_images.*' => 'nullable|image|max:4096',
+            'cover_image'  => 'required|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
+            'gallery_images.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
             'featured'     => 'nullable|boolean',
             'is_active'    => 'nullable|boolean',
             'sort_order'   => 'nullable|integer|min:0',
@@ -57,6 +57,36 @@ class PortfolioController extends Controller
         return redirect()->route('admin.portfolio.index')->with('success', 'Portfolio item created.');
     }
 
+    public function quickUpload(Request $request)
+    {
+        $validated = $request->validate([
+            'category'    => 'required|string|in:' . implode(',', array_keys(PortfolioItem::$categories)),
+            'file'        => 'required|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
+            'title'       => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $file = $request->file('file');
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $title = !empty($validated['title']) ? $validated['title'] : Str::title(str_replace(['-', '_'], ' ', $originalName));
+
+        $path = $file->store('portfolio', 'public');
+
+        PortfolioItem::create([
+            'title'       => $title,
+            'slug'        => $this->makeUniqueSlug($title),
+            'category'    => $validated['category'],
+            'description' => $validated['description'] ?? null,
+            'cover_image' => $path,
+            'is_active'   => true,
+            'sort_order'  => 0,
+        ]);
+
+        $categoryLabel = PortfolioItem::$categories[$validated['category']] ?? $validated['category'];
+
+        return redirect()->back()->with('success', "Item uploaded successfully to \"{$categoryLabel}\"!");
+    }
+
     public function edit(PortfolioItem $portfolio)
     {
         $categories = PortfolioItem::$categories;
@@ -72,8 +102,8 @@ class PortfolioController extends Controller
             'location'    => 'nullable|string|max:255',
             'year'        => 'nullable|integer|min:2000|max:2030',
             'client'      => 'nullable|string|max:255',
-            'cover_image' => 'nullable|image|max:4096',
-            'gallery_images.*' => 'nullable|image|max:4096',
+            'cover_image' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
+            'gallery_images.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
             'featured'    => 'nullable|boolean',
             'is_active'   => 'nullable|boolean',
             'sort_order'  => 'nullable|integer|min:0',

@@ -80,12 +80,43 @@
     </div>
 </section>
 
-{{-- Cover image --}}
+{{-- Cover image / PDF Viewer --}}
 <div style="background-color:#f8fafc;">
     <div class="max-w-7xl mx-auto px-6 py-8">
+        @if($item->is_pdf)
+        {{-- PDF Container --}}
+        <div class="rounded-xl overflow-hidden border border-slate-300 bg-slate-900 shadow-xl">
+            <div class="px-5 py-3.5 bg-slate-950 text-white flex flex-wrap items-center justify-between gap-3 border-b border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-300">PDF Drawing Package</div>
+                        <div class="text-sm font-semibold text-white leading-tight truncate max-w-md">{{ $item->title }}</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="{{ $item->cover_url }}" target="_blank" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        Open in New Tab
+                    </a>
+                    <a href="{{ $item->cover_url }}" download class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-colors flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+            <div class="w-full h-[680px] bg-slate-900">
+                <iframe src="{{ $item->cover_url }}" class="w-full h-full border-0" title="{{ $item->title }}"></iframe>
+            </div>
+        </div>
+        @else
+        {{-- Image Container --}}
         <div class="relative group">
-            <img src="{{ Storage::url($item->cover_image) }}" alt="{{ $item->title }}"
-                 class="lightbox-trigger w-full object-contain" style="max-height:620px; border:1px solid #e2e8f0; cursor:zoom-in;">
+            <img src="{{ $item->cover_url }}" alt="{{ $item->title }}"
+                 class="lightbox-trigger w-full object-contain" style="max-height:620px; border:1px solid #e2e8f0; cursor:zoom-in;"
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-[400px] bg-slate-900 flex flex-col items-center justify-center p-8 text-center rounded-xl border border-slate-800\'><div class=\'w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-3\'><svg class=\'w-8 h-8\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\'/></svg></div><h3 class=\'text-lg font-bold text-white mb-1\'>{{ e($item->title) }}</h3><p class=\'text-xs text-slate-400 max-w-sm\'>Architectural drawing & specification package for {{ e($item->category_label) }}.</p></div>';">
 
             {{-- Zoom hint (centred, fades in on hover) --}}
             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" style="background:rgba(0,0,0,0.06);">
@@ -114,6 +145,7 @@
             </a>
             @endif
         </div>
+        @endif
     </div>
 </div>
 

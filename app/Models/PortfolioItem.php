@@ -33,6 +33,17 @@ class PortfolioItem extends Model
         return self::$categories[$this->category] ?? ucfirst($this->category);
     }
 
+    public function getIsPdfAttribute(): bool
+    {
+        if (!$this->cover_image) return false;
+        return strtolower(pathinfo($this->cover_image, PATHINFO_EXTENSION)) === 'pdf';
+    }
+
+    public function getCoverUrlAttribute(): string
+    {
+        return $this->cover_image ? \Illuminate\Support\Facades\Storage::url($this->cover_image) : '';
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
