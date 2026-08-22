@@ -1,27 +1,36 @@
-// BuildCares hero 3D — AutoCAD-style architectural scene
-//   • Wireframe house drawn line-by-line in stages
-//   • Dimension lines with arrowheads + measurement labels
-//   • Snap-point markers at corners
-//   • XYZ axis gizmo in the corner
-//   • AutoCAD crosshair cursor following the mouse
-//   • Ambient field of drifting cross markers + dashed construction lines
+// BuildCares hero 3D — UK Architectural 3D CAD Visualization Scene
+//   • Typical UK Semi-Detached House with 3 Key Architectural Features:
+//     1) Single-Storey Rear Extension (Bi-fold doors + Roof Lantern)
+//     2) Double-Storey Side Extension (Matching brick & roofline)
+//     3) Loft Conversion (Dormer Window + Velux Rooflights)
+//   • Solid Shaded Meshes + Architectural CAD Line Overlays
+//   • Dynamic Feature Badges (Loft, Side Ext, Rear Ext)
+//   • Dimension Lines with Arrowheads + Measurement Badges
+//   • XYZ Axis Gizmo + AutoCAD Crosshair Cursor
 
 import * as THREE from 'three';
 
-const PRIMARY = 0x2563eb; // walls
-const ACCENT  = 0x0ea5e9; // openings (windows, doors)
-const DIM     = 0xf59e0b; // dimension lines (CAD yellow/amber)
-const HIDDEN  = 0x94a3b8; // hidden / construction lines
-const SOFT    = 0xbfdbfe; // soft accents
+const PRIMARY = 0x2563eb; // Main CAD blue
+const ACCENT  = 0x0ea5e9; // Openings/Windows
+const DIM     = 0xf59e0b; // CAD Dimension Amber
+const HIDDEN  = 0x94a3b8; // Construction Lines
+const SOFT    = 0xbfdbfe; // Accent Soft Blue
 
-// Service-type layer colors (matching how CAD drawings show new vs existing)
-const LOFT_C  = 0x10b981; // loft conversion  — emerald
-const SIDE_C  = 0xa855f7; // side extension   — purple
-const REAR_C  = 0xf97316; // rear extension   — orange
+// Extension Layer Colors
+const LOFT_C  = 0x10b981; // Emerald - Loft Conversion
+const SIDE_C  = 0xa855f7; // Purple  - Double Storey Side Extension
+const REAR_C  = 0xf97316; // Orange  - Single Storey Rear Extension
+
+// Architectural Materials Colors
+const BRICK_C  = 0xc26d47; // UK Red/Buff Brick
+const ROOF_C   = 0x334155; // UK Dark Slate Roof
+const GLASS_C  = 0x93c5fd; // Glazing / Windows
+const FRAME_C  = 0x1e293b; // Anthracite Window Frames
+const WALL_ALT = 0xe2e8f0; // Smooth Render Extension Wall
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ── Generic line helpers ───────────────────────────────────────────────────
+// ── Generic line & mesh helpers ──────────────────────────────────────────────
 function solidEdges(geometry, color, opacity = 1) {
     const edges = new THREE.EdgesGeometry(geometry, 1);
     const mat = new THREE.LineBasicMaterial({
@@ -29,22 +38,7 @@ function solidEdges(geometry, color, opacity = 1) {
         transparent: true,
         opacity,
     });
-    const seg = new THREE.LineSegments(edges, mat);
-    seg.userData.targetOpacity = opacity;
-    return seg;
-}
-
-function solidMesh(geometry, color, opacity = 0.85) {
-    const mat = new THREE.MeshPhongMaterial({
-        color,
-        transparent: true,
-        opacity,
-        side: THREE.DoubleSide,
-        shininess: 35,
-    });
-    const mesh = new THREE.Mesh(geometry, mat);
-    mesh.userData.targetOpacity = opacity;
-    return mesh;
+    return new THREE.LineSegments(edges, mat);
 }
 
 function dashedEdges(geometry, color, opacity = 1, dashSize = 0.08, gapSize = 0.06) {
@@ -67,7 +61,18 @@ function lineFromPoints(points, color, opacity = 1, dashed = false) {
     return line;
 }
 
-// ── Snap point marker: small square outline at a vertex ────────────────────
+function filledMesh(geometry, color, opacity = 0.85) {
+    const mat = new THREE.MeshLambertMaterial({
+        color,
+        transparent: true,
+        opacity,
+        side: THREE.DoubleSide,
+    });
+    const mesh = new THREE.Mesh(geometry, mat);
+    mesh.userData.targetOpacity = opacity;
+    return mesh;
+}
+
 function snapMarker(pos, color = ACCENT, size = 0.12) {
     const s = size / 2;
     const pts = [
@@ -83,18 +88,11 @@ function snapMarker(pos, color = ACCENT, size = 0.12) {
     return marker;
 }
 
-// ── Dimension: leader extension lines + main line with arrowheads ──────────
-//   from/to: endpoints of the measured edge (3D)
-//   normal:  perpendicular offset direction (unit vector)
-//   offset:  distance the dimension line sits away from the edge
-//   color, name returns object with the group and the worldspace label-anchor
 function dimensionLine(from, to, normal, offset, color = DIM) {
     const group = new THREE.Group();
-
     const fromOff = from.clone().addScaledVector(normal, offset);
     const toOff   = to.clone().addScaledVector(normal, offset);
 
-    // Extension lines: from the edge end to the dimension line
     group.add(lineFromPoints(
         [from.clone().addScaledVector(normal, offset * 0.1), fromOff.clone().addScaledVector(normal, 0.15)],
         color, 0
@@ -104,10 +102,8 @@ function dimensionLine(from, to, normal, offset, color = DIM) {
         color, 0
     ));
 
-    // Main dimension line
     group.add(lineFromPoints([fromOff, toOff], color, 0));
 
-    // Arrowheads — two short tick lines at 45° at each end
     const dir = toOff.clone().sub(fromOff).normalize();
     const perp = new THREE.Vector3().crossVectors(dir, new THREE.Vector3(0, 0, 1)).normalize();
     if (perp.lengthSq() < 0.01) {
@@ -122,128 +118,117 @@ function dimensionLine(from, to, normal, offset, color = DIM) {
     arrow(fromOff, 1);
     arrow(toOff, -1);
 
-    // Anchor for an HTML label (midpoint)
     const labelAnchor = fromOff.clone().add(toOff).multiplyScalar(0.5).addScaledVector(normal, 0.15);
-
     return { group, labelAnchor };
 }
 
-// ── XYZ gizmo (small axis indicator) ────────────────────────────────────────
 function axisGizmo() {
     const group = new THREE.Group();
     const len = 0.5;
-    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(len,0,0)], 0xef4444, 0.95)); // X red
-    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,len,0)], 0x22c55e, 0.95)); // Y green
-    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,len)], 0x3b82f6, 0.95)); // Z blue
+    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(len,0,0)], 0xef4444, 0.95));
+    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,len,0)], 0x22c55e, 0.95));
+    group.add(lineFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,len)], 0x3b82f6, 0.95));
     return group;
 }
 
-// ── Build the house structure as ordered "stages" for sequential reveal ────
+// ── Build house stages ───────────────────────────────────────────────────────
 function buildHouseStages() {
     const stages = [];
+    const extensionLabels = [];
 
-    // Stage 0: footprint plate + grid
+    // Stage 0: Ground footprint & CAD grid
     const plate = new THREE.Group();
     const footprint = lineFromPoints([
         new THREE.Vector3(-2.5, 0, -2),
-        new THREE.Vector3( 2.5, 0, -2),
-        new THREE.Vector3( 2.5, 0,  2),
+        new THREE.Vector3( 4.5, 0, -2),
+        new THREE.Vector3( 4.5, 0,  2),
         new THREE.Vector3(-2.5, 0,  2),
         new THREE.Vector3(-2.5, 0, -2),
     ], PRIMARY, 0, true);
     plate.add(footprint);
-    const grid = new THREE.GridHelper(10, 20, SOFT, SOFT);
+
+    const grid = new THREE.GridHelper(12, 24, SOFT, SOFT);
     grid.material.transparent = true;
     grid.material.opacity = 0;
-    grid.userData.targetOpacity = 0.22;
+    grid.userData.targetOpacity = 0.25;
     plate.add(grid);
     plate.userData.targetOpacity = 0.85;
     stages.push(plate);
 
-    // Stage 1: walls (main box)
+    // Stage 1: Main House Walls (Brick mesh + CAD wireframe)
     const walls = new THREE.Group();
-    const wallGeo = new THREE.BoxGeometry(4, 2.2, 3);
-    const wallMesh = solidMesh(wallGeo, 0xebf2fa, 0.88);
-    wallMesh.position.y = 1.1;
-    walls.add(wallMesh);
-    const wallBox = solidEdges(wallGeo, PRIMARY, 0);
-    wallBox.position.y = 1.1;
-    walls.add(wallBox);
+    const mainWallGeo = new THREE.BoxGeometry(4, 2.2, 3);
+    const mainWallMesh = filledMesh(mainWallGeo, BRICK_C, 0.75);
+    mainWallMesh.position.y = 1.1;
+    walls.add(mainWallMesh);
+
+    const wallBoxLines = solidEdges(mainWallGeo, PRIMARY, 0);
+    wallBoxLines.position.y = 1.1;
+    walls.add(wallBoxLines);
     walls.userData.targetOpacity = 0.95;
     stages.push(walls);
 
-    // Stage 2: roof
+    // Stage 2: Main Roof (Pitched slate roof + overhangs)
     const roof = new THREE.Group();
     const roofShape = new THREE.Shape();
-    roofShape.moveTo(-2.15, 0);
-    roofShape.lineTo(2.15, 0);
-    roofShape.lineTo(0, 1.4);
+    roofShape.moveTo(-2.2, 0);
+    roofShape.lineTo(2.2, 0);
+    roofShape.lineTo(0, 1.45);
     roofShape.closePath();
-    const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 3.15, bevelEnabled: false });
-    roofGeo.translate(0, 2.2, -1.575);
-    const roofMesh = solidMesh(roofGeo, 0x3b82f6, 0.80);
+
+    const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 3.25, bevelEnabled: false });
+    roofGeo.translate(0, 2.2, -1.625);
+    const roofMesh = filledMesh(roofGeo, ROOF_C, 0.85);
     roof.add(roofMesh);
+
     const roofEdges = solidEdges(roofGeo, PRIMARY, 0);
     roof.add(roofEdges);
 
-    // Ridge line — emphasized
+    // Main roof ridge line
     roof.add(lineFromPoints([
-        new THREE.Vector3(0, 3.6, -1.575),
-        new THREE.Vector3(0, 3.6,  1.575),
+        new THREE.Vector3(0, 3.65, -1.625),
+        new THREE.Vector3(0, 3.65,  1.625),
     ], PRIMARY, 0));
 
     roof.userData.targetOpacity = 0.95;
     stages.push(roof);
 
-    // Stage 3: openings — door + windows (different color)
+    // Stage 3: Openings (Door + Windows with frames and glass translucency)
     const openings = new THREE.Group();
 
-    const doorGeo = new THREE.BoxGeometry(0.6, 1.2, 0.02);
-    const doorMesh = solidMesh(doorGeo, 0x0284c7, 0.9);
-    doorMesh.position.set(0, 0.6, 1.501);
+    // Front Entrance Door with Canopy Porch
+    const doorMesh = filledMesh(new THREE.BoxGeometry(0.65, 1.3, 0.05), FRAME_C, 0.9);
+    doorMesh.position.set(-0.6, 0.65, 1.51);
     openings.add(doorMesh);
-    const door = solidEdges(doorGeo, ACCENT, 0);
-    door.position.set(0, 0.6, 1.501);
-    openings.add(door);
+    openings.add(solidEdges(new THREE.BoxGeometry(0.65, 1.3, 0.05), ACCENT, 0).position.set(-0.6, 0.65, 1.51));
 
-    // Front windows + mullion crosses
-    [-1.2, 1.2].forEach((x) => {
-        const winGeo = new THREE.BoxGeometry(0.7, 0.7, 0.02);
-        const winMesh = solidMesh(winGeo, 0x38bdf8, 0.75);
-        winMesh.position.set(x, 1.4, 1.501);
-        openings.add(winMesh);
-        const w = solidEdges(winGeo, ACCENT, 0);
-        w.position.set(x, 1.4, 1.501);
-        openings.add(w);
+    // Porch Canopy overhang
+    const porchCanopy = filledMesh(new THREE.BoxGeometry(0.9, 0.08, 0.4), ROOF_C, 0.9);
+    porchCanopy.position.set(-0.6, 1.35, 1.7);
+    openings.add(porchCanopy);
+    openings.add(solidEdges(new THREE.BoxGeometry(0.9, 0.08, 0.4), PRIMARY, 0).position.set(-0.6, 1.35, 1.7));
 
-        const cross = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(x, 1.05, 1.505), new THREE.Vector3(x, 1.75, 1.505),
-            new THREE.Vector3(x - 0.35, 1.4, 1.505), new THREE.Vector3(x + 0.35, 1.4, 1.505),
-        ]);
-        const lines = new THREE.LineSegments(
-            cross,
-            new THREE.LineBasicMaterial({ color: SOFT, transparent: true, opacity: 0 })
-        );
-        openings.add(lines);
-    });
+    // Ground Floor & First Floor Windows
+    [-1.3, 0.8].forEach((x) => {
+        // Ground floor window
+        if (x !== -0.6) {
+            const wG = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
+            wG.position.set(x, 0.65, 1.51);
+            openings.add(wG);
+            openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 0.65, 1.51));
+        }
 
-    // Side windows
-    [[-2.001, 1.4, 0], [2.001, 1.4, 0]].forEach(([x, y, z]) => {
-        const sideWinGeo = new THREE.BoxGeometry(0.9, 0.6, 0.02);
-        const sideWinMesh = solidMesh(sideWinGeo, 0x38bdf8, 0.75);
-        sideWinMesh.position.set(x, y, z);
-        sideWinMesh.rotation.y = Math.PI / 2;
-        openings.add(sideWinMesh);
-        const sideWin = solidEdges(sideWinGeo, ACCENT, 0);
-        sideWin.position.set(x, y, z);
-        sideWin.rotation.y = Math.PI / 2;
-        openings.add(sideWin);
+        // First floor windows
+        const wF1 = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
+        wF1.position.set(x, 1.65, 1.51);
+        openings.add(wF1);
+        openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 1.65, 1.51));
     });
 
     openings.userData.targetOpacity = 0.9;
     stages.push(openings);
 
-    // Stage 4: hidden (back) edges as dashed lines for CAD authenticity
+    // Stage 4: Hidden structural line overlays for CAD look
     const hidden = new THREE.Group();
     const hiddenBox = dashedEdges(new THREE.BoxGeometry(4, 2.2, 3), HIDDEN, 0, 0.08, 0.08);
     hiddenBox.position.y = 1.1;
@@ -251,118 +236,154 @@ function buildHouseStages() {
     hidden.userData.targetOpacity = 0.25;
     stages.push(hidden);
 
-    // Stage 5: snap markers at all corners
+    // Stage 5: Corner snap markers
     const snaps = new THREE.Group();
     const corners = [
         new THREE.Vector3(-2, 0,  1.5), new THREE.Vector3( 2, 0,  1.5),
         new THREE.Vector3(-2, 0, -1.5), new THREE.Vector3( 2, 0, -1.5),
         new THREE.Vector3(-2, 2.2,  1.5), new THREE.Vector3( 2, 2.2,  1.5),
         new THREE.Vector3(-2, 2.2, -1.5), new THREE.Vector3( 2, 2.2, -1.5),
-        new THREE.Vector3(0, 3.6,  1.575), new THREE.Vector3(0, 3.6, -1.575),
+        new THREE.Vector3(0, 3.65,  1.625), new THREE.Vector3(0, 3.65, -1.625),
     ];
     corners.forEach((c) => snaps.add(snapMarker(c, ACCENT, 0.14)));
     snaps.userData.targetOpacity = 0.9;
     stages.push(snaps);
 
-    // Each extension stage exposes a labelAnchor so the HTML overlay can pin a tag onto it.
-    const extensionLabels = [];
-
-    // Stage 6: Loft conversion — rear dormer on the +X roof slope
+    // Stage 6: 🟢 Loft Conversion (Dormer + Velux Rooflights)
     const loft = new THREE.Group();
-    const dormerGeo = new THREE.BoxGeometry(0.8, 0.7, 0.9);
-    const dormerMesh = solidMesh(dormerGeo, LOFT_C, 0.75);
-    dormerMesh.position.set(2.05, 2.95, -0.5);
+
+    // Box Dormer on rear roof slope
+    const dormerGeo = new THREE.BoxGeometry(1.4, 0.85, 1.1);
+    const dormerMesh = filledMesh(dormerGeo, ROOF_C, 0.9);
+    dormerMesh.position.set(0.5, 3.0, -0.6);
     loft.add(dormerMesh);
-    const dormer = solidEdges(dormerGeo, LOFT_C, 0);
-    dormer.position.set(2.05, 2.95, -0.5);
-    loft.add(dormer);
 
-    // Dormer window face (facing +X)
-    const dormerWinGeo = new THREE.BoxGeometry(0.02, 0.45, 0.6);
-    const dormerWinMesh = solidMesh(dormerWinGeo, 0x38bdf8, 0.85);
-    dormerWinMesh.position.set(2.46, 2.95, -0.5);
-    loft.add(dormerWinMesh);
-    const dormerWin = solidEdges(dormerWinGeo, LOFT_C, 0);
-    dormerWin.position.set(2.46, 2.95, -0.5);
+    const dormerEdges = solidEdges(dormerGeo, LOFT_C, 0);
+    dormerEdges.position.set(0.5, 3.0, -0.6);
+    loft.add(dormerEdges);
+
+    // Dormer double glass window
+    const dormerWin = filledMesh(new THREE.BoxGeometry(1.1, 0.55, 0.05), GLASS_C, 0.85);
+    dormerWin.position.set(0.5, 3.0, -1.16);
     loft.add(dormerWin);
+    loft.add(solidEdges(new THREE.BoxGeometry(1.1, 0.55, 0.05), LOFT_C, 0).position.set(0.5, 3.0, -1.16));
 
-    // Internal "new loft floor" line
-    const loftFloor = dashedEdges(
-        new THREE.PlaneGeometry(3.0, 2.6).rotateX(-Math.PI / 2),
-        LOFT_C, 0, 0.12, 0.08
-    );
-    loftFloor.position.y = 2.6;
-    loft.add(loftFloor);
+    // Front Roof Velux Window
+    const veluxGeo = new THREE.PlaneGeometry(0.6, 0.8);
+    const veluxMesh = filledMesh(veluxGeo, GLASS_C, 0.85);
+    veluxMesh.rotation.x = -Math.PI / 4;
+    veluxMesh.position.set(-1.0, 2.85, 0.8);
+    loft.add(veluxMesh);
+    loft.add(solidEdges(new THREE.BoxGeometry(0.62, 0.82, 0.02), LOFT_C, 0).position.set(-1.0, 2.85, 0.8));
+
     loft.userData.targetOpacity = 0.95;
     stages.push(loft);
-
-    // Stage 7: Double-storey side extension (extends +X)
-    const sideExt = new THREE.Group();
-    const sideBoxGeo = new THREE.BoxGeometry(2.5, 2.2, 3);
-    const sideBoxMesh = solidMesh(sideBoxGeo, SIDE_C, 0.75);
-    sideBoxMesh.position.set(3.25, 1.1, 0);
-    sideExt.add(sideBoxMesh);
-    const sideBox = solidEdges(sideBoxGeo, SIDE_C, 0);
-    sideBox.position.set(3.25, 1.1, 0);
-    sideExt.add(sideBox);
-
-    // First-floor slab line
-    sideExt.add(lineFromPoints([
-        new THREE.Vector3(2.0, 1.2, -1.5), new THREE.Vector3(4.5, 1.2, -1.5),
-        new THREE.Vector3(4.5, 1.2, -1.5), new THREE.Vector3(4.5, 1.2,  1.5),
-        new THREE.Vector3(4.5, 1.2,  1.5), new THREE.Vector3(2.0, 1.2,  1.5),
-    ], SIDE_C, 0));
-    // Two windows per floor on the outer (+X) face
-    [-0.7, 0.7].forEach((z) => {
-        [0.5, 1.65].forEach((y) => {
-            const sideWindowGeo = new THREE.BoxGeometry(0.02, 0.55, 0.55);
-            const sideWindowMesh = solidMesh(sideWindowGeo, 0x38bdf8, 0.85);
-            sideWindowMesh.position.set(4.51, y + 0.15, z);
-            sideExt.add(sideWindowMesh);
-            const w = solidEdges(sideWindowGeo, SIDE_C, 0);
-            w.position.set(4.51, y + 0.15, z);
-            sideExt.add(w);
-        });
+    extensionLabels.push({
+        text: 'LOFT CONVERSION',
+        subtext: 'Dormer & Velux Rooflights',
+        color: '#10b981',
+        anchor: new THREE.Vector3(0.5, 3.65, -0.6),
+        stageIndex: 6,
     });
+
+    // Stage 7: 🟣 Double-Storey Side Extension
+    const sideExt = new THREE.Group();
+
+    // Side Extension 2-storey walls
+    const sideWallGeo = new THREE.BoxGeometry(2.3, 2.2, 3);
+    const sideWallMesh = filledMesh(sideWallGeo, BRICK_C, 0.8);
+    sideWallMesh.position.set(3.15, 1.1, 0);
+    sideExt.add(sideWallMesh);
+    const sideWallEdges = solidEdges(sideWallGeo, SIDE_C, 0);
+    sideWallEdges.position.set(3.15, 1.1, 0);
+    sideExt.add(sideWallEdges);
+
+    // Pitched roof extending main roofline over side extension
+    const sideRoofShape = new THREE.Shape();
+    sideRoofShape.moveTo(2.0, 0);
+    sideRoofShape.lineTo(4.3, 0);
+    sideRoofShape.lineTo(3.15, 1.25);
+    sideRoofShape.closePath();
+
+    const sideRoofGeo = new THREE.ExtrudeGeometry(sideRoofShape, { depth: 3.15, bevelEnabled: false });
+    sideRoofGeo.translate(0, 2.2, -1.575);
+    const sideRoofMesh = filledMesh(sideRoofGeo, ROOF_C, 0.85);
+    sideExt.add(sideRoofMesh);
+    const sideRoofEdges = solidEdges(sideRoofGeo, SIDE_C, 0);
+    sideExt.add(sideRoofEdges);
+
+    // Windows on Front (+Z) and Side (+X)
+    const sideWin1 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
+    sideWin1.position.set(3.15, 0.65, 1.51);
+    sideExt.add(sideWin1);
+    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 0.65, 1.51));
+
+    const sideWin2 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
+    sideWin2.position.set(3.15, 1.65, 1.51);
+    sideExt.add(sideWin2);
+    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 1.65, 1.51));
+
     sideExt.userData.targetOpacity = 0.95;
     stages.push(sideExt);
+    extensionLabels.push({
+        text: 'DOUBLE-STOREY SIDE EXTENSION',
+        subtext: 'Matching Brickwork & Roof',
+        color: '#a855f7',
+        anchor: new THREE.Vector3(3.6, 2.6, 0.8),
+        stageIndex: 7,
+    });
 
-    // Stage 8: Single-storey rear extension (extends -Z)
+    // Stage 8: 🟠 Single-Storey Rear Extension (Bi-fold doors + Glass Roof Lantern)
     const rearExt = new THREE.Group();
-    const rearBoxGeo = new THREE.BoxGeometry(4, 1.0, 2);
-    const rearBoxMesh = solidMesh(rearBoxGeo, REAR_C, 0.75);
-    rearBoxMesh.position.set(0, 0.5, -2.5);
-    rearExt.add(rearBoxMesh);
-    const rearBox = solidEdges(rearBoxGeo, REAR_C, 0);
-    rearBox.position.set(0, 0.5, -2.5);
-    rearExt.add(rearBox);
 
-    // Large glazed rear opening (e.g. bi-fold doors) on -Z face
-    const rearGlassGeo = new THREE.BoxGeometry(3.0, 0.7, 0.02);
-    const rearGlassMesh = solidMesh(rearGlassGeo, 0x38bdf8, 0.85);
-    rearGlassMesh.position.set(0, 0.55, -3.51);
-    rearExt.add(rearGlassMesh);
-    const rearGlass = solidEdges(rearGlassGeo, REAR_C, 0);
-    rearGlass.position.set(0, 0.55, -3.51);
-    rearExt.add(rearGlass);
+    // Single storey extension wall
+    const rearBoxGeo = new THREE.BoxGeometry(4.2, 1.1, 1.8);
+    const rearMesh = filledMesh(rearBoxGeo, WALL_ALT, 0.85);
+    rearMesh.position.set(0.1, 0.55, -2.4);
+    rearExt.add(rearMesh);
+    const rearEdges = solidEdges(rearBoxGeo, REAR_C, 0);
+    rearEdges.position.set(0.1, 0.55, -2.4);
+    rearExt.add(rearEdges);
 
-    // Mullion divisions
-    [-1.0, 0, 1.0].forEach((x) => {
+    // Glass Roof Lantern on Flat Roof
+    const lanternGeo = new THREE.BoxGeometry(2.0, 0.25, 1.0);
+    const lanternMesh = filledMesh(lanternGeo, GLASS_C, 0.8);
+    lanternMesh.position.set(0.1, 1.22, -2.4);
+    rearExt.add(lanternMesh);
+    rearExt.add(solidEdges(lanternGeo, REAR_C, 0).position.set(0.1, 1.22, -2.4));
+
+    // Full-height modern aluminum Bi-Fold Glass Doors on -Z rear elevation
+    const bifoldGeo = new THREE.BoxGeometry(3.2, 0.85, 0.05);
+    const bifoldMesh = filledMesh(bifoldGeo, GLASS_C, 0.85);
+    bifoldMesh.position.set(0.1, 0.5, -3.31);
+    rearExt.add(bifoldMesh);
+    rearExt.add(solidEdges(bifoldGeo, REAR_C, 0).position.set(0.1, 0.5, -3.31));
+
+    // Vertical bi-fold door mullions
+    [-1.0, -0.33, 0.33, 1.0].forEach((xOff) => {
         rearExt.add(lineFromPoints([
-            new THREE.Vector3(x, 0.2, -3.515),
-            new THREE.Vector3(x, 0.9, -3.515),
+            new THREE.Vector3(0.1 + xOff, 0.08, -3.32),
+            new THREE.Vector3(0.1 + xOff, 0.92, -3.32),
         ], REAR_C, 0));
     });
+
     rearExt.userData.targetOpacity = 0.95;
     stages.push(rearExt);
+    extensionLabels.push({
+        text: 'SINGLE-STOREY REAR EXTENSION',
+        subtext: 'Bi-fold Doors & Roof Lantern',
+        color: '#f97316',
+        anchor: new THREE.Vector3(-0.8, 1.35, -2.5),
+        stageIndex: 8,
+    });
 
     return { stages, extensionLabels };
 }
 
-// ── Build dimension lines (will be revealed after structure) ───────────────
+// ── Build dimensions ─────────────────────────────────────────────────────────
 function buildDimensions() {
     const dims = new THREE.Group();
-    const labels = []; // {anchor: Vector3, text: string}
+    const labels = [];
 
     // Width (front, X-axis)
     {
@@ -400,11 +421,11 @@ function buildDimensions() {
         labels.push({ anchor: d.labelAnchor, text: '4.50m' });
     }
 
-    // Roof ridge height (left side total)
+    // Total Ridge Height (left side)
     {
         const d = dimensionLine(
             new THREE.Vector3(-2, 0, 1.5),
-            new THREE.Vector3(-2, 3.6, 1.5),
+            new THREE.Vector3(-2, 3.65, 1.5),
             new THREE.Vector3(-1, 0, 0),
             1.0,
         );
@@ -415,15 +436,27 @@ function buildDimensions() {
     return { group: dims, labels };
 }
 
-// ── Scene 1: AutoCAD-style house viewer ────────────────────────────────────
+// ── Main Scene Initialization ────────────────────────────────────────────────
 export function initHeroHouse(container) {
     if (!container) return;
 
     const scene = new THREE.Scene();
-    // FOV widened and camera pulled back to accommodate the three extensions
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.set(9.5, 6, 11.5);
-    const cameraTarget = new THREE.Vector3(0.5, 1.4, -0.5);
+
+    // Lighting setup for realistic shaded 3D rendering
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.25);
+    mainLight.position.set(12, 18, 10);
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0x93c5fd, 0.45);
+    fillLight.position.set(-10, 8, -10);
+    scene.add(fillLight);
+
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(10.5, 7.0, 12.5);
+    const cameraTarget = new THREE.Vector3(0.8, 1.5, -0.4);
     camera.lookAt(cameraTarget);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -431,59 +464,53 @@ export function initHeroHouse(container) {
     container.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = 'width:100%;height:100%;display:block;';
 
-    // Ambient and directional lighting for 3D rendered surfaces
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
-    scene.add(ambientLight);
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.75);
-    dirLight1.position.set(12, 18, 14);
-    scene.add(dirLight1);
-    const dirLight2 = new THREE.DirectionalLight(0xbfdbfe, 0.35);
-    dirLight2.position.set(-10, -5, -10);
-    scene.add(dirLight2);
-
-    // Build stages (base house + dimensions + 3 extension types)
     const houseGroup = new THREE.Group();
     scene.add(houseGroup);
+
     const { stages, extensionLabels } = buildHouseStages();
     stages.forEach((s) => houseGroup.add(s));
 
-    // Dimensions (added but invisible until reveal)
     const { group: dimGroup, labels } = buildDimensions();
     dimGroup.userData.targetOpacity = 1;
     houseGroup.add(dimGroup);
 
-    // HTML overlay layer for dimension labels (created on demand)
+    // HTML overlay layer for labels
     let labelLayer = container.querySelector('.cad-labels');
     if (!labelLayer) {
         labelLayer = document.createElement('div');
         labelLayer.className = 'cad-labels';
-        labelLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;font-family:DM Sans,system-ui,sans-serif;';
+        labelLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;font-family:DM Sans,system-ui,sans-serif;z-index:20;';
         container.appendChild(labelLayer);
     }
+
     const labelEls = labels.map(({ text }) => {
         const el = document.createElement('div');
         el.textContent = text;
         el.style.cssText = `
             position:absolute; transform:translate(-50%,-50%);
-            padding:1px 6px; font-size:9px; font-weight:700; letter-spacing:0.08em;
-            color:#f59e0b; background:rgba(255,255,255,0.92); border:1px solid rgba(245,158,11,0.4);
-            border-radius:1px; white-space:nowrap; opacity:0; transition:opacity 0.4s ease;
+            padding:2px 7px; font-size:9px; font-weight:700; letter-spacing:0.08em;
+            color:#f59e0b; background:rgba(255,255,255,0.95); border:1px solid rgba(245,158,11,0.5);
+            border-radius:3px; white-space:nowrap; opacity:0; transition:opacity 0.4s ease;
+            box-shadow:0 2px 6px rgba(0,0,0,0.06);
         `;
         labelLayer.appendChild(el);
         return el;
     });
 
-    // Extension-type labels (LOFT / SIDE / REAR) — bolder chips in their layer color
-    const extLabelEls = extensionLabels.map(({ text, color }) => {
+    // Extension-type feature badges
+    const extLabelEls = extensionLabels.map(({ text, subtext, color }) => {
         const el = document.createElement('div');
-        el.textContent = text;
         const rgb = hexToRgb(color);
+        el.innerHTML = `
+            <div style="font-weight:800; font-size:9px; letter-spacing:0.08em; text-transform:uppercase;">${text}</div>
+            <div style="font-weight:500; font-size:8px; opacity:0.9; margin-top:1px;">${subtext}</div>
+        `;
         el.style.cssText = `
             position:absolute; transform:translate(-50%,-50%);
-            padding:3px 8px; font-size:9px; font-weight:800; letter-spacing:0.1em;
-            color:#ffffff; background:${color}; border:1px solid rgba(${rgb},0.85);
-            border-radius:1px; white-space:nowrap; opacity:0; transition:opacity 0.4s ease;
-            box-shadow:0 2px 8px rgba(${rgb},0.35);
+            padding:4px 10px; color:#ffffff; background:${color};
+            border:1px solid rgba(255,255,255,0.3); border-radius:6px; white-space:nowrap;
+            opacity:0; transition:opacity 0.4s ease; box-shadow:0 4px 14px rgba(${rgb},0.4);
+            pointer-events:none;
         `;
         labelLayer.appendChild(el);
         return el;
@@ -495,7 +522,7 @@ export function initHeroHouse(container) {
         return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
     }
 
-    // Axis gizmo (lower-left corner of the canvas — separate ortho scene)
+    // Axis gizmo
     const gizmoScene = new THREE.Scene();
     const gizmoCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
     gizmoCam.position.set(0, 0, 3);
@@ -503,7 +530,6 @@ export function initHeroHouse(container) {
     const gizmo = axisGizmo();
     gizmoScene.add(gizmo);
 
-    // HTML labels for axis (X/Y/Z)
     const axisLabels = ['X', 'Y', 'Z'].map((letter, i) => {
         const el = document.createElement('div');
         el.textContent = letter;
@@ -517,11 +543,11 @@ export function initHeroHouse(container) {
         return el;
     });
 
-    // Crosshair cursor overlay (HTML) — large + that follows mouse on this canvas
+    // Crosshair cursor
     const crosshair = document.createElement('div');
     crosshair.className = 'cad-crosshair';
     crosshair.style.cssText = `
-        position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 0.3s ease;
+        position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 0.3s ease; z-index:10;
     `;
     crosshair.innerHTML = `
         <div class="ch-h" style="position:absolute;left:0;right:0;height:1px;background:rgba(37,99,235,0.35);"></div>
@@ -529,7 +555,7 @@ export function initHeroHouse(container) {
         <div class="ch-c" style="position:absolute;width:18px;height:18px;transform:translate(-50%,-50%);">
             <div style="position:absolute;inset:0;border:1px solid rgba(37,99,235,0.55);background:rgba(255,255,255,0.4);"></div>
         </div>
-        <div class="ch-coord" style="position:absolute;font-family:DM Sans,system-ui,sans-serif;font-size:9px;font-weight:600;color:#2563eb;background:rgba(255,255,255,0.9);padding:2px 6px;border:1px solid rgba(37,99,235,0.3);letter-spacing:0.05em;white-space:nowrap;"></div>
+        <div class="ch-coord" style="position:absolute;font-family:DM Sans,system-ui,sans-serif;font-size:9px;font-weight:600;color:#2563eb;background:rgba(255,255,255,0.9);padding:2px 6px;border:1px solid rgba(37,99,235,0.3);border-radius:3px;letter-spacing:0.05em;white-space:nowrap;"></div>
     `;
     container.appendChild(crosshair);
     const chH = crosshair.querySelector('.ch-h');
@@ -557,7 +583,6 @@ export function initHeroHouse(container) {
     window.addEventListener('mousemove', onMove, { passive: true });
     window.addEventListener('mouseleave', () => { mouse.inside = false; crosshair.style.opacity = '0'; }, { passive: true });
 
-    // Resize
     const resize = () => {
         const w = container.clientWidth;
         const h = container.clientHeight;
@@ -569,7 +594,6 @@ export function initHeroHouse(container) {
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
-    // Visibility gate
     let visible = true;
     const io = new IntersectionObserver(
         ([entry]) => { visible = entry.isIntersecting; },
@@ -577,20 +601,11 @@ export function initHeroHouse(container) {
     );
     io.observe(container);
 
-    // Stage reveal timings (seconds from start)
-    //   0.0 → plate     0.4 → walls    0.9 → roof
-    //   1.4 → openings  1.9 → hidden   2.2 → snap markers
-    //   2.5 → dimensions
-    //   3.0 → loft conversion
-    //   3.5 → side extension
-    //   4.0 → rear extension
-    //   4.6 → rotation kicks in
     const stageStarts = [0.0, 0.4, 0.9, 1.4, 1.9, 2.2, 3.0, 3.5, 4.0];
     const stageDur = 0.55;
     const dimStart = 2.5;
     const dimDur = 0.6;
 
-    // If reduced motion: show all instantly
     if (prefersReducedMotion) {
         stages.forEach((s) => setStageOpacity(s, 1));
         setStageOpacity(dimGroup, 1);
@@ -615,12 +630,11 @@ export function initHeroHouse(container) {
                 }
             }
             if (obj.isGridHelper) {
-                obj.material.opacity = (obj.userData.targetOpacity ?? 0.22) * p;
+                obj.material.opacity = (obj.userData.targetOpacity ?? 0.25) * p;
             }
         });
     }
 
-    // Project a 3D point in houseGroup local space to screen coords
     const projVec = new THREE.Vector3();
     function project(point, sizeW, sizeH) {
         projVec.copy(point).applyMatrix4(houseGroup.matrixWorld).project(camera);
@@ -636,7 +650,6 @@ export function initHeroHouse(container) {
         if (visible) {
             const t = clock.getElapsedTime();
 
-            // Stage reveals
             if (!prefersReducedMotion) {
                 stages.forEach((s, i) => {
                     const start = stageStarts[i];
@@ -644,13 +657,11 @@ export function initHeroHouse(container) {
                     setStageOpacity(s, p);
                 });
 
-                // Dimensions
                 const dp = Math.min(1, Math.max(0, (t - dimStart) / dimDur));
                 setStageOpacity(dimGroup, dp);
                 labelEls.forEach((el) => (el.style.opacity = dp > 0.4 ? '1' : '0'));
                 axisLabels.forEach((el) => (el.style.opacity = dp > 0.2 ? '1' : '0'));
 
-                // Extension labels fade in alongside their stage
                 extensionLabels.forEach((l, i) => {
                     const sStart = stageStarts[l.stageIndex];
                     const p = Math.min(1, Math.max(0, (t - sStart) / stageDur));
@@ -658,21 +669,18 @@ export function initHeroHouse(container) {
                 });
             }
 
-            // Rotation only kicks in after structure + extensions are fully drawn
             const spinStart = 4.6;
             const spinT = Math.max(0, t - spinStart);
             houseGroup.rotation.y = spinT * 0.12;
 
-            // Smooth mouse parallax (only when crosshair active)
             mouse.x += (mouse.tx - mouse.x) * 0.04;
             mouse.y += (mouse.ty - mouse.y) * 0.04;
-            camera.position.x = 9.5 + mouse.x * 0.7;
-            camera.position.y = 6 + mouse.y * 0.35;
+            camera.position.x = 10.5 + mouse.x * 0.7;
+            camera.position.y = 7.0 + mouse.y * 0.35;
             camera.lookAt(cameraTarget);
 
             renderer.render(scene, camera);
 
-            // Position HTML labels via projection (uses world matrices computed in render)
             const w = container.clientWidth;
             const h = container.clientHeight;
             labels.forEach((l, i) => {
@@ -686,34 +694,26 @@ export function initHeroHouse(container) {
                 extLabelEls[i].style.top  = p.y + 'px';
             });
 
-            // Gizmo (overlay in lower-left)
             const gizmoSize = Math.min(70, w * 0.16);
             renderer.setScissorTest(true);
             renderer.setScissor(16, 16, gizmoSize, gizmoSize);
             renderer.setViewport(16, 16, gizmoSize, gizmoSize);
-            // Rotate gizmo to match houseGroup rotation (visualizing world XYZ)
             gizmo.quaternion.copy(houseGroup.quaternion).invert();
-            // Camera looks straight; we instead position gizmo to face camera
             gizmo.rotation.x = -0.4;
             gizmo.rotation.y = -houseGroup.rotation.y + 0.4;
             renderer.render(gizmoScene, gizmoCam);
             renderer.setScissorTest(false);
             renderer.setViewport(0, 0, w, h);
 
-            // Axis label positions (gizmo origin is at canvas (16+gizmoSize/2, h-16-gizmoSize/2))
             const cx = 16 + gizmoSize / 2;
             const cy = h - 16 - gizmoSize / 2;
             const axisLen = gizmoSize * 0.42;
-            // X axis end (rotated by houseGroup.rotation.y around Y)
             const ry = -houseGroup.rotation.y + 0.4;
             const rx = -0.4;
-            // simple manual projection: rotate (1,0,0), (0,1,0), (0,0,1) by rx then ry, ignore z
             const proj = (vx, vy, vz) => {
-                // rotate around X (rx)
                 let y1 = vy * Math.cos(rx) - vz * Math.sin(rx);
                 let z1 = vy * Math.sin(rx) + vz * Math.cos(rx);
                 let x1 = vx;
-                // rotate around Y (ry)
                 let x2 = x1 * Math.cos(ry) + z1 * Math.sin(ry);
                 let z2 = -x1 * Math.sin(ry) + z1 * Math.cos(ry);
                 let y2 = y1;
@@ -729,7 +729,6 @@ export function initHeroHouse(container) {
             axisLabels[2].style.left = (cx + pz.x * axisLen) + 'px';
             axisLabels[2].style.top  = (cy - pz.y * axisLen) + 'px';
 
-            // Crosshair lines
             if (mouse.inside) {
                 chH.style.top = chY + 'px';
                 chV.style.left = chX + 'px';
@@ -737,24 +736,21 @@ export function initHeroHouse(container) {
                 chC.style.top  = chY + 'px';
                 chCoord.style.left = (chX + 14) + 'px';
                 chCoord.style.top  = (chY + 14) + 'px';
-                // Fake world coords for fun
                 const xCoord = ((chX / w - 0.5) * 12).toFixed(2);
                 const yCoord = ((0.5 - chY / h) * 8).toFixed(2);
                 chCoord.textContent = `X ${xCoord}  Y ${yCoord}`;
             }
-
         }
         requestAnimationFrame(tick);
     }
 
-    // Initialize stages invisible (except snap markers which need targetOpacity assignment)
     stages.forEach((s) => setStageOpacity(s, 0));
     setStageOpacity(dimGroup, 0);
 
     requestAnimationFrame(tick);
 }
 
-// ── Scene 2: Ambient field — drifting "+" markers + dashed construction lines
+// ── Scene 2: Ambient background field ─────────────────────────────────────────
 export function initAmbientField(container) {
     if (!container || prefersReducedMotion) return;
 
@@ -767,7 +763,6 @@ export function initAmbientField(container) {
     container.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = 'width:100%;height:100%;display:block;';
 
-    // Crosshair "+" markers as LineSegments
     const CROSS_COUNT = 60;
     const crossPositions = [];
     for (let i = 0; i < CROSS_COUNT; i++) {
@@ -776,8 +771,8 @@ export function initAmbientField(container) {
         const z = (Math.random() - 0.5) * 18;
         const s = 0.18;
         crossPositions.push(
-            x - s, y, z,  x + s, y, z,   // horizontal
-            x, y - s, z,  x, y + s, z,   // vertical
+            x - s, y, z,  x + s, y, z,
+            x, y - s, z,  x, y + s, z,
         );
     }
     const crossGeo = new THREE.BufferGeometry();
@@ -788,7 +783,6 @@ export function initAmbientField(container) {
     const crosses = new THREE.LineSegments(crossGeo, crossMat);
     scene.add(crosses);
 
-    // Drifting dashed construction lines (long polylines)
     const constructionLines = new THREE.Group();
     for (let i = 0; i < 7; i++) {
         const startX = (Math.random() - 0.5) * 24;
@@ -809,7 +803,6 @@ export function initAmbientField(container) {
     }
     scene.add(constructionLines);
 
-    // Drifting wireframe boxes (small architectural elements)
     const boxes = new THREE.Group();
     for (let i = 0; i < 6; i++) {
         const size = 0.5 + Math.random() * 0.8;
@@ -828,7 +821,6 @@ export function initAmbientField(container) {
     }
     scene.add(boxes);
 
-    // Camera parallax
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
     window.addEventListener('mousemove', (e) => {
         mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -855,7 +847,6 @@ export function initAmbientField(container) {
     function tick() {
         const t = clock.getElapsedTime();
         if (visible) {
-            // Slow drift up
             crosses.position.y = ((t * 0.15) % 4) - 2;
 
             constructionLines.children.forEach((l) => {
@@ -874,11 +865,11 @@ export function initAmbientField(container) {
             mouse.y += (mouse.ty - mouse.y) * 0.03;
             camera.position.x = mouse.x * 0.8;
             camera.position.y = -mouse.y * 0.5;
-            camera.lookAt(0, 0, 0);
 
             renderer.render(scene, camera);
         }
         requestAnimationFrame(tick);
     }
+
     requestAnimationFrame(tick);
 }
