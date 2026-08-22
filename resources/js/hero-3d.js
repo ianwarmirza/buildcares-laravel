@@ -377,7 +377,7 @@ function buildHouseStages() {
         stageIndex: 8,
     });
 
-    return { stages, extensionLabels };
+    return { stages };
 }
 
 // ── Build dimensions ─────────────────────────────────────────────────────────
@@ -467,7 +467,7 @@ export function initHeroHouse(container) {
     const houseGroup = new THREE.Group();
     scene.add(houseGroup);
 
-    const { stages, extensionLabels } = buildHouseStages();
+    const { stages } = buildHouseStages();
     stages.forEach((s) => houseGroup.add(s));
 
     const { group: dimGroup, labels } = buildDimensions();
@@ -497,32 +497,7 @@ export function initHeroHouse(container) {
         return el;
     });
 
-    // Extension-type feature badges
-    const extLabelEls = extensionLabels.map(({ text, subtext, color }) => {
-        const el = document.createElement('div');
-        const rgb = hexToRgb(color);
-        el.innerHTML = `
-            <div style="font-weight:800; font-size:9px; letter-spacing:0.08em; text-transform:uppercase;">${text}</div>
-            <div style="font-weight:500; font-size:8px; opacity:0.9; margin-top:1px;">${subtext}</div>
-        `;
-        el.style.cssText = `
-            position:absolute; transform:translate(-50%,-50%);
-            padding:4px 10px; color:#ffffff; background:${color};
-            border:1px solid rgba(255,255,255,0.3); border-radius:6px; white-space:nowrap;
-            opacity:0; transition:opacity 0.4s ease; box-shadow:0 4px 14px rgba(${rgb},0.4);
-            pointer-events:none;
-        `;
-        labelLayer.appendChild(el);
-        return el;
-    });
-
-    function hexToRgb(hex) {
-        const h = hex.replace('#', '');
-        const n = parseInt(h, 16);
-        return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
-    }
-
-    // Axis gizmo
+    // Axis gizmo (lower-left corner of the canvas — separate ortho scene)
     const gizmoScene = new THREE.Scene();
     const gizmoCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
     gizmoCam.position.set(0, 0, 3);
@@ -611,7 +586,6 @@ export function initHeroHouse(container) {
         setStageOpacity(dimGroup, 1);
         labelEls.forEach((el) => (el.style.opacity = '1'));
         axisLabels.forEach((el) => (el.style.opacity = '1'));
-        extLabelEls.forEach((el) => (el.style.opacity = '1'));
     }
 
     function setStageOpacity(stage, p) {
@@ -661,12 +635,6 @@ export function initHeroHouse(container) {
                 setStageOpacity(dimGroup, dp);
                 labelEls.forEach((el) => (el.style.opacity = dp > 0.4 ? '1' : '0'));
                 axisLabels.forEach((el) => (el.style.opacity = dp > 0.2 ? '1' : '0'));
-
-                extensionLabels.forEach((l, i) => {
-                    const sStart = stageStarts[l.stageIndex];
-                    const p = Math.min(1, Math.max(0, (t - sStart) / stageDur));
-                    extLabelEls[i].style.opacity = p > 0.3 ? '1' : '0';
-                });
             }
 
             const spinStart = 4.6;
@@ -687,11 +655,6 @@ export function initHeroHouse(container) {
                 const p = project(l.anchor, w, h);
                 labelEls[i].style.left = p.x + 'px';
                 labelEls[i].style.top  = p.y + 'px';
-            });
-            extensionLabels.forEach((l, i) => {
-                const p = project(l.anchor, w, h);
-                extLabelEls[i].style.left = p.x + 'px';
-                extLabelEls[i].style.top  = p.y + 'px';
             });
 
             const gizmoSize = Math.min(70, w * 0.16);
