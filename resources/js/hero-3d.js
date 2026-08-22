@@ -168,26 +168,28 @@ function buildHouseStages() {
     walls.userData.targetOpacity = 0.95;
     stages.push(walls);
 
-    // Stage 2: Main Roof (Pitched slate roof + overhangs)
+    // Stage 2: Main Roof (Gable ends on sides, roof slopes facing front and back)
     const roof = new THREE.Group();
     const roofShape = new THREE.Shape();
-    roofShape.moveTo(-2.2, 0);
-    roofShape.lineTo(2.2, 0);
-    roofShape.lineTo(0, 1.45);
+    roofShape.moveTo(-1.625, 0);  // Rear eave
+    roofShape.lineTo(1.625, 0);   // Front eave
+    roofShape.lineTo(0, 1.45);    // Central ridge peak
     roofShape.closePath();
 
-    const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 3.25, bevelEnabled: false });
-    roofGeo.translate(0, 2.2, -1.625);
+    const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 4.35, bevelEnabled: false });
+    roofGeo.rotateY(Math.PI / 2);
+    roofGeo.translate(-2.175, 2.2, 0);
+
     const roofMesh = filledMesh(roofGeo, ROOF_C, 0.85);
     roof.add(roofMesh);
 
     const roofEdges = solidEdges(roofGeo, PRIMARY, 0);
     roof.add(roofEdges);
 
-    // Main roof ridge line
+    // Main roof ridge line (running left-to-right along X-axis)
     roof.add(lineFromPoints([
-        new THREE.Vector3(0, 3.65, -1.625),
-        new THREE.Vector3(0, 3.65,  1.625),
+        new THREE.Vector3(-2.175, 3.65, 0),
+        new THREE.Vector3( 2.175, 3.65, 0),
     ], PRIMARY, 0));
 
     roof.userData.targetOpacity = 0.95;
@@ -243,35 +245,35 @@ function buildHouseStages() {
         new THREE.Vector3(-2, 0, -1.5), new THREE.Vector3( 2, 0, -1.5),
         new THREE.Vector3(-2, 2.2,  1.5), new THREE.Vector3( 2, 2.2,  1.5),
         new THREE.Vector3(-2, 2.2, -1.5), new THREE.Vector3( 2, 2.2, -1.5),
-        new THREE.Vector3(0, 3.65,  1.625), new THREE.Vector3(0, 3.65, -1.625),
+        new THREE.Vector3(-2.175, 3.65, 0), new THREE.Vector3(2.175, 3.65, 0),
     ];
     corners.forEach((c) => snaps.add(snapMarker(c, ACCENT, 0.14)));
     snaps.userData.targetOpacity = 0.9;
     stages.push(snaps);
 
-    // Stage 6: 🟢 Loft Conversion (Dormer + Velux Rooflights)
+    // Stage 6: 🟢 Loft Conversion (Rear Box Dormer on rear roof slope + Velux on front slope)
     const loft = new THREE.Group();
 
-    // Box Dormer on rear roof slope
-    const dormerGeo = new THREE.BoxGeometry(1.4, 0.85, 1.1);
+    // Box Dormer sitting on the rear slope (facing -Z)
+    const dormerGeo = new THREE.BoxGeometry(1.6, 0.85, 1.1);
     const dormerMesh = filledMesh(dormerGeo, ROOF_C, 0.9);
-    dormerMesh.position.set(0.5, 3.0, -0.6);
+    dormerMesh.position.set(0.2, 2.95, -0.85);
     loft.add(dormerMesh);
 
     const dormerEdges = solidEdges(dormerGeo, LOFT_C, 0);
-    dormerEdges.position.set(0.5, 3.0, -0.6);
+    dormerEdges.position.set(0.2, 2.95, -0.85);
     loft.add(dormerEdges);
 
-    // Dormer double glass window
-    const dormerWin = filledMesh(new THREE.BoxGeometry(1.1, 0.55, 0.05), GLASS_C, 0.85);
-    dormerWin.position.set(0.5, 3.0, -1.16);
+    // Dormer rear window (facing -Z)
+    const dormerWin = filledMesh(new THREE.BoxGeometry(1.2, 0.55, 0.05), GLASS_C, 0.85);
+    dormerWin.position.set(0.2, 2.95, -1.41);
     loft.add(dormerWin);
-    loft.add(solidEdges(new THREE.BoxGeometry(1.1, 0.55, 0.05), LOFT_C, 0).position.set(0.5, 3.0, -1.16));
+    loft.add(solidEdges(new THREE.BoxGeometry(1.2, 0.55, 0.05), LOFT_C, 0).position.set(0.2, 2.95, -1.41));
 
-    // Front Roof Velux Window
+    // Front Roof Velux Window (on front slope facing +Z)
     const veluxGeo = new THREE.PlaneGeometry(0.6, 0.8);
     const veluxMesh = filledMesh(veluxGeo, GLASS_C, 0.85);
-    veluxMesh.rotation.x = -Math.PI / 4;
+    veluxMesh.rotation.x = Math.PI / 4;
     veluxMesh.position.set(-1.0, 2.85, 0.8);
     loft.add(veluxMesh);
     loft.add(solidEdges(new THREE.BoxGeometry(0.62, 0.82, 0.02), LOFT_C, 0).position.set(-1.0, 2.85, 0.8));
@@ -280,9 +282,9 @@ function buildHouseStages() {
     stages.push(loft);
     extensionLabels.push({
         text: 'LOFT CONVERSION',
-        subtext: 'Dormer & Velux Rooflights',
+        subtext: 'Rear Box Dormer & Rooflights',
         color: '#10b981',
-        anchor: new THREE.Vector3(0.5, 3.65, -0.6),
+        anchor: new THREE.Vector3(0.2, 3.45, -0.85),
         stageIndex: 6,
     });
 
@@ -298,15 +300,16 @@ function buildHouseStages() {
     sideWallEdges.position.set(3.15, 1.1, 0);
     sideExt.add(sideWallEdges);
 
-    // Pitched roof extending main roofline over side extension
+    // Pitched roof extending main roofline over side extension (slopes front/back, gable right)
     const sideRoofShape = new THREE.Shape();
-    sideRoofShape.moveTo(2.0, 0);
-    sideRoofShape.lineTo(4.3, 0);
-    sideRoofShape.lineTo(3.15, 1.25);
+    sideRoofShape.moveTo(-1.625, 0);
+    sideRoofShape.lineTo(1.625, 0);
+    sideRoofShape.lineTo(0, 1.45);
     sideRoofShape.closePath();
 
-    const sideRoofGeo = new THREE.ExtrudeGeometry(sideRoofShape, { depth: 3.15, bevelEnabled: false });
-    sideRoofGeo.translate(0, 2.2, -1.575);
+    const sideRoofGeo = new THREE.ExtrudeGeometry(sideRoofShape, { depth: 2.35, bevelEnabled: false });
+    sideRoofGeo.rotateY(Math.PI / 2);
+    sideRoofGeo.translate(1.95, 2.2, 0);
     const sideRoofMesh = filledMesh(sideRoofGeo, ROOF_C, 0.85);
     sideExt.add(sideRoofMesh);
     const sideRoofEdges = solidEdges(sideRoofGeo, SIDE_C, 0);
