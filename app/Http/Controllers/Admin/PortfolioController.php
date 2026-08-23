@@ -163,6 +163,29 @@ class PortfolioController extends Controller
         return redirect()->route('admin.portfolio.index')->with('success', 'Portfolio item deleted.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->route('admin.portfolio.index')->with('error', 'No portfolio items selected.');
+        }
+
+        $items = PortfolioItem::whereIn('id', $ids)->get();
+        $count = 0;
+        foreach ($items as $item) {
+            if ($item->cover_image) {
+                Storage::disk('public')->delete($item->cover_image);
+            }
+            foreach (($item->gallery_images ?? []) as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            $item->delete();
+            $count++;
+        }
+
+        return redirect()->route('admin.portfolio.index')->with('success', "{$count} portfolio items deleted.");
+    }
+
     private function makeUniqueSlug(string $title): string
     {
         $base = Str::slug($title);

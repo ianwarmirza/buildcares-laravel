@@ -37,6 +37,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::post('portfolio/quick-upload', [AdminPortfolioController::class, 'quickUpload'])->name('portfolio.quickUpload');
+        Route::match(['post', 'delete', 'patch'], 'portfolio/bulk-delete', [AdminPortfolioController::class, 'bulkDestroy'])->name('portfolio.bulkDestroy');
         Route::resource('portfolio', AdminPortfolioController::class)->except(['show']);
         Route::resource('services', AdminServiceController::class)->except(['show']);
 

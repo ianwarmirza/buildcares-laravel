@@ -5,9 +5,24 @@
 
 @section('content')
 
-<div class="flex items-center justify-between mb-6">
+{{-- Hidden Bulk Delete Form --}}
+<form id="bulk-delete-form" action="{{ route('admin.portfolio.bulkDestroy') }}" method="POST" class="hidden">
+    @csrf
+    <div id="bulk-delete-inputs"></div>
+</form>
+
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
     <p class="text-slate-400 text-sm">{{ $items->total() }} items total</p>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
+        {{-- Delete Selected Button --}}
+        @if($items->total() > 0)
+        <button type="button" id="delete-selected-btn" disabled onclick="submitBulkDelete()"
+                class="px-3.5 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 text-white bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Delete Marked (<span id="selected-count">0</span>)
+        </button>
+        @endif
+
         <button type="button" onclick="openQuickUploadModal()" class="px-3.5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition-all flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             ⚡ Quick Upload (Photo/PDF)
@@ -22,7 +37,10 @@
 <div class="card-dark rounded-xl overflow-hidden">
     <table class="w-full text-sm">
         <thead>
-            <tr class="border-b border-slate-200">
+            <tr class="border-b border-slate-200 bg-slate-50/50">
+                <th class="py-3 px-4 w-10 text-center">
+                    <input type="checkbox" id="select-all" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" title="Select All">
+                </th>
                 <th class="text-left py-3 px-4 text-xs uppercase tracking-widest text-slate-500 font-medium">Item</th>
                 <th class="text-left py-3 px-4 text-xs uppercase tracking-widest text-slate-500 font-medium hidden md:table-cell">Category</th>
                 <th class="text-left py-3 px-4 text-xs uppercase tracking-widest text-slate-500 font-medium hidden lg:table-cell">Location</th>
@@ -34,6 +52,9 @@
         <tbody class="divide-y divide-slate-200">
             @forelse($items as $item)
             <tr class="hover:bg-light-warm transition-colors">
+                <td class="py-3 px-4 text-center">
+                    <input type="checkbox" value="{{ $item->id }}" class="item-checkbox w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                </td>
                 <td class="py-3 px-4">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-9 rounded overflow-hidden bg-slate-100 flex-shrink-0 relative border border-slate-200 flex items-center justify-center">
@@ -83,8 +104,7 @@
                            class="p-1.5 text-slate-500 hover:text-blue-400 transition-colors" title="Edit">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </a>
-                        <form action="{{ route('admin.portfolio.destroy', $item) }}" method="POST" class="inline"
-                              onsubmit="return confirm('Delete this portfolio item?')">
+                        <form action="{{ route('admin.portfolio.destroy', $item) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="p-1.5 text-slate-500 hover:text-red-400 transition-colors" title="Delete">
@@ -96,7 +116,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="py-16 text-center text-slate-500">
+                <td colspan="7" class="py-16 text-center text-slate-500">
                     No portfolio items yet. <a href="{{ route('admin.portfolio.create') }}" class="text-gold hover:underline">Add the first one</a>.
                 </td>
             </tr>
@@ -112,5 +132,54 @@
 @endif
 
 @include('admin.portfolio._quick_upload_modal')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAll = document.getElementById('select-all');
+    const checkboxes = document.querySelectorAll('.item-checkbox');
+    const deleteBtn = document.getElementById('delete-selected-btn');
+    const countLabel = document.getElementById('selected-count');
+
+    function updateCount() {
+        const checked = document.querySelectorAll('.item-checkbox:checked');
+        const count = checked.length;
+        if (countLabel) countLabel.textContent = count;
+        if (deleteBtn) deleteBtn.disabled = (count === 0);
+        if (selectAll) selectAll.checked = (checkboxes.length > 0 && count === checkboxes.length);
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateCount();
+        });
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateCount);
+    });
+
+    updateCount();
+});
+
+function submitBulkDelete() {
+    const checked = document.querySelectorAll('.item-checkbox:checked');
+    if (checked.length === 0) return;
+
+    const form = document.getElementById('bulk-delete-form');
+    const inputsContainer = document.getElementById('bulk-delete-inputs');
+    inputsContainer.innerHTML = '';
+
+    checked.forEach(cb => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'ids[]';
+        input.value = cb.value;
+        inputsContainer.appendChild(input);
+    });
+
+    form.submit();
+}
+</script>
 
 @endsection
