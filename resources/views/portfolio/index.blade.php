@@ -96,12 +96,14 @@
             <h3 class="font-bold text-xl mb-2 uppercase" style="color:#0f172a;">No projects yet</h3>
             <p class="text-sm mb-6" style="color:#64748b;">
                 @if($category && $category !== 'all')
-                    No projects in this category. <a href="{{ route('portfolio.index') }}" class="font-bold hover:underline" style="color:#2563eb;">View all</a>
+                    No projects in this category. <a href="{{ route('portfolio.index') }}" class="font-bold hover:underline" style="color:#2563eb;">View all projects</a>
                 @else
-                    Portfolio items will appear here once added via the admin panel.
+                    Our latest portfolio projects and CAD drawings will appear here soon.
                 @endif
             </p>
+            @auth
             <a href="{{ route('admin.portfolio.create') }}" class="btn-gold text-sm">Add Portfolio Item</a>
+            @endauth
         </div>
         @endif
     </div>
