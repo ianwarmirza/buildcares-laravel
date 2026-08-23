@@ -251,7 +251,7 @@ function buildHouseStages() {
     snaps.userData.targetOpacity = 0.9;
     stages.push(snaps);
 
-    // Stage 6: 🟢 Loft Conversion (Rear Box Dormer on rear roof slope + Velux on front slope)
+    // Stage 6: 🟢 Loft Conversion (Rear Box Dormer + Two Front Rooflights)
     const loft = new THREE.Group();
 
     // Box Dormer sitting on the rear slope (facing -Z)
@@ -270,61 +270,51 @@ function buildHouseStages() {
     loft.add(dormerWin);
     loft.add(solidEdges(new THREE.BoxGeometry(1.2, 0.55, 0.05), LOFT_C, 0).position.set(0.2, 2.95, -1.41));
 
-    // Front Roof Velux Window (on front slope facing +Z)
-    const veluxGeo = new THREE.PlaneGeometry(0.6, 0.8);
-    const veluxMesh = filledMesh(veluxGeo, GLASS_C, 0.85);
-    veluxMesh.rotation.x = Math.PI / 4;
-    veluxMesh.position.set(-1.0, 2.85, 0.8);
-    loft.add(veluxMesh);
-    loft.add(solidEdges(new THREE.BoxGeometry(0.62, 0.82, 0.02), LOFT_C, 0).position.set(-1.0, 2.85, 0.8));
+    // Two Front Rooflights (Velux Windows on front pitch slope facing +Z)
+    [-1.0, 0.8].forEach((xPos) => {
+        const veluxGeo = new THREE.PlaneGeometry(0.55, 0.75);
+        const veluxMesh = filledMesh(veluxGeo, GLASS_C, 0.85);
+        veluxMesh.rotation.x = Math.PI / 4;
+        veluxMesh.position.set(xPos, 2.85, 0.82);
+        loft.add(veluxMesh);
+        loft.add(solidEdges(new THREE.BoxGeometry(0.57, 0.77, 0.02), LOFT_C, 0).position.set(xPos, 2.85, 0.82));
+    });
 
     loft.userData.targetOpacity = 0.95;
     stages.push(loft);
-    extensionLabels.push({
-        text: 'LOFT CONVERSION',
-        subtext: 'Rear Box Dormer & Rooflights',
-        color: '#10b981',
-        anchor: new THREE.Vector3(0.2, 3.45, -0.85),
-        stageIndex: 6,
-    });
 
-    // Stage 7: 🟣 Double-Storey Side Extension
+    // Stage 7: 🟣 Single-Storey Side Extension (Left side of main house with Pitched Roof)
     const sideExt = new THREE.Group();
 
-    // Side Extension 2-storey walls
-    const sideWallGeo = new THREE.BoxGeometry(2.3, 2.2, 3);
+    // Single-storey side extension walls on left side (x = -2.0 to -3.9)
+    const sideWallGeo = new THREE.BoxGeometry(1.9, 1.3, 2.8);
     const sideWallMesh = filledMesh(sideWallGeo, BRICK_C, 0.8);
-    sideWallMesh.position.set(3.15, 1.1, 0);
+    sideWallMesh.position.set(-2.95, 0.65, 0);
     sideExt.add(sideWallMesh);
     const sideWallEdges = solidEdges(sideWallGeo, SIDE_C, 0);
-    sideWallEdges.position.set(3.15, 1.1, 0);
+    sideWallEdges.position.set(-2.95, 0.65, 0);
     sideExt.add(sideWallEdges);
 
-    // Pitched roof extending main roofline over side extension (slopes front/back, gable right)
+    // Pitched roof over single-storey left side extension
     const sideRoofShape = new THREE.Shape();
-    sideRoofShape.moveTo(-1.625, 0);
-    sideRoofShape.lineTo(1.625, 0);
-    sideRoofShape.lineTo(0, 1.45);
+    sideRoofShape.moveTo(-1.5, 0);
+    sideRoofShape.lineTo(1.5, 0);
+    sideRoofShape.lineTo(0, 0.8);
     sideRoofShape.closePath();
 
-    const sideRoofGeo = new THREE.ExtrudeGeometry(sideRoofShape, { depth: 2.35, bevelEnabled: false });
+    const sideRoofGeo = new THREE.ExtrudeGeometry(sideRoofShape, { depth: 2.05, bevelEnabled: false });
     sideRoofGeo.rotateY(Math.PI / 2);
-    sideRoofGeo.translate(1.95, 2.2, 0);
+    sideRoofGeo.translate(-4.05, 1.3, 0);
     const sideRoofMesh = filledMesh(sideRoofGeo, ROOF_C, 0.85);
     sideExt.add(sideRoofMesh);
     const sideRoofEdges = solidEdges(sideRoofGeo, SIDE_C, 0);
     sideExt.add(sideRoofEdges);
 
-    // Windows on Front (+Z) and Side (+X)
-    const sideWin1 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
-    sideWin1.position.set(3.15, 0.65, 1.51);
+    // Front Window on Single-Storey Side Extension
+    const sideWin1 = filledMesh(new THREE.BoxGeometry(0.7, 0.65, 0.05), GLASS_C, 0.75);
+    sideWin1.position.set(-2.95, 0.65, 1.41);
     sideExt.add(sideWin1);
-    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 0.65, 1.51));
-
-    const sideWin2 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
-    sideWin2.position.set(3.15, 1.65, 1.51);
-    sideExt.add(sideWin2);
-    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 1.65, 1.51));
+    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.65, 0.05), SIDE_C, 0).position.set(-2.95, 0.65, 1.41));
 
     sideExt.userData.targetOpacity = 0.95;
     stages.push(sideExt);
