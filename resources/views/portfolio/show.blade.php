@@ -107,8 +107,27 @@
                     </a>
                 </div>
             </div>
-            <div class="w-full h-[680px] bg-slate-900">
+            <div class="w-full h-[680px] bg-slate-900 relative">
                 <iframe src="{{ $item->cover_url }}" class="w-full h-full border-0" title="{{ $item->title }}"></iframe>
+
+                {{-- Floating prev/next chevrons over the PDF --}}
+                @if($prev)
+                <a href="{{ route('portfolio.show', $prev->slug) }}"
+                   class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 opacity-80 hover:opacity-100 hover:scale-105 shadow-xl z-20"
+                   style="background:rgba(15,23,42,0.85); color:#ffffff; border:1px solid rgba(255,255,255,0.2);"
+                   title="Previous: {{ $prev->title }}" aria-label="Previous project">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                </a>
+                @endif
+
+                @if($next)
+                <a href="{{ route('portfolio.show', $next->slug) }}"
+                   class="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 opacity-80 hover:opacity-100 hover:scale-105 shadow-xl z-20"
+                   style="background:rgba(15,23,42,0.85); color:#ffffff; border:1px solid rgba(255,255,255,0.2);"
+                   title="Next: {{ $next->title }}" aria-label="Next project">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                </a>
+                @endif
             </div>
         </div>
         @else
@@ -312,9 +331,18 @@
                    data-current="{{ $isCurrent ? '1' : '0' }}"
                    class="sibling-card group flex-shrink-0 w-64 sm:w-72 block transition-all duration-200"
                    style="scroll-snap-align:start; {{ $isCurrent ? 'outline:2px solid #2563eb; outline-offset:3px;' : '' }}">
-                    <div class="aspect-[4/3] overflow-hidden border" style="border-color:#e2e8f0; background:#ffffff;">
-                        <img src="{{ Storage::url($sib->cover_image) }}" alt="{{ $sib->title }}" loading="lazy"
-                             class="w-full h-full object-cover transition-transform duration-500 {{ $isCurrent ? '' : 'group-hover:scale-105' }}">
+                    <div class="aspect-[4/3] overflow-hidden border relative flex items-center justify-center" style="border-color:#e2e8f0; background:#ffffff;">
+                        @if($sib->is_pdf)
+                        <canvas class="pdf-thumbnail-canvas w-full h-full object-contain" data-pdf-url="{{ $sib->cover_url }}"></canvas>
+                        <div class="pdf-fallback-icon absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-3 text-center">
+                            <svg class="w-6 h-6 text-red-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                            <span class="text-[9px] font-bold text-red-400">PDF</span>
+                        </div>
+                        @else
+                        <img src="{{ $sib->cover_url }}" alt="{{ $sib->title }}" loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-500 {{ $isCurrent ? '' : 'group-hover:scale-105' }}"
+                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-slate-900 flex flex-col items-center justify-center text-center p-4\'><svg class=\'w-6 h-6 text-slate-400 mb-1\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\'/></svg><span class=\'text-[9px] font-bold text-slate-400 uppercase\'>CAD Drawing</span></div>';">
+                        @endif
                     </div>
                     <div class="pt-3">
                         <div class="flex items-center gap-2 mb-1">
@@ -556,6 +584,40 @@
         if (e.key === 'ArrowRight' && next) { e.preventDefault(); window.location.href = next.href; }
     });
 })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const pdfCanvases = document.querySelectorAll('.pdf-thumbnail-canvas');
+        pdfCanvases.forEach(canvas => {
+            const url = canvas.dataset.pdfUrl;
+            if (!url) return;
+
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                return pdf.getPage(1);
+            }).then(page => {
+                const viewport = page.getViewport({ scale: 1.2 });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const ctx = canvas.getContext('2d');
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                return page.render(renderContext).promise;
+            }).then(() => {
+                const fallback = canvas.parentElement.querySelector('.pdf-fallback-icon');
+                if (fallback) fallback.classList.add('hidden');
+            }).catch(err => {
+                console.error('PDF thumbnail render error:', err);
+            });
+        });
+    }
+});
 </script>
 @endpush
 
