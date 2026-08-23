@@ -5,7 +5,7 @@
 
 @section('content')
 
-{{-- Page Header --}}
+{{-- Hero Section --}}
 <section class="relative pt-40 pb-20 overflow-hidden" style="background-color:#0f172a;">
     <div class="absolute inset-0 opacity-[0.06] pointer-events-none">
         <svg class="w-full h-full" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
@@ -21,104 +21,258 @@
     <div class="absolute bottom-0 left-0 right-0 h-px" style="background:linear-gradient(to right, rgba(37,99,235,0.5), rgba(37,99,235,0.1), transparent);"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6">
-        <div class="section-label">What We Do</div>
-        <h1 class="section-title-light">Our Services</h1>
-        <p style="color:#64748b;" class="max-w-xl">Professional architectural drawings and CAD services for UK residential construction — from first sketch to planning approval.</p>
+        <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-400 bg-blue-950/80 border border-blue-800/60 rounded-full mb-4">
+            <span>📐</span> Precision CAD & Architectural Drawing Packages
+        </div>
+        <h1 class="section-title-light text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Our Services</h1>
+        <p style="color:#94a3b8;" class="max-w-2xl text-base sm:text-lg mt-3 leading-relaxed">
+            Professional architectural drawing packages tailored for UK planning applications and building control compliance. Fast turnaround, fixed pricing, and 100% approval focus.
+        </p>
     </div>
 </section>
 
-{{-- Services --}}
-<section class="section-padding bg-white">
+{{-- Sticky Service Navigation Pills --}}
+<section class="bg-white sticky top-[72px] z-40 border-b shadow-sm" style="border-color:#e2e8f0;">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2 flex-shrink-0">Jump To:</span>
+        @php
+        $navServices = [
+            'garage-conversion' => 'Garage Conversion',
+            'loft-conversion'   => 'Loft Conversion',
+            'extension'         => 'Extensions',
+            'new-build'          => 'New Build',
+            'outbuilding'       => 'Outbuilding',
+            'internal-changes'  => 'Internal Changes',
+        ];
+        @endphp
+        @foreach($navServices as $slug => $label)
+        <a href="#{{ $slug }}" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 transition-colors flex-shrink-0">
+            {{ $label }}
+        </a>
+        @endforeach
+    </div>
+</section>
+
+{{-- Main Services Showcase --}}
+<section class="py-20" style="background-color:#f8fafc;">
     <div class="max-w-7xl mx-auto px-6">
         @php
         $serviceData = [
-            ['slug'=>'garage-conversion','title'=>'Garage Conversion','img'=>'portfolio/cat-garage-conversion.jpg','icon'=>'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6','desc'=>'Convert your garage into a functional, comfortable living space. We produce full planning and building control drawing packages for single and double garage conversions, including structural details, drainage, insulation specifications and ventilation layouts.','features'=>['Full planning application drawings','Building control technical drawings','Structural beam calculations support','Drainage and ventilation layouts','Party wall drawings where applicable']],
-            ['slug'=>'loft-conversion','title'=>'Loft Conversion','img'=>'portfolio/cat-loft-conversion.jpg','icon'=>'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4','desc'=>'Dormer, hip-to-gable, mansard or Velux — we draw every loft conversion type to the standard needed for planning submission and building regulations approval.','features'=>['Dormer, hip-to-gable, mansard & Velux','Planning application full drawing set','Structural section drawings','Stair positions and headroom checks','Fire escape window specification']],
-            ['slug'=>'extension','title'=>'Extensions','img'=>'portfolio/cat-extension.jpg','icon'=>'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z','desc'=>'Single storey, double storey, rear, side or wrap-around — we deliver precisely drawn extensions to satisfy planners and building control officers.','features'=>['Existing and proposed floor plans','All elevations and cross-sections','Site plan and block plan','Planning statement drawings','Building control technical package']],
-            ['slug'=>'new-build','title'=>'New Build','img'=>'portfolio/cat-new-build.jpg','icon'=>'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z','desc'=>'Full architectural drawing services for new residential builds. From outline planning through to reserved matters and building control.','features'=>['Outline and detailed planning drawings','All floor plans, elevations and sections','Site layout and landscaping drawings','Building regulations full package','Coordination with structural engineers']],
-            ['slug'=>'outbuilding','title'=>'Outbuilding','img'=>'portfolio/cat-outbuilding.jpg','icon'=>'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z','desc'=>'Garden rooms, home offices, workshops, annexes and holiday lets. We draw permitted development and planning application packages for all outbuilding types.','features'=>['Garden room and home office drawings','Annexe and holiday let packages','Permitted development compliance','Drainage and services coordination','Material schedules and specifications']],
-            ['slug'=>'internal-changes','title'=>'Internal Changes','img'=>'portfolio/cat-internal-changes.jpg','icon'=>'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7','desc'=>'Internal reconfigurations, wall removals, new staircases and layout changes all require building control drawings.','features'=>['Existing and proposed layout drawings','Load-bearing wall assessment drawings','Structural beam specification support','Building control compliance package','As-built drawings on completion']],
+            [
+                'slug' => 'garage-conversion',
+                'number' => '01',
+                'title' => 'Garage Conversion Drawings',
+                'badge' => 'GARAGE CONVERSION',
+                'img' => 'portfolio/cat-garage-conversion.jpg',
+                'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+                'desc' => 'Transform your underutilized garage into a high-value living space, home office, or extra bedroom. We produce comprehensive planning and building regulations drawing packages with full insulation, ventilation, and structural specifications.',
+                'features' => [
+                    'Existing & Proposed Floor Plans',
+                    'Detailed Front & Rear Elevations',
+                    'Building Control Technical Specs',
+                    'Structural Steel Beam Details',
+                    'Insulation & Damp Proofing Specs',
+                    'Drainage & Ventilation Layouts'
+                ]
+            ],
+            [
+                'slug' => 'loft-conversion',
+                'number' => '02',
+                'title' => 'Loft Conversion Packages',
+                'badge' => 'LOFT CONVERSION',
+                'img' => 'portfolio/cat-loft-conversion.jpg',
+                'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+                'desc' => 'Maximize roof space with precision CAD drawings for rear box dormers, hip-to-gable extensions, mansard lofts, or Velux skylights. Designed to strict UK headroom and fire safety standards.',
+                'features' => [
+                    'Dormer & Hip-to-Gable Plans',
+                    'Cross-Section & Headroom Height Checks',
+                    'Staircase Placement & Layout',
+                    'Fire Safety & Escape Specs',
+                    'Thermal Performance Calculations',
+                    'Planning Application Full Set'
+                ]
+            ],
+            [
+                'slug' => 'extension',
+                'number' => '03',
+                'title' => 'Home Extensions (Single & Double Storey)',
+                'badge' => 'EXTENSIONS',
+                'img' => 'portfolio/cat-extension.jpg',
+                'icon' => 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
+                'desc' => 'Single-storey rear extensions, double-storey side extensions, or wrap-around open plan living. We draft complete drawing sets that satisfy council planning requirements and local building inspectors.',
+                'features' => [
+                    'Existing & Proposed Elevations',
+                    'Open-Plan Kitchen Layouts',
+                    'Bi-Fold & Skylight Details',
+                    'Location & Ordnance Block Plans',
+                    'Full Building Control Package',
+                    'Drainage & Foundation Details'
+                ]
+            ],
+            [
+                'slug' => 'new-build',
+                'number' => '04',
+                'title' => 'New Build Residential Drawings',
+                'badge' => 'NEW BUILD',
+                'img' => 'portfolio/cat-new-build.jpg',
+                'icon' => 'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z',
+                'desc' => 'Complete architectural drawing suites for new residential developments, bespoke houses, or infill plots. From outline planning proposals to detailed construction working drawings.',
+                'features' => [
+                    'Full Planning Application Package',
+                    'Site Masterplan & Access Design',
+                    'Detailed Floor Plans & Elevations',
+                    'Building Control Specification',
+                    'Structural Engineer Coordination',
+                    'SAP Thermal Compliance Support'
+                ]
+            ],
+            [
+                'slug' => 'outbuilding',
+                'number' => '05',
+                'title' => 'Garden Outbuildings & Annexe',
+                'badge' => 'OUTBUILDINGS',
+                'img' => 'portfolio/cat-outbuilding.jpg',
+                'icon' => 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z',
+                'desc' => 'Garden offices, workshops, granny annexes, and timber outbuildings. We verify permitted development rights or draft full planning permission packages.',
+                'features' => [
+                    'Garden Office & Studio Plans',
+                    'Granny Annexe Drawing Sets',
+                    'Permitted Development Checks',
+                    'Foundations & Timber Frame Details',
+                    'Utility Connections Coordination',
+                    'Material Schedule & Elevation Specs'
+                ]
+            ],
+            [
+                'slug' => 'internal-changes',
+                'number' => '06',
+                'title' => 'Internal Alterations & Wall Removals',
+                'badge' => 'INTERNAL CHANGES',
+                'img' => 'portfolio/cat-internal-changes.jpg',
+                'icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+                'desc' => 'Load-bearing wall removals, open-plan kitchen integration, and room reconfigurations. We prepare existing vs. proposed plans for building control sign-off.',
+                'features' => [
+                    'Before & After Layout Drawings',
+                    'Load-Bearing Wall Assessment',
+                    'RSJ Steel Beam Placement',
+                    'Fire Safety Door Specifications',
+                    'Building Control Submission Set',
+                    'Electric & Plumbing Layout Schemes'
+                ]
+            ],
         ];
         @endphp
 
-        <div class="space-y-20">
+        <div class="space-y-16">
             @foreach($serviceData as $i => $svc)
-            <div class="grid lg:grid-cols-2 gap-12 items-center reveal">
-                <div class="{{ $i % 2 === 1 ? 'lg:order-2' : '' }}">
-                    <div class="card-light p-10 flex flex-col items-center justify-center min-h-64 relative overflow-hidden group" style="border-top:2px solid #2563eb;">
-                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style="background:linear-gradient(135deg, #eff6ff 0%, transparent 100%);"></div>
-                        @if(!empty($svc['img']))
-                        <div class="w-full h-48 mb-4 overflow-hidden bg-[#f8fafc]">
-                            <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105">
+            <div id="{{ $svc['slug'] }}" class="scroll-mt-32 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                <div class="grid lg:grid-cols-12 items-center">
+                    {{-- Visual Column --}}
+                    <div class="lg:col-span-5 relative bg-slate-900 overflow-hidden min-h-[300px] lg:min-h-[440px] flex items-center justify-center p-6 {{ $i % 2 === 1 ? 'lg:order-2' : '' }}">
+                        <div class="absolute inset-0 opacity-20 pointer-events-none">
+                            <svg class="w-full h-full" viewBox="0 0 400 400"><path d="M0 0h400v400H0z" fill="none"/><path d="M0 40h400M0 80h400M0 120h400M0 160h400M0 200h400M0 240h400M0 280h400M0 320h400M0 360h400M40 0v400M80 0v400M120 0v400M160 0v400M200 0v400M240 0v400M280 0v400M320 0v400M360 0v400" stroke="#3b82f6" stroke-width="0.5"/></svg>
                         </div>
-                        @else
-                        <div class="w-16 h-16 flex items-center justify-center mb-4" style="background:#eff6ff; border:1px solid #dbeafe;">
-                            <svg class="w-8 h-8" style="color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="{{ $svc['icon'] }}"/>
-                            </svg>
-                        </div>
-                        @endif
-                        <div class="text-center">
-                            <div class="text-xs font-bold uppercase tracking-widest" style="color:#2563eb;">{{ $svc['title'] }}</div>
-                            <div class="text-xs mt-1" style="color:#94a3b8;">Architectural Drawings</div>
+                        <div class="relative z-10 w-full h-full flex flex-col items-center justify-center">
+                            @if(!empty($svc['img']))
+                            <div class="w-full h-64 sm:h-72 rounded-xl overflow-hidden border border-slate-700/80 shadow-2xl relative group">
+                                <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80"></div>
+                                <span class="absolute bottom-3 left-3 text-[10px] font-extrabold uppercase tracking-widest text-blue-400 bg-slate-900/90 px-2.5 py-1 rounded border border-blue-500/40 backdrop-blur">
+                                    {{ $svc['badge'] }} PACKAGE
+                                </span>
+                            </div>
+                            @else
+                            <div class="w-20 h-20 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400 flex items-center justify-center mb-4">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $svc['icon'] }}"/>
+                                </svg>
+                            </div>
+                            <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">{{ $svc['badge'] }}</span>
+                            @endif
                         </div>
                     </div>
-                </div>
 
-                <div class="{{ $i % 2 === 1 ? 'lg:order-1' : '' }}">
-                    <div class="section-label">Service {{ str_pad($i+1, 2, '0', STR_PAD_LEFT) }}</div>
-                    <h2 class="section-title">{{ $svc['title'] }}</h2>
-                    <p class="leading-relaxed mb-6 text-sm" style="color:#64748b;">{{ $svc['desc'] }}</p>
-                    <ul class="space-y-2 mb-8">
-                        @foreach($svc['features'] as $feat)
-                        <li class="flex items-center gap-3 text-sm" style="color:#475569;">
-                            <div class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background-color:#2563eb;"></div>
-                            {{ $feat }}
-                        </li>
-                        @endforeach
-                    </ul>
-                    <div class="flex gap-4">
-                        <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" class="btn-gold text-xs py-3 px-5">
-                            View Examples
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </a>
-                        <a href="{{ route('contact') }}?service={{ $svc['slug'] }}" class="btn-outline-gold text-xs py-3 px-5">Get a Quote</a>
+                    {{-- Text Content Column --}}
+                    <div class="lg:col-span-7 p-8 sm:p-10 lg:p-12 {{ $i % 2 === 1 ? 'lg:order-1' : '' }}">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-xs font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200/60">
+                                {{ $svc['number'] }} / SERVICE
+                            </span>
+                            <span class="text-xs font-medium text-slate-400">UK Standard CAD Package</span>
+                        </div>
+
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-4">
+                            {{ $svc['title'] }}
+                        </h2>
+
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                            {{ $svc['desc'] }}
+                        </p>
+
+                        {{-- Features 2-col List --}}
+                        <div class="grid sm:grid-cols-2 gap-3 mb-8">
+                            @foreach($svc['features'] as $feat)
+                            <div class="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200/60">
+                                <div class="w-5 h-5 rounded-full bg-blue-600/10 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">✓</div>
+                                <span>{{ $feat }}</span>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        {{-- Action Buttons --}}
+                        <div class="flex flex-wrap items-center gap-3 pt-2">
+                            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" class="btn-gold text-xs py-3 px-5 shadow-sm">
+                                Explore {{ $svc['badge'] }} Examples
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                            <a href="{{ route('contact') }}?service={{ $svc['slug'] }}" class="btn-outline-gold text-xs py-3 px-5">
+                                Get a Quote
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            @if(!$loop->last)<div class="border-t" style="border-color:#e2e8f0;"></div>@endif
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- What's Included --}}
-<section class="py-16 border-t" style="background-color:#f8fafc; border-color:#e2e8f0;">
+{{-- Deliverables Grid --}}
+<section class="py-20 bg-white border-t border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <div class="section-label justify-center">Deliverables</div>
-            <h2 class="section-title">What's Included</h2>
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                Complete Deliverables
+            </span>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-3 tracking-tight">What's Included in Your Drawing Package</h2>
+            <p class="text-slate-500 text-sm mt-2">Every project receives a complete, submission-ready set of professional architectural documents.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px" style="background-color:#e2e8f0;">
-            @foreach([['Planning Drawings','Site plans, block plans, floor plans, elevations, sections — everything needed for a planning application.','M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],['Building Control','Detailed structural, drainage, insulation and specification drawings for building regulations approval.','M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],['3D Models','SketchUp and Revit models to visualise the design before construction begins.','M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'],['Revisions','We include revision rounds to ensure the drawings match your requirements precisely.','M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15']] as $i => [$title, $desc, $icon])
-            <div class="p-8 bg-white reveal" style="border-top:2px solid #2563eb; animation-delay:{{ $i * 0.1 }}s">
-                <div class="w-10 h-10 flex items-center justify-center mb-4" style="background:#eff6ff; border:1px solid #dbeafe;">
-                    <svg class="w-5 h-5" style="color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $icon }}"/></svg>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach([
+                ['Planning Application Set', 'Site plans, location block plans, existing & proposed floor plans, section views, and key elevations.', 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
+                ['Building Control Technical Set', 'Full construction details, insulation & damp proofing specs, drainage layouts, and structural notes.', 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
+                ['3D Concept Visuals', 'Realistic 3D CAD visualization models to visualize space, light, and proportions before building.', 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'],
+                ['Revision Guarantee', 'We make minor design tweaks and revisions to ensure your drawings match your vision exactly.', 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15']
+            ] as $i => [$title, $desc, $icon])
+            <div class="p-6 bg-slate-50 rounded-xl border border-slate-200/80 hover:border-blue-500/50 hover:bg-blue-50/20 transition-all group">
+                <div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $icon }}"/></svg>
                 </div>
-                <h3 class="font-bold text-sm mb-2" style="color:#0f172a;">{{ $title }}</h3>
-                <p class="text-sm leading-relaxed" style="color:#64748b;">{{ $desc }}</p>
+                <h3 class="font-bold text-base text-slate-900 mb-2">{{ $title }}</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">{{ $desc }}</p>
             </div>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- CTA --}}
-<section class="py-16" style="background-color:#0f172a; border-top:2px solid #2563eb;">
+{{-- CTA Section --}}
+<section class="py-20" style="background-color:#0f172a; border-top:2px solid #2563eb;">
     <div class="max-w-3xl mx-auto px-6 text-center">
-        <h2 class="font-bold text-2xl mb-4" style="color:#f8fafc;">Ready to Get Started?</h2>
-        <p class="mb-8" style="color:#64748b;">Discuss your project with us today. Fast turnaround, professional results.</p>
-        <a href="{{ route('contact') }}" class="btn-gold px-8 py-4">Get a Free Quote</a>
+        <h2 class="font-bold text-3xl sm:text-4xl mb-4 text-white">Ready to Start Your Project?</h2>
+        <p class="mb-8 text-slate-400 text-sm sm:text-base leading-relaxed">Discuss your project with our architectural team today. Fast turnaround, 100% compliance guaranteed.</p>
+        <a href="{{ route('contact') }}" class="btn-gold px-8 py-4 text-sm font-bold shadow-lg">Get a Free Quote</a>
     </div>
 </section>
 

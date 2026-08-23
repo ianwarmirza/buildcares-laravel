@@ -48,19 +48,14 @@
                class="portfolio-card reveal group relative block overflow-hidden rounded-lg bg-white border border-slate-200 shadow-sm"
                style="animation-delay:{{ ($i % 8) * 0.08 }}s;">
                 @if($item->is_pdf)
-                <div class="w-full aspect-[4/3] bg-white overflow-hidden relative flex items-center justify-center border-b border-slate-100 group/pdf">
-                    {{-- Native PDF Page 1 Embed (White Background CAD Drawing Preview) --}}
-                    <iframe src="{{ $item->cover_url }}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=Fit"
-                            class="w-full h-full pointer-events-none border-0 absolute inset-0 z-0 bg-white scale-[1.01]"
-                            title="{{ $item->title }}"></iframe>
-
-                    {{-- High-res Canvas Overlay --}}
-                    <canvas class="pdf-thumbnail-canvas w-full h-full object-contain absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none" data-pdf-url="{{ $item->cover_url }}"></canvas>
-
-                    {{-- PDF Badge --}}
-                    <div class="absolute top-2 right-2 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-50/95 px-1.5 py-0.5 rounded border border-red-200 shadow-sm z-20">
-                        <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
-                        <span>PDF</span>
+                <div class="w-full aspect-[4/3] bg-slate-900 overflow-hidden relative group/pdf flex items-center justify-center">
+                    <canvas class="pdf-canvas w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:scale-105" data-pdf-url="{{ $item->cover_url }}"></canvas>
+                    <div class="pdf-loading-fallback absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-6 text-center group-hover:bg-slate-800 transition-colors">
+                        <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-red-400 bg-red-950/80 px-2 py-0.5 rounded border border-red-800/50">PDF Drawing</span>
+                        <span class="text-xs font-semibold text-slate-300 mt-1.5 line-clamp-1 max-w-[90%]">{{ $item->title }}</span>
                     </div>
                 </div>
                 @else
@@ -123,45 +118,33 @@
         <h2 class="font-bold text-2xl mb-4" style="color:#f8fafc;">Like What You See?</h2>
         <p class="mb-8" style="color:#64748b;">Let's work together on your next project. Get in touch for a free consultation.</p>
         <a href="{{ route('contact') }}" class="btn-gold">Start Your Project</a>
-    </div>
 </section>
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof pdfjsLib !== 'undefined') {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        const pdfCanvases = document.querySelectorAll('.pdf-thumbnail-canvas');
-        pdfCanvases.forEach(canvas => {
+        document.querySelectorAll('.pdf-canvas').forEach(function(canvas) {
             const url = canvas.dataset.pdfUrl;
             if (!url) return;
 
-            const loadingTask = pdfjsLib.getDocument({
-                url: url,
-                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
-                cMapPacked: true,
-            });
-
-            loadingTask.promise.then(pdf => {
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
                 return pdf.getPage(1);
-            }).then(page => {
-                const viewport = page.getViewport({ scale: 1.4 });
+            }).then(function(page) {
+                const viewport = page.getViewport({ scale: 1.5 });
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-
                 const ctx = canvas.getContext('2d');
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                return page.render(renderContext).promise;
-            }).then(() => {
+                return page.render({ canvasContext: ctx, viewport: viewport }).promise;
+            }).then(function() {
+                const fallback = canvas.parentElement.querySelector('.pdf-loading-fallback');
+                if (fallback) fallback.classList.add('hidden');
                 canvas.classList.remove('opacity-0');
-                canvas.classList.add('opacity-100');
-            }).catch(err => {
-                console.warn('PDF canvas render fallback to native embed:', err);
+            }).catch(function(err) {
+                console.warn('PDF.js render fallback active:', err);
             });
         });
     }

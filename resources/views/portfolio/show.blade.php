@@ -85,7 +85,7 @@
     <div class="max-w-7xl mx-auto px-6 py-8">
         @if($item->is_pdf)
         {{-- PDF Container --}}
-        <div class="rounded-xl overflow-hidden border border-slate-300 bg-slate-900 shadow-xl">
+        <div class="rounded-xl overflow-hidden border border-slate-300 bg-slate-900 shadow-xl relative group">
             <div class="px-5 py-3.5 bg-slate-950 text-white flex flex-wrap items-center justify-between gap-3 border-b border-slate-800">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center">
@@ -331,20 +331,9 @@
                    data-current="{{ $isCurrent ? '1' : '0' }}"
                    class="sibling-card group flex-shrink-0 w-64 sm:w-72 block transition-all duration-200"
                    style="scroll-snap-align:start; {{ $isCurrent ? 'outline:2px solid #2563eb; outline-offset:3px;' : '' }}">
-                    <div class="aspect-[4/3] overflow-hidden border relative flex items-center justify-center" style="border-color:#e2e8f0; background:#ffffff;">
-                        @if($sib->is_pdf)
-                        <iframe src="{{ $sib->cover_url }}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=Fit"
-                                class="w-full h-full pointer-events-none border-0 absolute inset-0 z-0 bg-white scale-[1.01]"
-                                title="{{ $sib->title }}"></iframe>
-                        <canvas class="pdf-thumbnail-canvas w-full h-full object-contain absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none" data-pdf-url="{{ $sib->cover_url }}"></canvas>
-                        <div class="absolute top-1.5 right-1.5 flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-red-600 bg-red-50/95 px-1 py-0.5 rounded border border-red-200 shadow-sm z-20">
-                            <span>PDF</span>
-                        </div>
-                        @else
-                        <img src="{{ $sib->cover_url }}" alt="{{ $sib->title }}" loading="lazy"
-                             class="w-full h-full object-cover transition-transform duration-500 {{ $isCurrent ? '' : 'group-hover:scale-105' }}"
-                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-slate-900 flex flex-col items-center justify-center text-center p-4\'><svg class=\'w-6 h-6 text-slate-400 mb-1\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\'/></svg><span class=\'text-[9px] font-bold text-slate-400 uppercase\'>CAD Drawing</span></div>';">
-                        @endif
+                    <div class="aspect-[4/3] overflow-hidden border" style="border-color:#e2e8f0; background:#ffffff;">
+                        <img src="{{ Storage::url($sib->cover_image) }}" alt="{{ $sib->title }}" loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-500 {{ $isCurrent ? '' : 'group-hover:scale-105' }}">
                     </div>
                     <div class="pt-3">
                         <div class="flex items-center gap-2 mb-1">
@@ -586,46 +575,6 @@
         if (e.key === 'ArrowRight' && next) { e.preventDefault(); window.location.href = next.href; }
     });
 })();
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof pdfjsLib !== 'undefined') {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
-        const pdfCanvases = document.querySelectorAll('.pdf-thumbnail-canvas');
-        pdfCanvases.forEach(canvas => {
-            const url = canvas.dataset.pdfUrl;
-            if (!url) return;
-
-            const loadingTask = pdfjsLib.getDocument({
-                url: url,
-                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
-                cMapPacked: true,
-            });
-
-            loadingTask.promise.then(pdf => {
-                return pdf.getPage(1);
-            }).then(page => {
-                const viewport = page.getViewport({ scale: 1.4 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const ctx = canvas.getContext('2d');
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                return page.render(renderContext).promise;
-            }).then(() => {
-                canvas.classList.remove('opacity-0');
-                canvas.classList.add('opacity-100');
-            }).catch(err => {
-                console.warn('PDF canvas render fallback to native embed:', err);
-            });
-        });
-    }
-});
 </script>
 @endpush
 
