@@ -49,14 +49,16 @@
                style="animation-delay:{{ ($i % 8) * 0.08 }}s;">
                 @if($item->is_pdf)
                 <div class="w-full aspect-[4/3] bg-white overflow-hidden relative flex items-center justify-center border-b border-slate-100 group/pdf">
-                    <canvas class="pdf-thumbnail-canvas w-full h-full object-contain" data-pdf-url="{{ $item->cover_url }}"></canvas>
-                    <div class="pdf-fallback-icon absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-6 text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center mb-2 animate-pulse">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-red-400 bg-red-950/80 px-2 py-0.5 rounded border border-red-800/50">PDF Drawing</span>
-                    </div>
-                    <div class="absolute top-2 right-2 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-50/90 px-1.5 py-0.5 rounded border border-red-200 shadow-sm z-10">
+                    {{-- Native PDF Page 1 Embed (White Background CAD Drawing Preview) --}}
+                    <iframe src="{{ $item->cover_url }}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=Fit"
+                            class="w-full h-full pointer-events-none border-0 absolute inset-0 z-0 bg-white scale-[1.01]"
+                            title="{{ $item->title }}"></iframe>
+
+                    {{-- High-res Canvas Overlay --}}
+                    <canvas class="pdf-thumbnail-canvas w-full h-full object-contain absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none" data-pdf-url="{{ $item->cover_url }}"></canvas>
+
+                    {{-- PDF Badge --}}
+                    <div class="absolute top-2 right-2 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-red-600 bg-red-50/95 px-1.5 py-0.5 rounded border border-red-200 shadow-sm z-20">
                         <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
                         <span>PDF</span>
                     </div>
@@ -125,21 +127,27 @@
 </section>
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof pdfjsLib !== 'undefined') {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
         const pdfCanvases = document.querySelectorAll('.pdf-thumbnail-canvas');
         pdfCanvases.forEach(canvas => {
             const url = canvas.dataset.pdfUrl;
             if (!url) return;
 
-            pdfjsLib.getDocument(url).promise.then(pdf => {
+            const loadingTask = pdfjsLib.getDocument({
+                url: url,
+                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
+                cMapPacked: true,
+            });
+
+            loadingTask.promise.then(pdf => {
                 return pdf.getPage(1);
             }).then(page => {
-                const viewport = page.getViewport({ scale: 1.2 });
+                const viewport = page.getViewport({ scale: 1.4 });
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 
@@ -150,10 +158,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
                 return page.render(renderContext).promise;
             }).then(() => {
-                const fallback = canvas.parentElement.querySelector('.pdf-fallback-icon');
-                if (fallback) fallback.classList.add('hidden');
+                canvas.classList.remove('opacity-0');
+                canvas.classList.add('opacity-100');
             }).catch(err => {
-                console.error('PDF thumbnail render error:', err);
+                console.warn('PDF canvas render fallback to native embed:', err);
             });
         });
     }

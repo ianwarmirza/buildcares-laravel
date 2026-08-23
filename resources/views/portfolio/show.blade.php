@@ -333,10 +333,12 @@
                    style="scroll-snap-align:start; {{ $isCurrent ? 'outline:2px solid #2563eb; outline-offset:3px;' : '' }}">
                     <div class="aspect-[4/3] overflow-hidden border relative flex items-center justify-center" style="border-color:#e2e8f0; background:#ffffff;">
                         @if($sib->is_pdf)
-                        <canvas class="pdf-thumbnail-canvas w-full h-full object-contain" data-pdf-url="{{ $sib->cover_url }}"></canvas>
-                        <div class="pdf-fallback-icon absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-3 text-center">
-                            <svg class="w-6 h-6 text-red-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
-                            <span class="text-[9px] font-bold text-red-400">PDF</span>
+                        <iframe src="{{ $sib->cover_url }}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=Fit"
+                                class="w-full h-full pointer-events-none border-0 absolute inset-0 z-0 bg-white scale-[1.01]"
+                                title="{{ $sib->title }}"></iframe>
+                        <canvas class="pdf-thumbnail-canvas w-full h-full object-contain absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none" data-pdf-url="{{ $sib->cover_url }}"></canvas>
+                        <div class="absolute top-1.5 right-1.5 flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-red-600 bg-red-50/95 px-1 py-0.5 rounded border border-red-200 shadow-sm z-20">
+                            <span>PDF</span>
                         </div>
                         @else
                         <img src="{{ $sib->cover_url }}" alt="{{ $sib->title }}" loading="lazy"
@@ -585,21 +587,27 @@
     });
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof pdfjsLib !== 'undefined') {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
         const pdfCanvases = document.querySelectorAll('.pdf-thumbnail-canvas');
         pdfCanvases.forEach(canvas => {
             const url = canvas.dataset.pdfUrl;
             if (!url) return;
 
-            pdfjsLib.getDocument(url).promise.then(pdf => {
+            const loadingTask = pdfjsLib.getDocument({
+                url: url,
+                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
+                cMapPacked: true,
+            });
+
+            loadingTask.promise.then(pdf => {
                 return pdf.getPage(1);
             }).then(page => {
-                const viewport = page.getViewport({ scale: 1.2 });
+                const viewport = page.getViewport({ scale: 1.4 });
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 
@@ -610,10 +618,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
                 return page.render(renderContext).promise;
             }).then(() => {
-                const fallback = canvas.parentElement.querySelector('.pdf-fallback-icon');
-                if (fallback) fallback.classList.add('hidden');
+                canvas.classList.remove('opacity-0');
+                canvas.classList.add('opacity-100');
             }).catch(err => {
-                console.error('PDF thumbnail render error:', err);
+                console.warn('PDF canvas render fallback to native embed:', err);
             });
         });
     }
