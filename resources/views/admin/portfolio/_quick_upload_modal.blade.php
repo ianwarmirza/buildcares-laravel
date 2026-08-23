@@ -3,18 +3,18 @@
     <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 animate-fadeInUp">
         {{-- Modal Header --}}
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
                 </div>
                 <div>
                     <h3 class="font-display font-semibold text-slate-800 text-base">Quick Upload (Photo or PDF)</h3>
-                    <p class="text-slate-500 text-xs">Add a file directly to any portfolio category tab</p>
+                    <p class="text-slate-500 text-xs">Drag & drop or select a file to upload to your portfolio</p>
                 </div>
             </div>
-            <button type="button" onclick="closeQuickUploadModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
+            <button type="button" onclick="closeQuickUploadModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -37,14 +37,43 @@
                 </select>
             </div>
 
-            {{-- File Input --}}
+            {{-- Drag & Drop Zone --}}
             <div>
-                <label for="qu-file" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                     Upload Photo or PDF <span class="text-red-500">*</span>
                 </label>
-                <input type="file" id="qu-file" name="file" accept=".jpg,.jpeg,.png,.webp,.pdf" required
-                       class="w-full px-3 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100/80 focus:outline-none file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700">
-                <p class="text-[11px] text-slate-400 mt-1">Supports JPG, PNG, WEBP images or PDF files (up to 20MB)</p>
+
+                <div class="relative">
+                    <input type="file" id="qu-file" name="file" accept=".jpg,.jpeg,.png,.webp,.pdf" required class="sr-only">
+
+                    <div id="dropzone"
+                         onclick="document.getElementById('qu-file').click()"
+                         class="w-full p-5 border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl bg-slate-50/70 hover:bg-blue-50/30 transition-all cursor-pointer text-center group">
+
+                        {{-- Default Dropzone Prompt --}}
+                        <div id="dropzone-prompt" class="flex flex-col items-center justify-center py-2">
+                            <div class="w-12 h-12 mb-2 rounded-full bg-blue-100/80 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-700">
+                                Drag & drop your file here, or <span class="text-blue-600 underline">browse</span>
+                            </p>
+                            <p class="text-[11px] text-slate-400 mt-1">Supports JPG, PNG, WEBP images or PDF files (up to 20MB)</p>
+                        </div>
+
+                        {{-- Selected File Preview --}}
+                        <div id="dropzone-preview" class="hidden flex-col items-center justify-center py-2">
+                            <div id="file-icon" class="w-12 h-12 mb-2 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center font-bold">
+                                {{-- Dynamic icon injected via JS --}}
+                            </div>
+                            <p id="file-name" class="text-sm font-bold text-slate-800 truncate max-w-xs"></p>
+                            <p id="file-size" class="text-xs text-slate-500 mt-0.5"></p>
+                            <span class="text-[11px] text-blue-600 font-semibold mt-2 underline">Click or drag another file to change</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Title (Optional) --}}
@@ -100,5 +129,85 @@ function closeQuickUploadModal() {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeQuickUploadModal();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('qu-file');
+    const promptView = document.getElementById('dropzone-prompt');
+    const previewView = document.getElementById('dropzone-preview');
+    const fileNameEl = document.getElementById('file-name');
+    const fileSizeEl = document.getElementById('file-size');
+    const fileIconEl = document.getElementById('file-icon');
+    const titleInput = document.getElementById('qu-title');
+
+    if (!dropzone || !fileInput) return;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, function() {
+            dropzone.classList.add('border-blue-600', 'bg-blue-50/80', 'ring-4', 'ring-blue-100');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, function() {
+            dropzone.classList.remove('border-blue-600', 'bg-blue-50/80', 'ring-4', 'ring-blue-100');
+        }, false);
+    });
+
+    dropzone.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            handleFileSelect(this.files[0]);
+        }
+    });
+
+    function handleFileSelect(file) {
+        if (!file) return;
+
+        promptView.classList.add('hidden');
+        previewView.classList.remove('hidden');
+        previewView.classList.add('flex');
+
+        fileNameEl.textContent = file.name;
+        fileSizeEl.textContent = formatBytes(file.size);
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'pdf') {
+            fileIconEl.className = 'w-12 h-12 mb-2 rounded-xl bg-red-500/15 text-red-600 flex items-center justify-center font-bold';
+            fileIconEl.innerHTML = '<svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>';
+        } else {
+            fileIconEl.className = 'w-12 h-12 mb-2 rounded-xl bg-blue-500/15 text-blue-600 flex items-center justify-center font-bold';
+            fileIconEl.innerHTML = '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
+        }
+
+        if (titleInput && !titleInput.value.trim()) {
+            const rawName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            titleInput.value = rawName.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
 });
 </script>
