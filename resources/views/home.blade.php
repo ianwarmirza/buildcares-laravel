@@ -307,29 +307,74 @@
 
 
 {{-- ═══ WHY CHOOSE US ═══ --}}
-<section class="section-padding bg-white border-t" style="border-color:#e2e8f0;">
+<section class="py-24 relative bg-white border-t border-slate-200">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-14">
-            <div class="section-label justify-center reveal">Our Advantage</div>
-            <h2 class="section-title reveal">Why Choose BuildCares</h2>
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50 rounded-full border border-blue-200/80 mb-3">
+                <span>⭐</span> Our Advantage
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Why Choose BuildCares</h2>
+            <p class="text-slate-500 text-sm sm:text-base mt-2">Built on precision, compliance, and fast turnaround for UK architectural projects.</p>
         </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach([
-                ['Expertise & Precision','CAD excellence with meticulous attention to every measurement and detail.','M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
-                ['Cost-Effective','Competitive pricing without compromising quality — professional results at fair rates.','M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                ['Full Service Range','2D drawings, 3D models, Photoshop renders, Revit BIM — everything under one roof.','M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'],
-                ['Fast Turnaround','Most projects delivered in 3–5 working days. Urgent submissions catered for.','M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-            ] as $i => [$title, $desc, $icon])
-            <div class="card-light p-6 reveal" style="animation-delay:{{ $i * 0.1 }}s">
-                <div class="w-12 h-12 flex items-center justify-center mb-5" style="background:#eff6ff; border:1px solid #dbeafe;">
-                    <svg class="w-5 h-5" style="color:#2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $icon }}"/>
-                    </svg>
+            @php
+            $advantages = [
+                [
+                    'title' => 'Expertise & Precision',
+                    'stat' => '100% Accuracy',
+                    'desc' => 'CAD excellence with meticulous attention to every dimension, wall thickness, beam calculation, and scale bar.',
+                    'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
+                ],
+                [
+                    'title' => 'Cost-Effective',
+                    'stat' => 'Fixed Rates',
+                    'desc' => 'Competitive fixed-price quotes without hidden fees. Professional architectural drawing sets at fair, transparent rates.',
+                    'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                ],
+                [
+                    'title' => 'Full Service Range',
+                    'stat' => 'All-in-One',
+                    'desc' => '2D planning drawings, 3D SketchUp models, Photoshop renders, and Revit BIM packages — everything under one roof.',
+                    'icon' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+                ],
+                [
+                    'title' => 'Fast Turnaround',
+                    'stat' => '3–5 Days',
+                    'desc' => 'Most project drawing packages delivered ready for submission within 3–5 working days. Urgent deadlines accommodated.',
+                    'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+                ],
+            ];
+            @endphp
+
+            @foreach($advantages as $i => $item)
+            <div class="bg-slate-50 p-7 rounded-2xl border border-slate-200/90 hover:bg-white hover:border-blue-500/80 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 relative group overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $item['icon'] }}"/></svg>
+                        </div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
+                            {{ $item['stat'] }}
+                        </span>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $item['title'] }}</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">{{ $item['desc'] }}</p>
                 </div>
-                <h3 class="font-bold text-sm mb-2" style="color:#0f172a;">{{ $title }}</h3>
-                <p class="text-sm leading-relaxed" style="color:#64748b;">{{ $desc }}</p>
             </div>
             @endforeach
+        </div>
+
+        {{-- Bottom Trust Strip --}}
+        <div class="mt-14 p-4 rounded-xl bg-slate-900 text-white flex flex-wrap items-center justify-around gap-4 text-xs font-semibold shadow-md border border-slate-800 text-center">
+            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Fixed Price Guarantee</span>
+            <span class="hidden sm:inline text-slate-700">•</span>
+            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Minor Revisions Included</span>
+            <span class="hidden sm:inline text-slate-700">•</span>
+            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> 100% Planning Approval Focus</span>
+            <span class="hidden sm:inline text-slate-700">•</span>
+            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> UK Building Regs Compliant</span>
         </div>
     </div>
 </section>
