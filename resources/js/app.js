@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const house = document.getElementById('hero-house-3d');
     if (house) initHeroHouse(house);
 
-    const ambient = document.getElementById('hero-ambient-3d');
-    if (ambient) initAmbientField(ambient);
+    document.querySelectorAll('#hero-ambient-3d, .hero-ambient-3d').forEach(el => {
+        initAmbientField(el);
+    });
 });
 
 

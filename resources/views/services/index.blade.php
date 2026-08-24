@@ -7,7 +7,10 @@
 
 {{-- Hero Section --}}
 <section class="relative pt-40 pb-20 overflow-hidden" style="background-color:#0f172a;">
-    <div class="absolute inset-0 opacity-[0.06] pointer-events-none">
+    {{-- Dynamic 3D ambient background field --}}
+    <div class="hero-ambient-3d absolute inset-0 z-0 pointer-events-none opacity-80" aria-hidden="true"></div>
+
+    <div class="absolute inset-0 opacity-[0.06] pointer-events-none z-0">
         <svg class="w-full h-full" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
             <defs>
                 <pattern id="sg" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2563eb" stroke-width="0.6"/></pattern>
@@ -17,6 +20,7 @@
             <rect width="100%" height="100%" fill="url(#sg-lg)"/>
         </svg>
     </div>
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none z-0" style="background:radial-gradient(circle at 75% 30%, rgba(37,99,235,0.15) 0%, transparent 65%);"></div>
     <div class="absolute top-0 left-0 w-1 h-full" style="background-color:#2563eb;"></div>
     <div class="absolute bottom-0 left-0 right-0 h-px" style="background:linear-gradient(to right, rgba(37,99,235,0.5), rgba(37,99,235,0.1), transparent);"></div>
 
