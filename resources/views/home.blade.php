@@ -167,49 +167,140 @@
 {{-- Featured projects removed as requested. --}}
 
 
-{{-- ═══ WHAT WE DEAL IN ═══ --}}
-<section class="section-padding" style="background-color:#f8fafc;">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-                <div class="section-label reveal">Specialisation</div>
-                <h2 class="section-title reveal">What We Deliver</h2>
-                <p class="leading-relaxed mb-8 reveal" style="color:#64748b;">
-                    As specialist CAD technicians and architectural designers, we produce drawings that planners and builders can rely on — precise, compliant, and delivered fast.
-                </p>
-                <div class="space-y-3 mb-8">
-                    @foreach([['Planning Drawings','Full planning application packages including site plans, floor plans, elevations and sections.'],['Building Control','Detailed technical drawings meeting building regulations for structural and compliance approval.'],['3D Modelling','Photorealistic SketchUp and Revit models for presentations and client approvals.'],['Design Modifications','Design development and iteration — we collaborate to refine until your vision is realised.']] as $i => [$title, $desc])
-                    <div class="card-light p-5 reveal" style="animation-delay:{{ $i * 0.08 }}s;">
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#2563eb;">
-                                <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+{{-- ═══ WHAT WE DELIVER & SOFTWARE WE USE ═══ --}}
+<section class="py-24 relative overflow-hidden" style="background-color:#f8fafc; border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;">
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+            {{-- Left Column: What We Deliver --}}
+            <div class="lg:col-span-7 space-y-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-700 bg-blue-100/80 rounded-full mb-3">
+                        <span>📋</span> Specialist Architectural Packages
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">What We Deliver</h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed max-w-xl">
+                        As specialist CAD technicians and architectural designers, we produce drawing packages that UK planners, building inspectors, and contractors can rely on.
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                    @php
+                    $deliverables = [
+                        [
+                            'title' => 'Planning Drawings',
+                            'badge' => 'Planning Ready',
+                            'desc' => 'Full planning application packages including location site plans, block plans, floor layouts, elevations and sections.',
+                            'icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'
+                        ],
+                        [
+                            'title' => 'Building Control',
+                            'badge' => 'Regs Compliant',
+                            'desc' => 'Detailed technical construction drawings meeting UK building regulations for structural, insulation & drainage sign-off.',
+                            'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
+                        ],
+                        [
+                            'title' => '3D Visualisation',
+                            'badge' => 'BIM & Renders',
+                            'desc' => 'Realistic SketchUp models, Revit BIM representations, and Photoshop renders for client presentations and council reviews.',
+                            'icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'
+                        ],
+                        [
+                            'title' => 'Design Modifications',
+                            'badge' => 'Fast Revisions',
+                            'desc' => 'Continuous design iteration and updates — we collaborate with you until your architectural vision is realized.',
+                            'icon' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+                        ],
+                    ];
+                    @endphp
+
+                    @foreach($deliverables as $i => $item)
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-500/60 hover:-translate-y-1 transition-all group duration-300 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $item['icon'] }}"/></svg>
                             </div>
-                            <div>
-                                <h4 class="font-semibold text-sm mb-1" style="color:#0f172a;">{{ $title }}</h4>
-                                <p class="text-xs leading-relaxed" style="color:#64748b;">{{ $desc }}</p>
-                            </div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                                {{ $item['badge'] }}
+                            </span>
                         </div>
+                        <h3 class="font-bold text-base text-slate-900 mb-1.5 group-hover:text-blue-600 transition-colors">{{ $item['title'] }}</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">{{ $item['desc'] }}</p>
                     </div>
                     @endforeach
                 </div>
             </div>
-            <div>
-                <div class="section-label reveal">Tools of the Trade</div>
-                <h3 class="font-bold text-2xl mb-8 reveal" style="color:#0f172a;">Software We Use</h3>
+
+            {{-- Right Column: Software We Use & Professional Standards --}}
+            <div class="lg:col-span-5 space-y-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-slate-700 bg-slate-200/80 rounded-full mb-3">
+                        <span>🛠️</span> Professional CAD Suite
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Software We Use</h3>
+                    <p class="text-slate-600 text-sm mt-1">Industry-standard tools for maximum precision and compatibility.</p>
+                </div>
+
                 <div class="grid grid-cols-2 gap-3">
-                    @foreach([['SketchUp','3D Modelling','#0097D4'],['Autodesk Revit','BIM & 3D','#0696D7'],['AutoCAD','2D Drafting','#D2232A'],['Adobe Photoshop','Rendering','#31A8FF']] as $i => [$name, $type, $color])
-                    <div class="card-light p-5 flex items-center gap-4 reveal" style="animation-delay:{{ $i * 0.08 }}s">
-                        <div class="w-10 h-10 flex items-center justify-center flex-shrink-0" style="background-color:{{ $color }}15; border:1px solid {{ $color }}30;">
-                            <span class="text-xs font-bold" style="color:{{ $color }};">{{ substr($name,0,2) }}</span>
+                    @php
+                    $softwareList = [
+                        [
+                            'name' => 'SketchUp Pro',
+                            'type' => '3D Spatial Modelling',
+                            'color' => '#0097D4',
+                            'short' => 'SKP'
+                        ],
+                        [
+                            'name' => 'Autodesk Revit',
+                            'type' => 'BIM & Structural 3D',
+                            'color' => '#0696D7',
+                            'short' => 'RVT'
+                        ],
+                        [
+                            'name' => 'AutoCAD Architecture',
+                            'type' => '2D Technical Drafting',
+                            'color' => '#D2232A',
+                            'short' => 'CAD'
+                        ],
+                        [
+                            'name' => 'Adobe Photoshop',
+                            'type' => 'Photorealistic Renders',
+                            'color' => '#31A8FF',
+                            'short' => 'PSD'
+                        ],
+                    ];
+                    @endphp
+
+                    @foreach($softwareList as $sw)
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-slate-300 transition-all">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-white font-extrabold text-xs shadow-sm" style="background-color: {{ $sw['color'] }};">
+                            {{ $sw['short'] }}
                         </div>
                         <div>
-                            <div class="font-semibold text-sm" style="color:#0f172a;">{{ $name }}</div>
-                            <div class="text-xs" style="color:#94a3b8;">{{ $type }}</div>
+                            <div class="font-bold text-xs sm:text-sm text-slate-900 leading-snug">{{ $sw['name'] }}</div>
+                            <div class="text-[11px] font-medium text-slate-400 mt-0.5">{{ $sw['type'] }}</div>
                         </div>
                     </div>
                     @endforeach
                 </div>
+
+                {{-- Highlights Card --}}
+                <div class="p-6 rounded-xl bg-slate-900 text-white shadow-lg relative overflow-hidden border border-slate-800">
+                    <div class="absolute -right-6 -bottom-6 opacity-10 text-blue-400 pointer-events-none">
+                        <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.57l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.57l7-10a1 1 0 011.12-.384z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Fixed Rates & Fast Turnaround</span>
+                    </div>
+                    <h4 class="font-bold text-base text-white mb-1">UK Planning & Building Regs Ready</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Every drawing is formatted to exact UK council standards (scale bars, block plans, notes, and key dimensions) ensuring smooth approval.
+                    </p>
+                </div>
             </div>
+
         </div>
     </div>
 </section>
