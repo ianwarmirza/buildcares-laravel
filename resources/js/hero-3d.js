@@ -195,32 +195,83 @@ function buildHouseStages() {
     roof.userData.targetOpacity = 0.95;
     stages.push(roof);
 
-    // Stage 3: Openings (Door + Windows with frames and glass translucency)
+    // Stage 3: Openings & Centralized Front Door with Hipped Roof Porch
     const openings = new THREE.Group();
 
-    // Front Entrance Door with Canopy Porch
-    const doorMesh = filledMesh(new THREE.BoxGeometry(0.65, 1.3, 0.05), FRAME_C, 0.9);
-    doorMesh.position.set(-0.6, 0.65, 1.51);
+    // Central Entrance Door (centered at X = 0.0)
+    const doorMesh = filledMesh(new THREE.BoxGeometry(0.7, 1.35, 0.05), FRAME_C, 0.9);
+    doorMesh.position.set(0.0, 0.675, 1.51);
     openings.add(doorMesh);
-    openings.add(solidEdges(new THREE.BoxGeometry(0.65, 1.3, 0.05), ACCENT, 0).position.set(-0.6, 0.65, 1.51));
+    openings.add(solidEdges(new THREE.BoxGeometry(0.7, 1.35, 0.05), ACCENT, 0).position.set(0.0, 0.675, 1.51));
 
-    // Porch Canopy overhang
-    const porchCanopy = filledMesh(new THREE.BoxGeometry(0.9, 0.08, 0.4), ROOF_C, 0.9);
-    porchCanopy.position.set(-0.6, 1.35, 1.7);
-    openings.add(porchCanopy);
-    openings.add(solidEdges(new THREE.BoxGeometry(0.9, 0.08, 0.4), PRIMARY, 0).position.set(-0.6, 1.35, 1.7));
+    // Porch side brick pillars & architrave beam
+    const leftPillar = filledMesh(new THREE.BoxGeometry(0.12, 1.35, 0.55), BRICK_C, 0.85);
+    leftPillar.position.set(-0.54, 0.675, 1.775);
+    openings.add(leftPillar);
+    openings.add(solidEdges(new THREE.BoxGeometry(0.12, 1.35, 0.55), PRIMARY, 0).position.set(-0.54, 0.675, 1.775));
 
-    // Ground Floor & First Floor Windows
-    [-1.3, 0.8].forEach((x) => {
+    const rightPillar = filledMesh(new THREE.BoxGeometry(0.12, 1.35, 0.55), BRICK_C, 0.85);
+    rightPillar.position.set(0.54, 0.675, 1.775);
+    openings.add(rightPillar);
+    openings.add(solidEdges(new THREE.BoxGeometry(0.12, 1.35, 0.55), PRIMARY, 0).position.set(0.54, 0.675, 1.775));
+
+    const porchBeam = filledMesh(new THREE.BoxGeometry(1.2, 0.12, 0.55), ROOF_C, 0.9);
+    porchBeam.position.set(0.0, 1.36, 1.775);
+    openings.add(porchBeam);
+    openings.add(solidEdges(new THREE.BoxGeometry(1.2, 0.12, 0.55), PRIMARY, 0).position.set(0.0, 1.36, 1.775));
+
+    // Hipped Roof above Porch (3-sided pitch sloping up to wall)
+    const porchRoofGeo = new THREE.BufferGeometry();
+    const pVertices = new Float32Array([
+        -0.65, 1.42, 1.50,  // 0: Rear-Left eave against wall
+        +0.65, 1.42, 1.50,  // 1: Rear-Right eave against wall
+        +0.65, 1.42, 2.08,  // 2: Front-Right eave
+        -0.65, 1.42, 2.08,  // 3: Front-Left eave
+         0.00, 1.82, 1.50,  // 4: Wall Top Ridge Peak
+         0.00, 1.62, 1.85,  // 5: Front Hip Ridge Point
+    ]);
+
+    const pIndices = [
+        0, 3, 5,  0, 5, 4, // Left slope
+        1, 4, 5,  1, 5, 2, // Right slope
+        3, 2, 5           // Front slope
+    ];
+
+    porchRoofGeo.setAttribute('position', new THREE.BufferAttribute(pVertices, 3));
+    porchRoofGeo.setIndex(pIndices);
+    porchRoofGeo.computeVertexNormals();
+
+    const porchRoofMesh = filledMesh(porchRoofGeo, ROOF_C, 0.9);
+    openings.add(porchRoofMesh);
+
+    // Hipped Porch Roof CAD Edges
+    const porchEdgePairs = [
+        [[-0.65, 1.42, 1.50], [-0.65, 1.42, 2.08]], // Left eave
+        [[-0.65, 1.42, 2.08], [+0.65, 1.42, 2.08]], // Front eave
+        [[+0.65, 1.42, 2.08], [+0.65, 1.42, 1.50]], // Right eave
+        [[-0.65, 1.42, 1.50], [ 0.00, 1.82, 1.50]], // Wall left hip
+        [[+0.65, 1.42, 1.50], [ 0.00, 1.82, 1.50]], // Wall right hip
+        [[-0.65, 1.42, 2.08], [ 0.00, 1.62, 1.85]], // Left hip ridge
+        [[+0.65, 1.42, 2.08], [ 0.00, 1.62, 1.85]], // Right hip ridge
+        [[ 0.00, 1.82, 1.50], [ 0.00, 1.62, 1.85]], // Main ridge
+    ];
+
+    porchEdgePairs.forEach(([p1, p2]) => {
+        openings.add(lineFromPoints([
+            new THREE.Vector3(...p1),
+            new THREE.Vector3(...p2)
+        ], PRIMARY, 0));
+    });
+
+    // Symmetrical Ground Floor & First Floor Windows
+    [-1.2, 1.2].forEach((x) => {
         // Ground floor window
-        if (x !== -0.6) {
-            const wG = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
-            wG.position.set(x, 0.65, 1.51);
-            openings.add(wG);
-            openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 0.65, 1.51));
-        }
+        const wG = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
+        wG.position.set(x, 0.65, 1.51);
+        openings.add(wG);
+        openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 0.65, 1.51));
 
-        // First floor windows
+        // First floor window
         const wF1 = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
         wF1.position.set(x, 1.65, 1.51);
         openings.add(wF1);
