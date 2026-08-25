@@ -44,7 +44,11 @@ class TeamMember extends Model
             if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
                 return $this->photo;
             }
-            return Storage::url($this->photo);
+            $path = ltrim($this->photo, '/');
+            if (str_starts_with($path, 'storage/')) {
+                $path = substr($path, 8);
+            }
+            return asset('storage/' . $path);
         }
 
         // Return a clean default avatar placeholder if photo not provided

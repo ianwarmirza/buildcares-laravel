@@ -18,10 +18,10 @@
         </a>
     </div>
 
-    <form action="{{ $isEdit ? route('admin.team.update', $teamMember) : route('admin.team.store') }}"
+    <form id="team-form" action="{{ $isEdit ? route('admin.team.update', $teamMember) : route('admin.team.store') }}"
           method="POST"
           enctype="multipart/form-data"
-          class="space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+          class="space-y-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative">
         @csrf
         @if($isEdit)
             @method('PUT')
@@ -54,21 +54,26 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-900 flex items-center gap-2">
-                        <span>📸</span> Profile Photo & Circular Adjuster
+                        <span>📸</span> Profile Photo Upload & Circle Adjuster
                     </h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Upload JPG/PNG and adjust face alignment so it displays perfectly centralized on the website.</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Select a JPG / PNG photo and adjust face alignment so it displays perfectly centralized on the website.</p>
                 </div>
             </div>
 
-            {{-- Dropzone Container --}}
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-5 text-center transition-colors bg-white cursor-pointer relative group">
-                <input type="file" name="photo" id="photo-input" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
-                <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            {{-- Direct Upload Bar & Dropzone --}}
+            <div id="drop-zone" class="border-2 border-dashed border-blue-300 hover:border-blue-600 rounded-xl p-5 text-center transition-all bg-white cursor-pointer relative group">
+                <input type="file" name="photo" id="photo-input" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30">
+                <div class="flex flex-col items-center justify-center space-y-2.5 pointer-events-none">
+                    <div class="w-12 h-12 rounded-full bg-blue-100/80 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     </div>
-                    <p class="text-xs font-bold text-slate-800">Click to Select JPG / PNG or Drag & Drop File Here</p>
-                    <p class="text-[10px] text-slate-500">Supports JPG, PNG, WEBP (Max 10MB)</p>
+                    <div>
+                        <p class="text-sm font-extrabold text-blue-600 group-hover:underline">Click to Select Photo (JPG / PNG) or Drag & Drop File</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Supports JPG, PNG, WEBP (Max 10MB)</p>
+                    </div>
+                    <div id="file-info-badge" class="hidden px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold items-center gap-1.5 mt-1">
+                        <span>✅ Selected:</span> <span id="file-name-text"></span>
+                    </div>
                 </div>
             </div>
             @error('photo')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -85,7 +90,7 @@
                              class="w-full h-full object-cover transition-all duration-75"
                              style="object-position: {{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}% {{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}%; transform: scale({{ (old('photo_zoom', $teamMember->photo_zoom ?? 100)) / 100 }});">
                     </div>
-                    <span class="text-[10px] font-bold text-blue-600 mt-2">Adjust position below ⬇</span>
+                    <span class="text-[10px] font-bold text-blue-600 mt-2">Adjust position sliders below ⬇</span>
                 </div>
 
                 {{-- Right: Adjuster Sliders --}}
@@ -190,20 +195,47 @@
 
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.team.index') }}" class="px-5 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Cancel</a>
-                <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30">
-                    {{ $isEdit ? 'Update Team Member' : 'Save Team Member' }}
+                <button type="submit" id="submit-btn" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30 flex items-center gap-2">
+                    <span>{{ $isEdit ? 'Update Team Member' : 'Save Team Member' }}</span>
                 </button>
             </div>
         </div>
     </form>
 </div>
 
+{{-- Upload Progress Modal --}}
+<div id="upload-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center space-y-6 animate-fadeInUp">
+        <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto shadow-sm">
+            <svg class="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        </div>
+        <div>
+            <h3 class="text-lg font-extrabold text-slate-900" id="progress-title">Uploading Team Member Details...</h3>
+            <p class="text-xs text-slate-500 mt-1" id="progress-status">Please wait while your photo & details are being saved.</p>
+        </div>
+
+        {{-- Progress Bar Container --}}
+        <div class="space-y-2">
+            <div class="h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200 shadow-inner">
+                <div id="progress-bar-fill" class="h-full rounded-full bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 transition-all duration-150 w-0"></div>
+            </div>
+            <div class="flex justify-between items-center text-xs font-mono font-bold text-slate-600">
+                <span id="progress-bytes">0 KB / 0 KB</span>
+                <span id="progress-percent" class="text-blue-600 font-extrabold">0%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 (function () {
+    const form = document.getElementById('team-form');
     const photoInput = document.getElementById('photo-input');
     const photoPreview = document.getElementById('photo-preview');
     const dropZone = document.getElementById('drop-zone');
+    const fileBadge = document.getElementById('file-info-badge');
+    const fileNameText = document.getElementById('file-name-text');
 
     const sliderX = document.getElementById('slider-pos-x');
     const sliderY = document.getElementById('slider-pos-y');
@@ -216,6 +248,13 @@
     const valX = document.getElementById('val-pos-x');
     const valY = document.getElementById('val-pos-y');
     const valZoom = document.getElementById('val-zoom');
+
+    const uploadModal = document.getElementById('upload-modal');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressPercent = document.getElementById('progress-percent');
+    const progressBytes = document.getElementById('progress-bytes');
+    const progressTitle = document.getElementById('progress-title');
+    const progressStatus = document.getElementById('progress-status');
 
     function updatePreview() {
         const posX = sliderX.value;
@@ -238,42 +277,56 @@
         slider?.addEventListener('input', updatePreview);
     });
 
-    photoInput?.addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
+    function handleFile(file) {
+        if (!file) return;
+        
+        // Show file info badge
+        if (fileNameText && fileBadge) {
+            const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+            fileNameText.textContent = file.name + ' (' + sizeMb + ' MB)';
+            fileBadge.classList.remove('hidden');
+            fileBadge.classList.add('inline-flex');
+        }
+
+        // Instant preview using ObjectURL
+        try {
+            const objectUrl = URL.createObjectURL(file);
+            photoPreview.src = objectUrl;
+        } catch (err) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 photoPreview.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
+    }
+
+    photoInput?.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            handleFile(this.files[0]);
+        }
     });
 
     ['dragenter', 'dragover'].forEach(eventName => {
         dropZone?.addEventListener(eventName, (e) => {
             e.preventDefault();
-            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+            dropZone.classList.add('border-blue-600', 'bg-blue-50/50');
         }, false);
     });
 
     ['dragleave'].forEach(eventName => {
         dropZone?.addEventListener(eventName, (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            dropZone.classList.remove('border-blue-600', 'bg-blue-50/50');
         }, false);
     });
 
     dropZone?.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        dropZone.classList.remove('border-blue-600', 'bg-blue-50/50');
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             photoInput.files = e.dataTransfer.files;
-            const file = e.dataTransfer.files[0];
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-                photoPreview.src = evt.target.result;
-            };
-            reader.readAsDataURL(file);
+            handleFile(e.dataTransfer.files[0]);
         }
     }, false);
 
@@ -296,6 +349,65 @@
         sliderY.value = 50;
         sliderZoom.value = 100;
         updatePreview();
+    });
+
+    // Real-Time XHR Upload Progress Bar Handler
+    form?.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Show Upload Progress Modal
+        uploadModal.classList.remove('hidden');
+        uploadModal.classList.add('flex');
+        progressBarFill.style.width = '0%';
+        progressPercent.textContent = '0%';
+        progressBytes.textContent = 'Preparing...';
+
+        const formData = new FormData(form);
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percent = Math.round((event.loaded / event.total) * 100);
+                progressBarFill.style.width = percent + '%';
+                progressPercent.textContent = percent + '%';
+
+                const loadedMb = (event.loaded / (1024 * 1024)).toFixed(2);
+                const totalMb = (event.total / (1024 * 1024)).toFixed(2);
+                progressBytes.textContent = loadedMb + ' MB / ' + totalMb + ' MB';
+
+                if (percent === 100) {
+                    progressTitle.textContent = 'Processing & Saving...';
+                    progressStatus.textContent = 'Almost done! Finalizing member record...';
+                }
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                progressBarFill.style.width = '100%';
+                progressPercent.textContent = '100%';
+                progressTitle.textContent = '✅ Upload Complete!';
+                progressStatus.textContent = 'Redirecting back to team list...';
+                setTimeout(() => {
+                    window.location.href = "{{ route('admin.team.index') }}";
+                }, 800);
+            } else {
+                alert('Upload Error (' + xhr.status + '). Please check your internet connection or file size.');
+                uploadModal.classList.add('hidden');
+                uploadModal.classList.remove('flex');
+            }
+        };
+
+        xhr.onerror = function () {
+            alert('Network error occurred during file upload.');
+            uploadModal.classList.add('hidden');
+            uploadModal.classList.remove('flex');
+        };
+
+        xhr.send(formData);
     });
 })();
 </script>
