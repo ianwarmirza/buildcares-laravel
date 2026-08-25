@@ -49,16 +49,7 @@
                     @endif
                 </div>
 
-                {{-- Right Side Badges --}}
-                <div class="hidden lg:flex items-center gap-4 text-[11px] font-semibold text-slate-400">
-                    <span class="inline-flex items-center gap-1.5 bg-blue-950/70 border border-blue-800/50 text-blue-300 px-2.5 py-0.5 rounded-full">
-                        <span>⚡</span> Fast Response: &lt; 2 Hours
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-0.5 rounded-full">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        Available Now
-                    </span>
-                </div>
+
             </div>
         </div>
 
