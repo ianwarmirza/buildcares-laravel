@@ -25,7 +25,12 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('team', 'public');
+            $path = $request->file('photo')->store('team', 'public');
+            $validated['photo'] = $path;
+            
+            // Mirror copy to public_path for permanent static serving
+            @mkdir(public_path('storage/team'), 0777, true);
+            @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -52,7 +57,12 @@ class TeamController extends Controller
             if ($team->photo && !str_starts_with($team->photo, 'http') && Storage::disk('public')->exists($team->photo)) {
                 Storage::disk('public')->delete($team->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('team', 'public');
+            $path = $request->file('photo')->store('team', 'public');
+            $validated['photo'] = $path;
+
+            // Mirror copy to public_path for permanent static serving
+            @mkdir(public_path('storage/team'), 0777, true);
+            @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);

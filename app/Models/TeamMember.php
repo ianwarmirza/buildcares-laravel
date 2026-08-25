@@ -41,22 +41,12 @@ class TeamMember extends Model
 
     public function getHasPhotoAttribute(): bool
     {
-        if (empty($this->photo)) {
-            return false;
-        }
-        if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
-            return true;
-        }
-        $path = ltrim($this->photo, '/');
-        if (str_starts_with($path, 'storage/')) {
-            $path = substr($path, 8);
-        }
-        return file_exists(storage_path('app/public/' . $path)) || file_exists(public_path('storage/' . $path));
+        return !empty($this->photo);
     }
 
     public function getPhotoUrlAttribute()
     {
-        if ($this->has_photo) {
+        if (!empty($this->photo)) {
             if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
                 return $this->photo;
             }
