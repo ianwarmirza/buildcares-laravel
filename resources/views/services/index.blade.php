@@ -43,7 +43,7 @@
             @php
                 $num = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
                 $badge = $svc->icon ? strtoupper($svc->icon) : strtoupper($svc->name);
-                $imgUrl = $svc->cover_image ? Storage::url($svc->cover_image) : null;
+                $imgUrl = $svc->cover_image_url;
                 $features = is_array($svc->features) && count($svc->features) > 0 ? $svc->features : [
                     'Existing & Proposed Floor Plans',
                     'Detailed Front & Rear Elevations',
