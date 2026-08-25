@@ -426,7 +426,7 @@
 }
 
 .marquee-track {
-    animation: ongoingTicker 35s linear infinite;
+    animation: ongoingTicker 17.5s linear infinite;
 }
 
 .mask-marquee {
