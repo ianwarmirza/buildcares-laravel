@@ -259,38 +259,118 @@
 
 
 {{-- ═══ SERVICES ═══ --}}
-<section class="section-padding" style="background-color:#f8fafc;">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center mb-14">
-            <div class="section-label justify-center reveal">Our Expertise</div>
-            <h2 class="section-title reveal">Services We Offer</h2>
-            <p class="leading-relaxed max-w-xl mx-auto reveal" style="color:#64748b;">Comprehensive architectural drawing and CAD services tailored for UK planning and building control requirements.</p>
+<section class="py-24 relative overflow-hidden bg-slate-50 border-t border-b border-slate-200">
+    {{-- Background Blueprint Grid Overlay --}}
+    <div class="absolute inset-0 pointer-events-none opacity-[0.04]">
+        <svg class="w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
+            <defs><pattern id="services-grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2563eb" stroke-width="0.8"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#services-grid-pattern)"/>
+        </svg>
+    </div>
+    <div class="absolute top-0 right-1/4 w-[700px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-extrabold uppercase tracking-widest mb-3">
+                <span>🛠️</span> Our Expertise
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Services We Offer</h2>
+            <p class="text-slate-500 text-sm sm:text-base mt-3 leading-relaxed">Comprehensive architectural drawing and CAD services tailored for UK planning and building control requirements.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px" style="background-color:#e2e8f0;">
-            @php
-            $services = [
-                ['img'=>'portfolio/cat-garage-conversion.jpg','title'=>'Garage Conversion','desc'=>'Transform your garage into valuable living space with detailed planning and building control drawings.','slug'=>'garage-conversion'],
-                ['img'=>'portfolio/cat-loft-conversion.jpg','title'=>'Loft Conversion','desc'=>'Unlock your loft\'s potential with dormer or hip-to-gable conversions, fully drawn to approval standard.','slug'=>'loft-conversion'],
-                ['img'=>'portfolio/cat-extension.jpg','title'=>'Extensions','desc'=>'Single, double or wrap-around extensions designed to maximise space and comply with planning regulations.','slug'=>'extension'],
-                ['img'=>'portfolio/cat-new-build.jpg','title'=>'New Build','desc'=>'Complete architectural packages for new residential builds from concept through to planning submission.','slug'=>'new-build'],
-                ['img'=>'portfolio/cat-outbuilding.jpg','title'=>'Outbuilding','desc'=>'Garden rooms, home offices, studios and annexes — full drawings for permitted development or planning.','slug'=>'outbuilding'],
-                ['img'=>'portfolio/cat-internal-changes.jpg','title'=>'Internal Changes','desc'=>'Structural internal alterations, wall removals and reconfigurations with precise building control drawings.','slug'=>'internal-changes'],
-            ];
-            @endphp
+        @php
+        $services = [
+            [
+                'img' => 'portfolio/cat-garage-conversion.jpg',
+                'title' => 'Garage Conversion',
+                'badge' => 'Permitted Dev & Regs',
+                'desc' => 'Transform your garage into valuable living space with detailed planning and building control drawings.',
+                'slug' => 'garage-conversion'
+            ],
+            [
+                'img' => 'portfolio/cat-loft-conversion.jpg',
+                'title' => 'Loft Conversion',
+                'badge' => 'Dormer & Hip-to-Gable',
+                'desc' => 'Unlock your loft\'s potential with dormer or hip-to-gable conversions, fully drawn to approval standard.',
+                'slug' => 'loft-conversion'
+            ],
+            [
+                'img' => 'portfolio/cat-extension.jpg',
+                'title' => 'Extensions',
+                'badge' => 'Single & Double Storey',
+                'desc' => 'Single, double or wrap-around extensions designed to maximise space and comply with planning regulations.',
+                'slug' => 'extension'
+            ],
+            [
+                'img' => 'portfolio/cat-new-build.jpg',
+                'title' => 'New Build',
+                'badge' => 'Full CAD Package',
+                'desc' => 'Complete architectural packages for new residential builds from concept through to planning submission.',
+                'slug' => 'new-build'
+            ],
+            [
+                'img' => 'portfolio/cat-outbuilding.jpg',
+                'title' => 'Outbuilding',
+                'badge' => 'Garden Rooms & Studios',
+                'desc' => 'Garden rooms, home offices, studios and annexes — full drawings for permitted development or planning.',
+                'slug' => 'outbuilding'
+            ],
+            [
+                'img' => 'portfolio/cat-internal-changes.jpg',
+                'title' => 'Internal Changes',
+                'badge' => 'Structural & Layouts',
+                'desc' => 'Structural internal alterations, wall removals and reconfigurations with precise building control drawings.',
+                'slug' => 'internal-changes'
+            ],
+        ];
+        @endphp
 
+        {{-- Distinct Card Grid with Generous 32px Gaps --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($services as $i => $svc)
-            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" class="group reveal bg-white block overflow-hidden" style="animation-delay:{{ $i * 0.07 }}s;">
-                <div class="overflow-hidden" style="height:200px;">
-                    <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-blue-500/80 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                {{-- Top Blue Gradient Accent Line --}}
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
+
+                <div>
+                    {{-- CAD Drawing Image Showcase Box --}}
+                    <div class="relative h-56 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
+                        {{-- Micro Blueprint Grid SVG --}}
+                        <div class="absolute inset-0 pointer-events-none opacity-[0.05]">
+                            <svg class="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+                                <pattern id="card-bp-grid-{{ $i }}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2563eb" stroke-width="0.6"/></pattern>
+                                <rect width="100%" height="100%" fill="url(#card-bp-grid-{{ $i }})"/>
+                            </svg>
+                        </div>
+
+                        {{-- Category Badge --}}
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-white/95 backdrop-blur-md border border-blue-200/80 px-2.5 py-1 rounded-full shadow-xs absolute top-3.5 right-3.5 z-10">
+                            {{ $svc['badge'] }}
+                        </span>
+
+                        {{-- 3D Isometric CAD House Image --}}
+                        <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="h-full w-auto max-w-full object-contain filter drop-shadow-md group-hover:scale-108 transition-transform duration-500 z-10">
+                    </div>
+
+                    {{-- Content Details --}}
+                    <div class="p-6">
+                        <h3 class="font-extrabold text-xl text-slate-900 mb-2 group-hover:text-blue-600 transition-colors tracking-tight">
+                            {{ $svc['title'] }}
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                            {{ $svc['desc'] }}
+                        </p>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-bold text-base mb-2" style="color:#0f172a;">{{ $svc['title'] }}</h3>
-                    <p class="text-sm leading-relaxed mb-4" style="color:#64748b;">{{ $svc['desc'] }}</p>
-                    <span class="text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all" style="color:#2563eb;">
-                        View Projects
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                    </span>
+
+                {{-- Interactive Bottom Button Strip --}}
+                <div class="px-6 pb-6 pt-2">
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between font-bold text-xs text-blue-600 group-hover:text-blue-700">
+                        <span>View Projects</span>
+                        <span class="w-7 h-7 rounded-full bg-blue-50 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </span>
+                    </div>
                 </div>
             </a>
             @endforeach
