@@ -323,16 +323,16 @@ function buildHouseStages() {
         return group;
     }
 
-    // Ground Floor Left (Red Box 1): Modern Bifold Door
-    openings.add(createBiFoldDoor(-1.25, 0.65, 1.51, 1.35, 1.1));
+    // Ground Floor Left: Architectural Window (Same design and size as above floor)
+    openings.add(createArchitecturalWindow(-1.25, 0.65, 1.51, 0.85, 0.85));
 
-    // Ground Floor Right (Red Box 2): Architectural Window
+    // Ground Floor Right: Architectural Window
     openings.add(createArchitecturalWindow(1.25, 0.65, 1.51, 0.85, 0.85));
 
-    // First Floor Left (Red Box 3): Architectural Window
+    // First Floor Left: Architectural Window
     openings.add(createArchitecturalWindow(-1.25, 1.65, 1.51, 0.85, 0.85));
 
-    // First Floor Right (Red Box 4): Architectural Window
+    // First Floor Right: Architectural Window
     openings.add(createArchitecturalWindow(1.25, 1.65, 1.51, 0.85, 0.85));
 
     openings.userData.targetOpacity = 0.9;
@@ -442,16 +442,9 @@ function buildHouseStages() {
     const sideRoofEdges = solidEdges(sideRoofGeo, SIDE_C, 0);
     sideExt.add(sideRoofEdges);
 
-    // Windows on Front (+Z) and Side (+X)
-    const sideWin1 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
-    sideWin1.position.set(3.15, 0.65, 1.51);
-    sideExt.add(sideWin1);
-    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 0.65, 1.51));
-
-    const sideWin2 = filledMesh(new THREE.BoxGeometry(0.7, 0.75, 0.05), GLASS_C, 0.75);
-    sideWin2.position.set(3.15, 1.65, 1.51);
-    sideExt.add(sideWin2);
-    sideExt.add(solidEdges(new THREE.BoxGeometry(0.7, 0.75, 0.05), SIDE_C, 0).position.set(3.15, 1.65, 1.51));
+    // Windows on Front (+Z) matching main house architectural window style
+    sideExt.add(createArchitecturalWindow(3.15, 0.65, 1.51, 0.85, 0.85));
+    sideExt.add(createArchitecturalWindow(3.15, 1.65, 1.51, 0.85, 0.85));
 
     sideExt.userData.targetOpacity = 0.95;
     stages.push(sideExt);
