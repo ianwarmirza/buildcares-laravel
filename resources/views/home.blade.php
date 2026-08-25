@@ -376,28 +376,32 @@
         ];
         @endphp
 
-        {{-- Distinct Card Grid with Generous 32px Gaps --}}
+        {{-- Distinct Card Grid with Alternating White and Light Blue Theme --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($services as $i => $svc)
-            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-2xl hover:border-blue-500/80 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+            @php
+                $isBlue = ($i % 2 === 1);
+            @endphp
+            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" 
+               class="{{ $isBlue ? 'bg-gradient-to-b from-blue-50/90 via-sky-50/60 to-blue-50/80 border-blue-200/90' : 'bg-white border-slate-200/90' }} rounded-2xl border shadow-sm hover:shadow-2xl hover:border-blue-500/80 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
                 {{-- Top Blue Gradient Accent Line --}}
                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
 
                 <div>
                     {{-- Dedicated Top Card Header Strip (ABOVE PHOTO) --}}
-                    <div class="px-5 pt-4 pb-3 bg-gradient-to-r from-slate-50 to-blue-50/50 border-b border-slate-100 flex items-center justify-between z-30 relative">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <div class="px-5 pt-4 pb-3 {{ $isBlue ? 'bg-blue-100/70 border-b border-blue-200/70' : 'bg-gradient-to-r from-slate-50 to-blue-50/50 border-b border-slate-100' }} flex items-center justify-between z-30 relative">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider {{ $isBlue ? 'text-blue-700' : 'text-slate-400' }} flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> CAD Package
                         </span>
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-100/90 border border-blue-200/90 px-2.5 py-1 rounded-full shadow-xs">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest {{ $isBlue ? 'bg-blue-600 text-white shadow-xs border border-blue-600' : 'text-blue-700 bg-blue-100/90 border border-blue-200/90' }} px-2.5 py-1 rounded-full shadow-xs">
                             {{ $svc['badge'] }}
                         </span>
                     </div>
 
                     {{-- CAD Drawing Image Showcase Box (BELOW HEADER) --}}
-                    <div class="relative h-48 bg-gradient-to-br from-white via-slate-50 to-blue-50/20 p-5 flex items-center justify-center border-b border-slate-100 overflow-hidden">
+                    <div class="relative h-48 {{ $isBlue ? 'bg-white/80 border-b border-blue-100' : 'bg-gradient-to-br from-white via-slate-50 to-blue-50/20 border-b border-slate-100' }} p-5 flex items-center justify-center overflow-hidden">
                         {{-- Micro Blueprint Grid SVG --}}
-                        <div class="absolute inset-0 pointer-events-none opacity-[0.04]">
+                        <div class="absolute inset-0 pointer-events-none opacity-[0.05]">
                             <svg class="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
                                 <pattern id="card-bp-grid-{{ $i }}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2563eb" stroke-width="0.6"/></pattern>
                                 <rect width="100%" height="100%" fill="url(#card-bp-grid-{{ $i }})"/>
