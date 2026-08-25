@@ -54,8 +54,10 @@
                     </td>
                     <td class="py-3 px-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-full overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 shadow-sm">
-                                <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover">
+                            <div class="w-11 h-11 rounded-full overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 shadow-sm relative">
+                                <img src="{{ $member->photo_url }}" alt="{{ $member->name }}"
+                                     class="w-full h-full object-cover" style="{{ $member->photo_style }}"
+                                     onerror="this.onerror=null; this.src='{{ $member->gender === 'female' ? \App\Models\TeamMember::getFemaleAvatarSvg() : \App\Models\TeamMember::getMaleAvatarSvg() }}';">
                             </div>
                             <div>
                                 <div class="text-slate-900 font-bold leading-snug">{{ $member->name }}</div>

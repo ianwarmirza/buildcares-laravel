@@ -689,6 +689,7 @@
                     'bio'   => $m->bio,
                     'photo' => $m->photo_url,
                     'style' => $m->photo_style,
+                    'gender'=> $m->gender,
                 ];
             })->all();
         } else {
@@ -736,7 +737,7 @@
                 <div>
                     {{-- Circular Photo Avatar --}}
                     <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-blue-50 p-1 bg-white shadow-md mx-auto mb-5 group-hover:scale-105 group-hover:border-blue-100 transition-all duration-300 flex-shrink-0">
-                        <img src="{{ $member['photo'] }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover rounded-full" style="{{ $member['style'] ?? '' }}">
+                        <img src="{{ $member['photo'] }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover rounded-full" style="{{ $member['style'] ?? '' }}" onerror="this.onerror=null; this.src='{{ ($member['gender'] ?? 'male') === 'female' ? \App\Models\TeamMember::getFemaleAvatarSvg() : \App\Models\TeamMember::getMaleAvatarSvg() }}';">
                     </div>
 
                     {{-- Name --}}
