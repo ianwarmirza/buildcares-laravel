@@ -1,49 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
     <defs>
-        <linearGradient id="fBg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1e1b4b"/>
-            <stop offset="60%" stop-color="#312e81"/>
-            <stop offset="100%" stop-color="#4338ca"/>
+        <linearGradient id="fSkin" x1="30%" y1="0%" x2="70%" y2="100%">
+            <stop offset="0%" stop-color="#fde3cf"/>
+            <stop offset="50%" stop-color="#f5cbb0"/>
+            <stop offset="100%" stop-color="#e2aa88"/>
         </linearGradient>
-        <radialGradient id="fGlow" cx="50%" cy="30%" r="60%">
-            <stop offset="0%" stop-color="#a855f7" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="fSuit" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#312e81"/>
-            <stop offset="100%" stop-color="#1e1b4b"/>
+
+        <linearGradient id="fHair" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#333333"/>
+            <stop offset="35%" stop-color="#111111"/>
+            <stop offset="100%" stop-color="#050505"/>
         </linearGradient>
+
+        <linearGradient id="fHairGloss" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+
+        <linearGradient id="fSuit" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2d6a4f"/>
+            <stop offset="50%" stop-color="#1b4d3e"/>
+            <stop offset="100%" stop-color="#0f3428"/>
+        </linearGradient>
+
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#000000" flood-opacity="0.18"/>
+        </filter>
     </defs>
 
-    <rect width="512" height="512" fill="url(#fBg)"/>
-    <circle cx="256" cy="200" r="220" fill="url(#fGlow)"/>
+    <circle cx="256" cy="256" r="248" fill="#ffffff" stroke="#f1f5f9" stroke-width="4"/>
 
-    <circle cx="256" cy="256" r="220" fill="none" stroke="rgba(192,132,252,0.18)" stroke-width="2" stroke-dasharray="6 6"/>
+    <ellipse cx="256" cy="455" rx="170" ry="25" fill="#000000" opacity="0.15"/>
 
-    <path d="M 135 200 C 125 320, 145 410, 185 435 C 205 445, 307 445, 327 435 C 367 410, 387 320, 377 200 C 375 110, 320 55, 256 55 C 192 55, 137 110, 135 200 Z" fill="#0f172a"/>
+    <g filter="url(#shadow)">
+        <path d="M 130 180 C 100 240, 95 300, 135 340 C 150 310, 155 250, 160 210 Z" fill="#111111"/>
+        <path d="M 382 180 C 412 240, 417 310, 377 360 C 362 310, 357 250, 352 210 Z" fill="#111111"/>
 
-    <path d="M 70 512 Q 135 375 256 375 Q 377 375 442 512 Z" fill="url(#fSuit)"/>
+        <path d="M 90 440 C 90 310, 160 250, 256 250 C 352 250, 422 310, 422 440 C 422 455, 390 465, 256 465 C 122 465, 90 455, 90 440 Z" fill="url(#fSuit)"/>
 
-    <path d="M 195 375 L 256 465 L 317 375 Z" fill="#ffffff"/>
-    <path d="M 220 375 L 256 435 L 292 375 Z" fill="#f1f5f9"/>
+        <polygon points="190,250 256,410 322,250" fill="#ffffff"/>
+        <polygon points="195,250 256,360 220,290" fill="#f1f5f9"/>
+        <polygon points="317,250 256,360 292,290" fill="#e2e8f0"/>
 
-    <path d="M 125 512 L 205 380 L 256 470 L 180 512 Z" fill="#4338ca"/>
-    <path d="M 387 512 L 307 380 L 256 470 L 332 512 Z" fill="#4338ca"/>
+        <path d="M 120 450 C 130 330, 185 260, 225 350 L 165 460 Z" fill="#153e32"/>
+        <path d="M 392 450 C 382 330, 327 260, 287 350 L 347 460 Z" fill="#153e32"/>
 
-    <rect x="222" y="260" width="68" height="110" rx="10" fill="#fed7aa"/>
-    <path d="M 222 320 Q 256 355 290 320 L 290 370 L 222 370 Z" fill="#f97316" opacity="0.15"/>
+        <path d="M 218 190 L 294 190 L 294 275 L 218 275 Z" fill="url(#fSkin)"/>
+        <path d="M 218 240 C 238 268, 274 268, 294 240 L 294 275 L 218 275 Z" fill="#d99978" opacity="0.25"/>
 
-    <circle cx="178" cy="225" r="18" fill="#fed7aa"/>
-    <circle cx="334" cy="225" r="18" fill="#fed7aa"/>
-    <circle cx="176" cy="242" r="7.5" fill="#ffffff"/>
-    <circle cx="176" cy="242" r="7.5" fill="none" stroke="#cbd5e1" stroke-width="1"/>
-    <circle cx="336" cy="242" r="7.5" fill="#ffffff"/>
-    <circle cx="336" cy="242" r="7.5" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+        <ellipse cx="178" cy="170" rx="16" ry="22" fill="url(#fSkin)"/>
+        <ellipse cx="334" cy="170" rx="16" ry="22" fill="url(#fSkin)"/>
 
-    <path d="M 184 185 Q 184 295 256 295 Q 328 295 328 185 Q 328 105 256 105 Q 184 105 184 185 Z" fill="#ffedd5"/>
+        <path d="M 184 135 C 184 235, 205 255, 256 255 C 307 255, 328 235, 328 135 C 328 75, 307 70, 256 70 C 205 70, 184 75, 184 135 Z" fill="url(#fSkin)"/>
 
-    <path d="M 205 170 Q 225 162 240 168" stroke="#1e1b4b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-    <path d="M 307 170 Q 287 162 272 168" stroke="#1e1b4b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path d="M 155 175 C 150 90, 195 40, 256 40 C 312 40, 350 70, 350 170 C 350 250, 342 300, 354 330 C 330 310, 322 250, 318 200 C 302 140, 280 120, 240 125 C 205 130, 180 155, 170 190 C 160 225, 140 260, 110 275 C 135 260, 145 230, 155 175 Z" fill="url(#fHair)"/>
+        <path d="M 158 165 C 160 85, 202 45, 256 45 C 308 45, 346 75, 346 165 C 346 240, 338 290, 350 320 C 330 300, 320 245, 314 195 C 298 135, 276 115, 238 120 C 202 125, 178 150, 168 185 C 158 220, 138 250, 115 265 C 138 250, 148 220, 158 165 Z" fill="#111111"/>
 
-    <path d="M 148 200 C 148 295, 172 360, 198 375 C 210 330, 204 270, 194 215 C 212 150, 235 130, 276 135 C 312 140, 322 175, 318 215 C 308 270, 302 330, 314 375 C 340 360, 364 295, 364 200 C 364 100, 316 55, 256 55 C 196 55, 148 100, 148 200 Z" fill="#1e1b4b"/>
+        <path d="M 230 52 C 260 46, 290 52, 315 65 C 295 58, 260 52, 230 60 Z" fill="url(#fHairGloss)"/>
+    </g>
 </svg>

@@ -1,57 +1,69 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
     <defs>
-        <linearGradient id="mBg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0f172a"/>
-            <stop offset="60%" stop-color="#1e293b"/>
-            <stop offset="100%" stop-color="#334155"/>
+        <linearGradient id="mSkin" x1="30%" y1="0%" x2="70%" y2="100%">
+            <stop offset="0%" stop-color="#fde3cf"/>
+            <stop offset="50%" stop-color="#f5cbb0"/>
+            <stop offset="100%" stop-color="#e2aa88"/>
         </linearGradient>
-        <radialGradient id="mGlow" cx="50%" cy="30%" r="60%">
-            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="mSuit" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1e293b"/>
-            <stop offset="100%" stop-color="#0f172a"/>
+
+        <linearGradient id="mHair" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#333333"/>
+            <stop offset="35%" stop-color="#111111"/>
+            <stop offset="100%" stop-color="#050505"/>
         </linearGradient>
-        <linearGradient id="mTie" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#2563eb"/>
+
+        <linearGradient id="mHairGloss" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+
+        <linearGradient id="mSuit" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2d2d2d"/>
+            <stop offset="100%" stop-color="#111111"/>
+        </linearGradient>
+
+        <linearGradient id="mTie" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6"/>
+            <stop offset="50%" stop-color="#2563eb"/>
             <stop offset="100%" stop-color="#1d4ed8"/>
         </linearGradient>
+
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#000000" flood-opacity="0.18"/>
+        </filter>
     </defs>
 
-    <rect width="512" height="512" fill="url(#mBg)"/>
-    <circle cx="256" cy="200" r="220" fill="url(#mGlow)"/>
+    <circle cx="256" cy="256" r="248" fill="#ffffff" stroke="#f1f5f9" stroke-width="4"/>
 
-    <circle cx="256" cy="256" r="220" fill="none" stroke="rgba(56,189,248,0.15)" stroke-width="2" stroke-dasharray="6 6"/>
+    <ellipse cx="256" cy="455" rx="170" ry="25" fill="#000000" opacity="0.15"/>
 
-    <path d="M 60 512 Q 130 370 256 370 Q 382 370 452 512 Z" fill="url(#mSuit)"/>
-    <path d="M 120 512 L 205 385 L 256 460 L 190 512 Z" fill="#334155"/>
-    <path d="M 392 512 L 307 385 L 256 460 L 322 512 Z" fill="#334155"/>
+    <g filter="url(#shadow)">
+        <path d="M 90 440 C 90 310, 160 250, 256 250 C 352 250, 422 310, 422 440 C 422 455, 390 465, 256 465 C 122 465, 90 455, 90 440 Z" fill="url(#mSuit)"/>
 
-    <path d="M 195 385 L 256 480 L 317 385 L 256 360 Z" fill="#ffffff"/>
-    <path d="M 210 380 L 256 440 L 225 390 Z" fill="#e2e8f0"/>
-    <path d="M 302 380 L 256 440 L 287 390 Z" fill="#cbd5e1"/>
+        <polygon points="200,250 256,430 312,250" fill="#ffffff"/>
+        <polygon points="205,250 256,360 230,300" fill="#f1f5f9"/>
+        <polygon points="307,250 256,360 282,300" fill="#e2e8f0"/>
 
-    <polygon points="244,380 268,380 274,480 256,512 238,480" fill="url(#mTie)"/>
-    <polygon points="240,370 272,370 268,385 244,385" fill="#1e40af"/>
+        <polygon points="244,280 268,280 276,435 256,460 236,435" fill="url(#mTie)"/>
+        <polygon points="242,268 270,268 266,285 246,285" fill="#1e40af"/>
 
-    <rect x="220" y="270" width="72" height="100" rx="12" fill="#fed7aa"/>
-    <path d="M 220 320 Q 256 360 292 320 L 292 370 L 220 370 Z" fill="#f97316" opacity="0.15"/>
+        <path d="M 125 450 C 135 340, 190 270, 230 360 L 175 460 Z" fill="#1a1a1a"/>
+        <path d="M 387 450 C 377 340, 322 270, 282 360 L 337 460 Z" fill="#1a1a1a"/>
 
-    <ellipse cx="170" cy="220" rx="20" ry="30" fill="#fed7aa"/>
-    <ellipse cx="342" cy="220" rx="20" ry="30" fill="#fed7aa"/>
-    <ellipse cx="172" cy="220" rx="10" ry="16" fill="#fbcfe8" opacity="0.3"/>
-    <ellipse cx="340" cy="220" rx="10" ry="16" fill="#fbcfe8" opacity="0.3"/>
+        <path d="M 215 190 L 297 190 L 297 275 L 215 275 Z" fill="url(#mSkin)"/>
+        <path d="M 215 240 C 235 268, 277 268, 297 240 L 297 275 L 215 275 Z" fill="#d99978" opacity="0.25"/>
 
-    <path d="M 180 180 Q 180 300 256 300 Q 332 300 332 180 Q 332 100 256 100 Q 180 100 180 180 Z" fill="#ffedd5"/>
+        <ellipse cx="172" cy="170" rx="18" ry="26" fill="url(#mSkin)"/>
+        <ellipse cx="340" cy="170" rx="18" ry="26" fill="url(#mSkin)"/>
 
-    <path d="M 185 220 Q 256 305 327 220 Q 327 265 256 295 Q 185 265 185 220 Z" fill="#f97316" opacity="0.12"/>
+        <path d="M 180 135 C 180 235, 205 260, 256 260 C 307 260, 332 235, 332 135 C 332 75, 307 70, 256 70 C 205 70, 180 75, 180 135 Z" fill="url(#mSkin)"/>
 
-    <path d="M 205 175 Q 225 168 240 174" stroke="#1e293b" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-    <path d="M 307 175 Q 287 168 272 174" stroke="#1e293b" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path d="M 166 135 C 166 60, 206 35, 256 35 C 310 35, 346 65, 346 135 C 346 130, 342 95, 325 80 C 305 65, 260 60, 230 80 C 198 100, 172 115, 166 135 Z" fill="url(#mHair)"/>
+        <path d="M 166 130 C 168 75, 212 40, 265 40 C 312 40, 344 75, 346 130 C 326 78, 282 60, 235 80 C 198 95, 176 110, 166 130 Z" fill="#111111"/>
+        
+        <path d="M 210 50 C 240 42, 275 45, 295 55 C 275 52, 240 50, 210 58 Z" fill="url(#mHairGloss)"/>
 
-    <path d="M 158 175 C 154 90 200 55 256 55 C 316 55 354 90 354 175 C 354 170 348 120 330 105 C 310 90 270 85 238 105 C 205 125 175 145 158 175 Z" fill="#0f172a"/>
-    <path d="M 160 165 C 165 105 210 65 265 65 C 315 65 348 95 350 165 C 330 105 285 85 240 105 C 205 120 178 140 160 165 Z" fill="#1e293b"/>
-    <path d="M 172 165 L 180 165 L 178 215 L 170 210 Z" fill="#0f172a"/>
-    <path d="M 340 165 L 332 165 L 334 215 L 342 210 Z" fill="#0f172a"/>
+        <path d="M 172 120 L 180 120 L 178 165 L 170 160 Z" fill="#111111"/>
+        <path d="M 340 120 L 332 120 L 334 165 L 342 160 Z" fill="#111111"/>
+    </g>
 </svg>
