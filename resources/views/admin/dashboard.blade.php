@@ -40,6 +40,10 @@
                 <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Add Detailed Portfolio Item
             </a>
+            <a href="{{ route('admin.ongoing-projects.create') }}" class="flex items-center gap-3 p-3 rounded-lg bg-blue-50/80 hover:bg-blue-100 transition-colors text-sm text-blue-700 font-bold border border-blue-200">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                + Add Ongoing Project (Live Ticker)
+            </a>
             <a href="{{ route('admin.services.create') }}" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors text-sm text-slate-700 hover:text-dark-900">
                 <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Add Service

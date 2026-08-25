@@ -49,6 +49,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::match(['post', 'delete', 'patch'], 'team/bulk-delete', [AdminTeamController::class, 'bulkDestroy'])->name('team.bulkDestroy');
         Route::resource('team', AdminTeamController::class)->except(['show']);
 
+        Route::match(['post', 'delete', 'patch'], 'ongoing-projects/bulk-delete', [\App\Http\Controllers\Admin\OngoingProjectController::class, 'bulkDestroy'])->name('ongoing-projects.bulkDestroy');
+        Route::resource('ongoing-projects', \App\Http\Controllers\Admin\OngoingProjectController::class)->except(['show']);
+
         Route::get('messages', [AdminMessageController::class, 'index'])->name('messages.index');
         Route::match(['post', 'delete', 'patch'], 'messages/bulk-delete', [AdminMessageController::class, 'bulkDestroy'])->name('messages.bulkDestroy');
         Route::delete('messages/delete-all', [AdminMessageController::class, 'deleteAll'])->name('messages.deleteAll');

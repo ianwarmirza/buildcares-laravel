@@ -27,6 +27,56 @@
     <div class="relative z-10 max-w-7xl mx-auto px-6 pt-36 pb-24 w-full">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <div>
+                {{-- ═══ ONGOING PROJECTS LIVE TICKER (RIGHT TO LEFT MARQUEE) ═══ --}}
+                @php
+                $dbOngoing = \App\Models\OngoingProject::active()->limit(10)->get();
+                if ($dbOngoing->count() > 0) {
+                    $tickerList = $dbOngoing;
+                } else {
+                    $tickerList = collect([
+                        (object)['site_address' => '42 High Street, Oxford, UK', 'proposal' => 'Double Storey Rear Extension & Loft Conversion', 'status' => 'In Progress'],
+                        (object)['site_address' => '15 Station Road, Reading, UK', 'proposal' => 'Single Storey Wrap-Around Kitchen Extension', 'status' => 'Planning Submission'],
+                        (object)['site_address' => '88 Park Lane, Sutton, London, UK', 'proposal' => 'Dormer Loft Conversion & Internal Alterations', 'status' => 'Building Control Review'],
+                        (object)['site_address' => '24 Church Street, Cambridge, UK', 'proposal' => 'Garage Conversion to Home Office & Gym Annex', 'status' => 'In Progress'],
+                        (object)['site_address' => '7 Victoria Road, Slough, UK', 'proposal' => 'Hip-to-Gable Roof Extension & Skylights', 'status' => 'Drawing Finalisation'],
+                        (object)['site_address' => '102 Green Lane, Croydon, London, UK', 'proposal' => 'New Build 4-Bedroom Detached House CAD Package', 'status' => 'Planning Ready'],
+                        (object)['site_address' => '31 Mill Road, St Albans, UK', 'proposal' => 'Outbuilding Garden Studio & Permitted Development Set', 'status' => 'In Progress'],
+                        (object)['site_address' => '59 Kingsway, Brighton, UK', 'proposal' => 'Structural Internal Wall Removal & Open Plan Living', 'status' => 'Building Control Approval'],
+                    ]);
+                }
+                @endphp
+
+                <div class="mb-8 animate-fadeInUp" style="animation-delay:0.05s">
+                    <div class="flex items-center rounded-2xl bg-white/95 backdrop-blur-md border border-blue-200/80 shadow-md p-1.5 overflow-hidden group">
+                        {{-- Ticker Badge --}}
+                        <div class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-[11px] uppercase tracking-wider flex items-center gap-2 flex-shrink-0 z-20 shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>Ongoing Projects</span>
+                        </div>
+
+                        {{-- Marquee Right-to-Left Scroll Window --}}
+                        <div class="overflow-hidden relative flex-1 ml-3 mask-marquee">
+                            <div class="marquee-track flex items-center gap-8 whitespace-nowrap group-hover:[animation-play-state:paused] py-1">
+                                {{-- Loop twice for seamless infinite marquee loop --}}
+                                @foreach([1, 2] as $loopPass)
+                                    @foreach($tickerList as $proj)
+                                    <div class="inline-flex items-center gap-2.5 text-xs text-slate-700 font-semibold flex-shrink-0">
+                                        <span class="text-blue-600 font-extrabold text-sm">📍</span>
+                                        <span class="text-slate-900 font-extrabold">{{ $proj->site_address }}</span>
+                                        <span class="text-slate-400 font-normal">•</span>
+                                        <span class="text-blue-700 font-bold">{{ $proj->proposal }}</span>
+                                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full ml-1">
+                                            {{ $proj->status }}
+                                        </span>
+                                    </div>
+                                    <span class="text-slate-300 font-mono text-xs">/</span>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="animate-fadeInUp" style="animation-delay:0.1s; font-family:'DM Sans',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:#2563eb; display:flex; align-items:center; gap:0.625rem; margin-bottom:1.75rem;">
                     <span style="display:block;width:1.5rem;height:2px;background:#2563eb;flex-shrink:0;"></span>
                     Freelance-Based Subcontractor

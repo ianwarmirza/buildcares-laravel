@@ -418,6 +418,22 @@
     transform: scale(1.1);
     box-shadow: 0 8px 30px rgba(37,211,102,0.55);
 }
+
+/* Marquee Ticker (Right to Left) */
+@keyframes ongoingTicker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+    animation: ongoingTicker 35s linear infinite;
+}
+
+.mask-marquee {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
 .whatsapp-float::before {
     content: '';
     position: absolute;
