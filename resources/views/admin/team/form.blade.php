@@ -227,7 +227,11 @@
 
 {{-- Upload Progress Modal --}}
 <div id="upload-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center space-y-6 animate-fadeInUp">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center space-y-6 animate-fadeInUp relative">
+        <button type="button" id="close-modal-btn" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 transition-colors rounded-full hover:bg-slate-100">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
         <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto shadow-sm">
             <svg class="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
         </div>
@@ -245,6 +249,13 @@
                 <span id="progress-bytes">0 KB / 0 KB</span>
                 <span id="progress-percent" class="text-blue-600 font-extrabold">0%</span>
             </div>
+        </div>
+
+        {{-- Done Action Button --}}
+        <div class="pt-2">
+            <button type="button" id="btn-redirect-now" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all hidden">
+                Go to Team List Now →
+            </button>
         </div>
     </div>
 </div>
@@ -513,17 +524,33 @@
             }
         };
 
+        document.getElementById('close-modal-btn')?.addEventListener('click', () => {
+            uploadModal.classList.add('hidden');
+            uploadModal.classList.remove('flex');
+            window.location.replace("{{ route('admin.team.index') }}");
+        });
+
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 400) {
                 progressBarFill.style.width = '100%';
                 progressPercent.textContent = '100%';
-                progressTitle.textContent = '✅ Upload Complete!';
-                progressStatus.textContent = 'Redirecting back to team list...';
+                progressTitle.textContent = '✅ Saved Successfully!';
+                progressStatus.textContent = 'Redirecting to team list...';
+                
+                const redirectBtn = document.getElementById('btn-redirect-now');
+                if (redirectBtn) {
+                    redirectBtn.classList.remove('hidden');
+                    redirectBtn.onclick = function() {
+                        window.location.replace("{{ route('admin.team.index') }}");
+                    };
+                }
+
+                // Force immediate redirection
                 setTimeout(() => {
-                    window.location.href = "{{ route('admin.team.index') }}";
-                }, 800);
+                    window.location.replace("{{ route('admin.team.index') }}");
+                }, 300);
             } else {
-                alert('Upload Error (' + xhr.status + '). Please check your internet connection or file size.');
+                alert('Upload Error (' + xhr.status + '). Please check your inputs or file size.');
                 uploadModal.classList.add('hidden');
                 uploadModal.classList.remove('flex');
             }
