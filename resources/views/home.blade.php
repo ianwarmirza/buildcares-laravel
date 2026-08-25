@@ -333,20 +333,25 @@
                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
 
                 <div>
-                    {{-- CAD Drawing Image Showcase Box --}}
-                    <div class="relative h-56 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
+                    {{-- Dedicated Top Card Header Strip (ABOVE PHOTO) --}}
+                    <div class="px-5 pt-4 pb-3 bg-gradient-to-r from-slate-50 to-blue-50/50 border-b border-slate-100 flex items-center justify-between z-30 relative">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> CAD Package
+                        </span>
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-100/90 border border-blue-200/90 px-2.5 py-1 rounded-full shadow-xs">
+                            {{ $svc['badge'] }}
+                        </span>
+                    </div>
+
+                    {{-- CAD Drawing Image Showcase Box (BELOW HEADER) --}}
+                    <div class="relative h-48 bg-gradient-to-br from-white via-slate-50 to-blue-50/20 p-5 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                         {{-- Micro Blueprint Grid SVG --}}
-                        <div class="absolute inset-0 pointer-events-none opacity-[0.05]">
+                        <div class="absolute inset-0 pointer-events-none opacity-[0.04]">
                             <svg class="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
                                 <pattern id="card-bp-grid-{{ $i }}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2563eb" stroke-width="0.6"/></pattern>
                                 <rect width="100%" height="100%" fill="url(#card-bp-grid-{{ $i }})"/>
                             </svg>
                         </div>
-
-                        {{-- Category Badge --}}
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-white/95 backdrop-blur-md border border-blue-200/80 px-2.5 py-1 rounded-full shadow-xs absolute top-3.5 right-3.5 z-10">
-                            {{ $svc['badge'] }}
-                        </span>
 
                         {{-- 3D Isometric CAD House Image --}}
                         <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="h-full w-auto max-w-full object-contain filter drop-shadow-md group-hover:scale-108 transition-transform duration-500 z-10">
