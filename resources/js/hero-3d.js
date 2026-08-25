@@ -263,20 +263,77 @@ function buildHouseStages() {
         ], PRIMARY, 0));
     });
 
-    // Symmetrical Ground Floor & First Floor Windows
-    [-1.2, 1.2].forEach((x) => {
-        // Ground floor window
-        const wG = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
-        wG.position.set(x, 0.65, 1.51);
-        openings.add(wG);
-        openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 0.65, 1.51));
+    // Helper for Ground Floor Bi-Fold Door (Wide glass folding panels with vertical mullions)
+    function createBiFoldDoor(xPos, yPos, zPos, width = 1.35, height = 1.1) {
+        const group = new THREE.Group();
 
-        // First floor window
-        const wF1 = filledMesh(new THREE.BoxGeometry(0.8, 0.75, 0.05), GLASS_C, 0.7);
-        wF1.position.set(x, 1.65, 1.51);
-        openings.add(wF1);
-        openings.add(solidEdges(new THREE.BoxGeometry(0.8, 0.75, 0.05), ACCENT, 0).position.set(x, 1.65, 1.51));
-    });
+        // Dark Aluminum Outer Frame
+        const frameGeo = new THREE.BoxGeometry(width, height, 0.06);
+        const frameMesh = filledMesh(frameGeo, FRAME_C, 0.95);
+        group.add(frameMesh);
+        group.add(solidEdges(frameGeo, ACCENT, 0));
+
+        // Full Glazing Glass Panel
+        const glassGeo = new THREE.BoxGeometry(width - 0.08, height - 0.08, 0.04);
+        const glassMesh = filledMesh(glassGeo, GLASS_C, 0.85);
+        group.add(glassMesh);
+
+        // Vertical Bifold Door Folding Mullions (3 folding panels)
+        const panelW = (width - 0.08) / 3;
+        for (let i = 1; i < 3; i++) {
+            const xOff = -(width - 0.08) / 2 + i * panelW;
+            group.add(lineFromPoints([
+                new THREE.Vector3(xOff, -(height - 0.08) / 2, 0.035),
+                new THREE.Vector3(xOff, (height - 0.08) / 2, 0.035),
+            ], ACCENT, 0));
+        }
+
+        group.position.set(xPos, yPos, zPos);
+        return group;
+    }
+
+    // Helper for Architectural Double Casement Window (Frame + Glass + Center Mullion + Transom line)
+    function createArchitecturalWindow(xPos, yPos, zPos, width = 0.85, height = 0.85) {
+        const group = new THREE.Group();
+
+        // Dark Frame
+        const frameGeo = new THREE.BoxGeometry(width, height, 0.06);
+        const frameMesh = filledMesh(frameGeo, FRAME_C, 0.95);
+        group.add(frameMesh);
+        group.add(solidEdges(frameGeo, ACCENT, 0));
+
+        // Glass Panes
+        const glassGeo = new THREE.BoxGeometry(width - 0.08, height - 0.08, 0.04);
+        const glassMesh = filledMesh(glassGeo, GLASS_C, 0.8);
+        group.add(glassMesh);
+
+        // Center Vertical Mullion Bar
+        group.add(lineFromPoints([
+            new THREE.Vector3(0, -(height - 0.08) / 2, 0.035),
+            new THREE.Vector3(0, (height - 0.08) / 2, 0.035),
+        ], ACCENT, 0));
+
+        // Horizontal Transom Bar
+        group.add(lineFromPoints([
+            new THREE.Vector3(-(width - 0.08) / 2, (height - 0.08) * 0.15, 0.035),
+            new THREE.Vector3((width - 0.08) / 2, (height - 0.08) * 0.15, 0.035),
+        ], ACCENT, 0));
+
+        group.position.set(xPos, yPos, zPos);
+        return group;
+    }
+
+    // Ground Floor Left (Red Box 1): Modern Bifold Door
+    openings.add(createBiFoldDoor(-1.25, 0.65, 1.51, 1.35, 1.1));
+
+    // Ground Floor Right (Red Box 2): Architectural Window
+    openings.add(createArchitecturalWindow(1.25, 0.65, 1.51, 0.85, 0.85));
+
+    // First Floor Left (Red Box 3): Architectural Window
+    openings.add(createArchitecturalWindow(-1.25, 1.65, 1.51, 0.85, 0.85));
+
+    // First Floor Right (Red Box 4): Architectural Window
+    openings.add(createArchitecturalWindow(1.25, 1.65, 1.51, 0.85, 0.85));
 
     openings.userData.targetOpacity = 0.9;
     stages.push(openings);
