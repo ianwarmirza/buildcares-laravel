@@ -27,13 +27,13 @@
             @method('PUT')
         @endif
 
-        <div class="grid sm:grid-cols-2 gap-6">
+        <div class="grid sm:grid-cols-3 gap-6">
             {{-- Name --}}
             <div>
                 <label for="name" class="block text-xs font-extrabold uppercase tracking-widest text-slate-700 mb-2">Full Name <span class="text-red-500">*</span></label>
                 <input type="text" name="name" id="name" required
                        value="{{ old('name', $teamMember->name ?? '') }}"
-                       placeholder="e.g. Alex Morgan"
+                       placeholder="e.g. Abaid Ullah Mansoor"
                        class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold">
                 @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
@@ -43,9 +43,28 @@
                 <label for="role" class="block text-xs font-extrabold uppercase tracking-widest text-slate-700 mb-2">Role / Title <span class="text-red-500">*</span></label>
                 <input type="text" name="role" id="role" required
                        value="{{ old('role', $teamMember->role ?? '') }}"
-                       placeholder="e.g. Lead CAD Specialist & BIM Architect"
+                       placeholder="e.g. Lead CAD Draftsman"
                        class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold">
                 @error('role')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            {{-- Gender --}}
+            <div>
+                <label class="block text-xs font-extrabold uppercase tracking-widest text-slate-700 mb-2">Gender / Avatar Icon <span class="text-red-500">*</span></label>
+                @php
+                    $currentGender = old('gender', $teamMember->gender ?? 'male');
+                @endphp
+                <div class="grid grid-cols-2 gap-2">
+                    <label id="gender-btn-male" class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all {{ $currentGender === 'male' ? 'border-blue-600 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 shadow-xs' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100' }}">
+                        <input type="radio" name="gender" id="gender-male" value="male" class="hidden" {{ $currentGender === 'male' ? 'checked' : '' }}>
+                        <span>👨 Male</span>
+                    </label>
+                    <label id="gender-btn-female" class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all {{ $currentGender === 'female' ? 'border-purple-600 bg-purple-50 text-purple-700 ring-2 ring-purple-500/20 shadow-xs' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100' }}">
+                        <input type="radio" name="gender" id="gender-female" value="female" class="hidden" {{ $currentGender === 'female' ? 'checked' : '' }}>
+                        <span>👩 Female</span>
+                    </label>
+                </div>
+                @error('gender')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
 
@@ -257,7 +276,37 @@
     const progressPercent = document.getElementById('progress-percent');
     const progressBytes = document.getElementById('progress-bytes');
     const progressTitle = document.getElementById('progress-title');
-    const progressStatus = document.getElementById('progress-status');
+    const maleAvatarSvg = "{!! \App\Models\TeamMember::getMaleAvatarSvg() !!}";
+    const femaleAvatarSvg = "{!! \App\Models\TeamMember::getFemaleAvatarSvg() !!}";
+    let isUserFileUploaded = {{ isset($teamMember) && $teamMember->has_photo ? 'true' : 'false' }};
+
+    const genderMaleRadio = document.getElementById('gender-male');
+    const genderFemaleRadio = document.getElementById('gender-female');
+    const genderBtnMale = document.getElementById('gender-btn-male');
+    const genderBtnFemale = document.getElementById('gender-btn-female');
+
+    function updateGenderUI(gender) {
+        if (gender === 'female') {
+            if (genderMaleRadio) genderMaleRadio.checked = false;
+            if (genderFemaleRadio) genderFemaleRadio.checked = true;
+            if (genderBtnMale) genderBtnMale.className = "flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100";
+            if (genderBtnFemale) genderBtnFemale.className = "flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all border-purple-600 bg-purple-50 text-purple-700 ring-2 ring-purple-500/20 shadow-xs";
+            if (!isUserFileUploaded && photoPreview) {
+                photoPreview.src = femaleAvatarSvg;
+            }
+        } else {
+            if (genderMaleRadio) genderMaleRadio.checked = true;
+            if (genderFemaleRadio) genderFemaleRadio.checked = false;
+            if (genderBtnFemale) genderBtnFemale.className = "flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100";
+            if (genderBtnMale) genderBtnMale.className = "flex items-center justify-center gap-2 py-3 px-3 rounded-xl border cursor-pointer font-bold text-xs transition-all border-blue-600 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 shadow-xs";
+            if (!isUserFileUploaded && photoPreview) {
+                photoPreview.src = maleAvatarSvg;
+            }
+        }
+    }
+
+    genderBtnMale?.addEventListener('click', () => updateGenderUI('male'));
+    genderBtnFemale?.addEventListener('click', () => updateGenderUI('female'));
 
     function updatePreview() {
         if (!sliderX || !sliderY || !sliderZoom || !photoPreview) return;
@@ -357,6 +406,7 @@
 
     function handleFile(file) {
         if (!file) return;
+        isUserFileUploaded = true;
         
         // Show file info badge
         if (fileNameText && fileBadge) {

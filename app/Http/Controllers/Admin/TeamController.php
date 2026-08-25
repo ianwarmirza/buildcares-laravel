@@ -103,6 +103,7 @@ class TeamController extends Controller
         return $request->validate([
             'name'             => 'required|string|max:255',
             'role'             => 'required|string|max:255',
+            'gender'           => 'required|in:male,female',
             'bio'              => 'nullable|string|max:2000',
             'photo'            => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
             'photo_position_x' => 'nullable|integer|between:0,100',
