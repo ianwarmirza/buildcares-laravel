@@ -444,22 +444,23 @@
 
 
 {{-- ═══ MEET OUR TEAM ═══ --}}
-<section class="py-24 relative overflow-hidden bg-[#0a0f12] text-white border-t border-slate-800">
-    <div class="absolute inset-0 pointer-events-none opacity-[0.05]">
+<section class="py-24 relative overflow-hidden bg-slate-50 border-t border-slate-200">
+    {{-- Blueprint micro-grid SVG background --}}
+    <div class="absolute inset-0 pointer-events-none opacity-[0.04]">
         <svg class="w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
-            <defs><pattern id="team-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#10b981" stroke-width="0.6"/></pattern></defs>
+            <defs><pattern id="team-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2563eb" stroke-width="0.8"/></pattern></defs>
             <rect width="100%" height="100%" fill="url(#team-grid)"/>
         </svg>
     </div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none" style="background:radial-gradient(circle at 50% 20%, rgba(16,185,129,0.12) 0%, transparent 70%);"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] pointer-events-none" style="background:radial-gradient(circle at 50% 20%, rgba(37,99,235,0.08) 0%, transparent 70%);"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6">
         <div class="text-center max-w-3xl mx-auto mb-16">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/30 text-emerald-400 text-xs font-extrabold uppercase tracking-widest mb-3">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-extrabold uppercase tracking-widest mb-3">
                 <span>👥</span> Our Experts
             </div>
-            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Meet Our Team</h2>
-            <p class="text-slate-400 text-sm sm:text-base mt-3">The experienced architectural technologists, CAD specialists, and BIM visualisers powering BuildCares.</p>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Meet Our Team</h2>
+            <p class="text-slate-500 text-sm sm:text-base mt-3">The experienced architectural technologists, CAD specialists, and BIM visualisers powering BuildCares.</p>
         </div>
 
         @php
@@ -478,64 +479,70 @@
                 [
                     'name'  => 'M Tauseeq Nasir ACIAT',
                     'role'  => 'FOUNDER & ARCHITECTURAL TECHNOLOGIST',
-                    'bio'   => 'Founder of ArckiDraw Ltd, Muhammad Tauseeq Nasir is an Architectural Technologist with 9+ years of experience specialising in UK planning, building regulations, and residential projects. He has extensive experience working with architects, developers, and homeowners, delivering accurate and high-quality technical...',
-                    'photo' => 'https://ui-avatars.com/api/?name=M+Tauseeq+Nasir&background=0F172A&color=10B981&size=512',
+                    'bio'   => 'Founder of ArckiDraw Ltd, Muhammad Tauseeq Nasir is an Architectural Technologist with 9+ years of experience specialising in UK planning, building regulations, and residential projects. He has extensive experience working with architects, developers, and homeowners.',
+                    'photo' => 'https://ui-avatars.com/api/?name=M+Tauseeq+Nasir&background=0F172A&color=2563EB&size=512',
                 ],
                 [
                     'name'  => 'Muhammad Anwar Mirza',
                     'role'  => 'CO-FOUNDER & ARCHITECT',
-                    'bio'   => 'Muhammad Anwar is a graduate of the University of Gujrat and a Co-founder of Arckidraw. He has extensive experience in preparing Planning and Building Regulations drawings for UK-based residential projects. As one of the founding members of Arckidraw, Anwar has played an important role in the...',
-                    'photo' => 'https://ui-avatars.com/api/?name=Muhammad+Anwar+Mirza&background=0F172A&color=10B981&size=512',
+                    'bio'   => 'Muhammad Anwar is a graduate of the University of Gujrat and a Co-founder of Arckidraw. He has extensive experience in preparing Planning and Building Regulations drawings for UK-based residential projects.',
+                    'photo' => 'https://ui-avatars.com/api/?name=Muhammad+Anwar+Mirza&background=0F172A&color=2563EB&size=512',
                 ],
                 [
                     'name'  => 'Iqra Shehzadi',
                     'role'  => 'JUNIOR ARCHITECT',
-                    'bio'   => 'Iqra joined ArckiDraw Ltd in 2020 after completing her Bachelor of Architecture (B.Arch). She specialises in planning drawings and has developed strong experience in preparing detailed drawings for residential extensions and loft conversions. Working closely under the guidance of our senior architects, sh...',
-                    'photo' => 'https://ui-avatars.com/api/?name=Iqra+Shehzadi&background=0F172A&color=10B981&size=512',
+                    'bio'   => 'Iqra joined ArckiDraw Ltd in 2020 after completing her Bachelor of Architecture (B.Arch). She specialises in planning drawings and has developed strong experience in preparing detailed drawings for residential extensions.',
+                    'photo' => 'https://ui-avatars.com/api/?name=Iqra+Shehzadi&background=0F172A&color=2563EB&size=512',
                 ],
                 [
                     'name'  => 'M Ali',
                     'role'  => 'SENIOR CGI ARTIST',
-                    'bio'   => 'M. Ali is a highly experienced CGI Artist with more than 15 years of experience in creating high-end, photorealistic renders and animations for both residential and commercial projects. He has strong expertise in architectural visualisation and interior design, with extensive experience working on projects across the UK and UAE. Hi...',
-                    'photo' => 'https://ui-avatars.com/api/?name=M+Ali&background=0F172A&color=10B981&size=512',
+                    'bio'   => 'M. Ali is a highly experienced CGI Artist with more than 15 years of experience in creating high-end, photorealistic renders and animations for both residential and commercial projects across the UK and UAE.',
+                    'photo' => 'https://ui-avatars.com/api/?name=M+Ali&background=0F172A&color=2563EB&size=512',
                 ],
                 [
                     'name'  => 'Ubaid Mirza',
                     'role'  => 'TRAINEE ARCHITECTURAL DRAFTSMAN',
-                    'bio'   => 'After completing college, Ubaid joined ArckiDraw as a Trainee Architectural Draftsman. He primarily works with AutoCAD and supports the team in preparing accurate existing-condition drawings based on survey notes and site measurements. Ubaid is developing his technical drafting skills and gaining practical...',
-                    'photo' => 'https://ui-avatars.com/api/?name=Ubaid+Mirza&background=0F172A&color=10B981&size=512',
+                    'bio'   => 'After completing college, Ubaid joined ArckiDraw as a Trainee Architectural Draftsman. He primarily works with AutoCAD and supports the team in preparing accurate existing-condition drawings based on survey notes.',
+                    'photo' => 'https://ui-avatars.com/api/?name=Ubaid+Mirza&background=0F172A&color=2563EB&size=512',
                 ],
             ];
         }
         @endphp
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             @foreach($homepageTeam as $member)
-            <div class="bg-[#0f171a] p-6 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/60 hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center shadow-lg group">
-                {{-- Circular Photo Avatar --}}
-                <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-emerald-500/80 p-1 bg-slate-950 mb-5 flex-shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
-                    <img src="{{ $member['photo'] }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover rounded-full">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-500/80 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                {{-- Top Blue Gradient Accent Line on Hover --}}
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                <div>
+                    {{-- Circular Photo Avatar --}}
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-blue-50 p-1 bg-white shadow-md mx-auto mb-5 group-hover:scale-105 group-hover:border-blue-100 transition-all duration-300 flex-shrink-0">
+                        <img src="{{ $member['photo'] }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover rounded-full">
+                    </div>
+
+                    {{-- Name --}}
+                    <h3 class="font-extrabold text-base text-slate-900 tracking-tight mb-1 text-center group-hover:text-blue-600 transition-colors">
+                        {{ $member['name'] }}
+                    </h3>
+
+                    {{-- Role Badge --}}
+                    <div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50/80 border border-blue-200/80 px-2.5 py-1 rounded-full mb-3 text-center min-h-[2.4rem] flex items-center justify-center">
+                        {{ $member['role'] }}
+                    </div>
+
+                    {{-- Bio Description --}}
+                    <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed line-clamp-4 text-center mb-5">
+                        {{ $member['bio'] }}
+                    </p>
                 </div>
 
-                {{-- Name --}}
-                <h3 class="font-extrabold text-base text-white tracking-tight mb-1.5 group-hover:text-emerald-400 transition-colors">
-                    {{ $member['name'] }}
-                </h3>
-
-                {{-- Role Badge --}}
-                <div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 mb-4 leading-tight min-h-[2.5rem] flex items-center justify-center">
-                    {{ $member['role'] }}
-                </div>
-
-                {{-- Bio Description --}}
-                <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed line-clamp-6 text-center">
-                    {{ $member['bio'] }}
-                </p>
-
-                {{-- Bottom Expand Arrow Link --}}
-                <div class="mt-auto pt-4 flex justify-center">
-                    <a href="{{ route('team.index') }}" class="w-8 h-8 rounded-full border border-slate-700/80 hover:border-emerald-500 text-slate-500 hover:text-emerald-400 flex items-center justify-center transition-colors" title="View Full Details">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                {{-- Action Link Button --}}
+                <div class="pt-2 border-t border-slate-100">
+                    <a href="{{ route('team.index') }}" class="w-full text-center py-2 px-3 rounded-xl bg-slate-50 group-hover:bg-blue-600 text-slate-700 group-hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 border border-slate-200 group-hover:border-blue-600 shadow-xs">
+                        <span>View Profile</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                 </div>
             </div>

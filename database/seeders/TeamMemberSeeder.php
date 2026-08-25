@@ -16,6 +16,7 @@ class TeamMemberSeeder extends Seeder
                 'bio'        => 'Founder of ArckiDraw Ltd, Muhammad Tauseeq Nasir is an Architectural Technologist with 9+ years of experience specialising in UK planning, building regulations, and residential projects. He has extensive experience working with architects, developers, and homeowners, delivering accurate and high-quality technical drawings.',
                 'sort_order' => 1,
                 'is_active'  => true,
+                'color'      => '2563EB',
             ],
             [
                 'name'       => 'Muhammad Anwar Mirza',
