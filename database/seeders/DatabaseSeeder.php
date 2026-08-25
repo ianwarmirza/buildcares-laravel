@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             PortfolioSeeder::class,
             ServiceSeeder::class,
+            TeamMemberSeeder::class,
         ]);
     }
 }

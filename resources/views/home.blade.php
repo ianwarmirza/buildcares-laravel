@@ -443,26 +443,103 @@
 </section>
 
 
-{{-- ═══ CTA ═══ --}}
-<section class="relative py-20 overflow-hidden border-t" style="background-color:#f8fafc; border-color:#e2e8f0;">
-    <div class="absolute inset-0 pointer-events-none opacity-[0.04]">
-        <svg class="w-full h-full" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice">
-            <defs><pattern id="cta-grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="#2563eb" stroke-width="0.8"/></pattern></defs>
-            <rect width="100%" height="100%" fill="url(#cta-grid)"/>
+{{-- ═══ MEET OUR TEAM ═══ --}}
+<section class="py-24 relative overflow-hidden bg-[#0a0f12] text-white border-t border-slate-800">
+    <div class="absolute inset-0 pointer-events-none opacity-[0.05]">
+        <svg class="w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
+            <defs><pattern id="team-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#10b981" stroke-width="0.6"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#team-grid)"/>
         </svg>
     </div>
-    <div class="absolute left-0 top-0 bottom-0 w-1" style="background:#2563eb;"></div>
-    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        <div class="section-label justify-center reveal">Ready to Build?</div>
-        <h2 class="section-title reveal">Have a Project in Mind?</h2>
-        <p class="text-lg mb-10 reveal max-w-xl mx-auto" style="color:#64748b;">
-            Get in touch today for a free consultation and quote. Most enquiries receive a response within a few hours.
-        </p>
-        <div class="flex flex-wrap gap-4 justify-center reveal">
-            <a href="{{ route('contact') }}" class="btn-gold text-sm px-8 py-4">
-                Get a Free Quote
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none" style="background:radial-gradient(circle at 50% 20%, rgba(16,185,129,0.12) 0%, transparent 70%);"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/30 text-emerald-400 text-xs font-extrabold uppercase tracking-widest mb-3">
+                <span>👥</span> Our Experts
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Meet Our Team</h2>
+            <p class="text-slate-400 text-sm sm:text-base mt-3">The experienced architectural technologists, CAD specialists, and BIM visualisers powering BuildCares.</p>
+        </div>
+
+        @php
+        $dbMembers = \App\Models\TeamMember::active()->orderBy('sort_order')->orderBy('id')->get();
+        if ($dbMembers->count() > 0) {
+            $homepageTeam = $dbMembers->map(function($m) {
+                return [
+                    'name'  => $m->name,
+                    'role'  => $m->role,
+                    'bio'   => $m->bio,
+                    'photo' => $m->photo_url,
+                ];
+            })->all();
+        } else {
+            $homepageTeam = [
+                [
+                    'name'  => 'M Tauseeq Nasir ACIAT',
+                    'role'  => 'FOUNDER & ARCHITECTURAL TECHNOLOGIST',
+                    'bio'   => 'Founder of ArckiDraw Ltd, Muhammad Tauseeq Nasir is an Architectural Technologist with 9+ years of experience specialising in UK planning, building regulations, and residential projects. He has extensive experience working with architects, developers, and homeowners, delivering accurate and high-quality technical...',
+                    'photo' => 'https://ui-avatars.com/api/?name=M+Tauseeq+Nasir&background=0F172A&color=10B981&size=512',
+                ],
+                [
+                    'name'  => 'Muhammad Anwar Mirza',
+                    'role'  => 'CO-FOUNDER & ARCHITECT',
+                    'bio'   => 'Muhammad Anwar is a graduate of the University of Gujrat and a Co-founder of Arckidraw. He has extensive experience in preparing Planning and Building Regulations drawings for UK-based residential projects. As one of the founding members of Arckidraw, Anwar has played an important role in the...',
+                    'photo' => 'https://ui-avatars.com/api/?name=Muhammad+Anwar+Mirza&background=0F172A&color=10B981&size=512',
+                ],
+                [
+                    'name'  => 'Iqra Shehzadi',
+                    'role'  => 'JUNIOR ARCHITECT',
+                    'bio'   => 'Iqra joined ArckiDraw Ltd in 2020 after completing her Bachelor of Architecture (B.Arch). She specialises in planning drawings and has developed strong experience in preparing detailed drawings for residential extensions and loft conversions. Working closely under the guidance of our senior architects, sh...',
+                    'photo' => 'https://ui-avatars.com/api/?name=Iqra+Shehzadi&background=0F172A&color=10B981&size=512',
+                ],
+                [
+                    'name'  => 'M Ali',
+                    'role'  => 'SENIOR CGI ARTIST',
+                    'bio'   => 'M. Ali is a highly experienced CGI Artist with more than 15 years of experience in creating high-end, photorealistic renders and animations for both residential and commercial projects. He has strong expertise in architectural visualisation and interior design, with extensive experience working on projects across the UK and UAE. Hi...',
+                    'photo' => 'https://ui-avatars.com/api/?name=M+Ali&background=0F172A&color=10B981&size=512',
+                ],
+                [
+                    'name'  => 'Ubaid Mirza',
+                    'role'  => 'TRAINEE ARCHITECTURAL DRAFTSMAN',
+                    'bio'   => 'After completing college, Ubaid joined ArckiDraw as a Trainee Architectural Draftsman. He primarily works with AutoCAD and supports the team in preparing accurate existing-condition drawings based on survey notes and site measurements. Ubaid is developing his technical drafting skills and gaining practical...',
+                    'photo' => 'https://ui-avatars.com/api/?name=Ubaid+Mirza&background=0F172A&color=10B981&size=512',
+                ],
+            ];
+        }
+        @endphp
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6">
+            @foreach($homepageTeam as $member)
+            <div class="bg-[#0f171a] p-6 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/60 hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center shadow-lg group">
+                {{-- Circular Photo Avatar --}}
+                <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-emerald-500/80 p-1 bg-slate-950 mb-5 flex-shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ $member['photo'] }}" alt="{{ $member['name'] }}" class="w-full h-full object-cover rounded-full">
+                </div>
+
+                {{-- Name --}}
+                <h3 class="font-extrabold text-base text-white tracking-tight mb-1.5 group-hover:text-emerald-400 transition-colors">
+                    {{ $member['name'] }}
+                </h3>
+
+                {{-- Role Badge --}}
+                <div class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 mb-4 leading-tight min-h-[2.5rem] flex items-center justify-center">
+                    {{ $member['role'] }}
+                </div>
+
+                {{-- Bio Description --}}
+                <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed line-clamp-6 text-center">
+                    {{ $member['bio'] }}
+                </p>
+
+                {{-- Bottom Expand Arrow Link --}}
+                <div class="mt-auto pt-4 flex justify-center">
+                    <a href="{{ route('team.index') }}" class="w-8 h-8 rounded-full border border-slate-700/80 hover:border-emerald-500 text-slate-500 hover:text-emerald-400 flex items-center justify-center transition-colors" title="View Full Details">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </a>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
 </section>
