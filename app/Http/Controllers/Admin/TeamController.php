@@ -25,10 +25,14 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request);
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('team', 'public');
-            $validated['photo'] = $path;
-            
-            // Mirror copy to public_path for permanent static serving
+            $file = $request->file('photo');
+            $mime = $file->getMimeType();
+            $contents = file_get_contents($file->getRealPath());
+            $dataUri = 'data:' . $mime . ';base64,' . base64_encode($contents);
+            $validated['photo'] = $dataUri;
+
+            // Secondary disk backup
+            $path = $file->store('team', 'public');
             @mkdir(public_path('storage/team'), 0777, true);
             @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         }
@@ -54,13 +58,14 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request, $team);
 
         if ($request->hasFile('photo')) {
-            if ($team->photo && !str_starts_with($team->photo, 'http') && Storage::disk('public')->exists($team->photo)) {
-                Storage::disk('public')->delete($team->photo);
-            }
-            $path = $request->file('photo')->store('team', 'public');
-            $validated['photo'] = $path;
+            $file = $request->file('photo');
+            $mime = $file->getMimeType();
+            $contents = file_get_contents($file->getRealPath());
+            $dataUri = 'data:' . $mime . ';base64,' . base64_encode($contents);
+            $validated['photo'] = $dataUri;
 
-            // Mirror copy to public_path for permanent static serving
+            // Secondary disk backup
+            $path = $file->store('team', 'public');
             @mkdir(public_path('storage/team'), 0777, true);
             @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         }

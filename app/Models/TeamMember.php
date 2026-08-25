@@ -47,7 +47,7 @@ class TeamMember extends Model
     public function getPhotoUrlAttribute()
     {
         if (!empty($this->photo)) {
-            if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
+            if (str_starts_with($this->photo, 'data:image/') || str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
                 return $this->photo;
             }
             $path = ltrim($this->photo, '/');
