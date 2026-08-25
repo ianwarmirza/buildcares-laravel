@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\MessageController as AdminMessageController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\Admin\TeamController as AdminTeamController;
+
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -20,6 +23,8 @@ Route::get('/portfolio/{slug}', [PortfolioController::class, 'show'])->name('por
 
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
+
+Route::get('/team', [TeamController::class, 'index'])->name('team.index');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -40,6 +45,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::match(['post', 'delete', 'patch'], 'portfolio/bulk-delete', [AdminPortfolioController::class, 'bulkDestroy'])->name('portfolio.bulkDestroy');
         Route::resource('portfolio', AdminPortfolioController::class)->except(['show']);
         Route::resource('services', AdminServiceController::class)->except(['show']);
+
+        Route::match(['post', 'delete', 'patch'], 'team/bulk-delete', [AdminTeamController::class, 'bulkDestroy'])->name('team.bulkDestroy');
+        Route::resource('team', AdminTeamController::class)->except(['show']);
 
         Route::get('messages', [AdminMessageController::class, 'index'])->name('messages.index');
         Route::match(['post', 'delete', 'patch'], 'messages/bulk-delete', [AdminMessageController::class, 'bulkDestroy'])->name('messages.bulkDestroy');
