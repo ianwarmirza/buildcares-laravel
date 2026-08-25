@@ -30,6 +30,9 @@ class TeamController extends Controller
 
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['sort_order'] = (int) $request->input('sort_order', 0);
+        $validated['photo_position_x'] = (int) $request->input('photo_position_x', 50);
+        $validated['photo_position_y'] = (int) $request->input('photo_position_y', 50);
+        $validated['photo_zoom'] = (int) $request->input('photo_zoom', 100);
 
         TeamMember::create($validated);
 
@@ -46,7 +49,7 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request, $team);
 
         if ($request->hasFile('photo')) {
-            if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+            if ($team->photo && !str_starts_with($team->photo, 'http') && Storage::disk('public')->exists($team->photo)) {
                 Storage::disk('public')->delete($team->photo);
             }
             $validated['photo'] = $request->file('photo')->store('team', 'public');
@@ -54,6 +57,9 @@ class TeamController extends Controller
 
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['sort_order'] = (int) $request->input('sort_order', 0);
+        $validated['photo_position_x'] = (int) $request->input('photo_position_x', 50);
+        $validated['photo_position_y'] = (int) $request->input('photo_position_y', 50);
+        $validated['photo_zoom'] = (int) $request->input('photo_zoom', 100);
 
         $team->update($validated);
 
@@ -62,7 +68,7 @@ class TeamController extends Controller
 
     public function destroy(TeamMember $team)
     {
-        if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+        if ($team->photo && !str_starts_with($team->photo, 'http') && Storage::disk('public')->exists($team->photo)) {
             Storage::disk('public')->delete($team->photo);
         }
         $team->delete();
@@ -83,7 +89,7 @@ class TeamController extends Controller
 
         $members = TeamMember::whereIn('id', $ids)->get();
         foreach ($members as $member) {
-            if ($member->photo && Storage::disk('public')->exists($member->photo)) {
+            if ($member->photo && !str_starts_with($member->photo, 'http') && Storage::disk('public')->exists($member->photo)) {
                 Storage::disk('public')->delete($member->photo);
             }
             $member->delete();
@@ -95,14 +101,17 @@ class TeamController extends Controller
     private function validateRequest(Request $request, ?TeamMember $team = null): array
     {
         return $request->validate([
-            'name'       => 'required|string|max:255',
-            'role'       => 'required|string|max:255',
-            'bio'        => 'nullable|string|max:2000',
-            'photo'      => 'nullable|image|max:8192',
-            'email'      => 'nullable|email|max:255',
-            'phone'      => 'nullable|string|max:50',
-            'linkedin'   => 'nullable|url|max:255',
-            'sort_order' => 'nullable|integer|min:0',
+            'name'             => 'required|string|max:255',
+            'role'             => 'required|string|max:255',
+            'bio'              => 'nullable|string|max:2000',
+            'photo'            => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'photo_position_x' => 'nullable|integer|between:0,100',
+            'photo_position_y' => 'nullable|integer|between:0,100',
+            'photo_zoom'       => 'nullable|integer|between:100,250',
+            'email'            => 'nullable|email|max:255',
+            'phone'            => 'nullable|string|max:50',
+            'linkedin'         => 'nullable|url|max:255',
+            'sort_order'       => 'nullable|integer|min:0',
         ]);
     }
 }

@@ -45,7 +45,7 @@
                 <div>
                     {{-- Photo Header --}}
                     <div class="relative aspect-square overflow-hidden bg-slate-100 border-b border-slate-100">
-                        <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ $member->photo_url }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="{{ $member->photo_style }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
 

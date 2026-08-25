@@ -34,7 +34,7 @@
                 <input type="text" name="name" id="name" required
                        value="{{ old('name', $teamMember->name ?? '') }}"
                        placeholder="e.g. Alex Morgan"
-                       class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                       class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold">
                 @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
@@ -44,26 +44,91 @@
                 <input type="text" name="role" id="role" required
                        value="{{ old('role', $teamMember->role ?? '') }}"
                        placeholder="e.g. Lead CAD Specialist & BIM Architect"
-                       class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                       class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold">
                 @error('role')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
 
-        {{-- Photo Upload with Drag and Drop --}}
-        <div>
-            <label class="block text-xs font-extrabold uppercase tracking-widest text-slate-700 mb-2">Profile Photo (JPG / PNG)</label>
-            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center transition-colors bg-slate-50 relative cursor-pointer">
-                <input type="file" name="photo" id="photo-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                
-                <div class="flex flex-col items-center justify-center space-y-2">
-                    <div id="photo-preview-container" class="w-20 h-20 rounded-full overflow-hidden bg-slate-200 border-2 border-white shadow-md mb-2">
-                        <img id="photo-preview" src="{{ $isEdit ? $teamMember->photo_url : 'https://ui-avatars.com/api/?name=User&background=0F172A&color=ffffff&size=512' }}" class="w-full h-full object-cover">
+        {{-- Profile Photo Upload & Centralizing Adjuster --}}
+        <div class="border border-blue-100 rounded-2xl p-6 bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-50 space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-900 flex items-center gap-2">
+                        <span>📸</span> Profile Photo & Circular Adjuster
+                    </h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Upload JPG/PNG and adjust face alignment so it displays perfectly centralized on the website.</p>
+                </div>
+            </div>
+
+            {{-- Dropzone Container --}}
+            <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-5 text-center transition-colors bg-white cursor-pointer relative group">
+                <input type="file" name="photo" id="photo-input" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     </div>
-                    <p class="text-xs font-bold text-slate-800">Drag & drop photo here or click to browse</p>
-                    <p class="text-[11px] text-slate-500">Square proportions recommended (JPG, PNG, max 8MB)</p>
+                    <p class="text-xs font-bold text-slate-800">Click to Select JPG / PNG or Drag & Drop File Here</p>
+                    <p class="text-[10px] text-slate-500">Supports JPG, PNG, WEBP (Max 10MB)</p>
                 </div>
             </div>
             @error('photo')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+
+            {{-- Interactive Circle Preview & Sliders --}}
+            <div class="grid md:grid-cols-12 gap-6 items-center pt-2">
+                {{-- Left: Circle Preview --}}
+                <div class="md:col-span-5 flex flex-col items-center justify-center text-center">
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-2">Live Website Circle Preview</span>
+                    <div class="w-36 h-36 rounded-full overflow-hidden bg-slate-900 border-4 border-blue-600 shadow-xl relative">
+                        <img id="photo-preview" 
+                             src="{{ $isEdit ? $teamMember->photo_url : 'https://ui-avatars.com/api/?name=User&background=0F172A&color=ffffff&size=512' }}" 
+                             alt="Avatar Preview" 
+                             class="w-full h-full object-cover transition-all duration-75"
+                             style="object-position: {{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}% {{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}%; transform: scale({{ (old('photo_zoom', $teamMember->photo_zoom ?? 100)) / 100 }});">
+                    </div>
+                    <span class="text-[10px] font-bold text-blue-600 mt-2">Adjust position below ⬇</span>
+                </div>
+
+                {{-- Right: Adjuster Sliders --}}
+                <div class="md:col-span-7 space-y-4 bg-white p-5 rounded-xl border border-slate-200">
+                    <input type="hidden" name="photo_position_x" id="photo_position_x" value="{{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}">
+                    <input type="hidden" name="photo_position_y" id="photo_position_y" value="{{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}">
+                    <input type="hidden" name="photo_zoom" id="photo_zoom" value="{{ old('photo_zoom', $teamMember->photo_zoom ?? 100) }}">
+
+                    {{-- Vertical Position (Up / Down) --}}
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-extrabold text-slate-700 mb-1">
+                            <span>↕ Vertical Position (Up / Down)</span>
+                            <span id="val-pos-y" class="font-mono text-blue-600">{{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}%</span>
+                        </div>
+                        <input type="range" id="slider-pos-y" min="0" max="100" value="{{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}" class="w-full accent-blue-600 cursor-pointer">
+                    </div>
+
+                    {{-- Horizontal Position (Left / Right) --}}
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-extrabold text-slate-700 mb-1">
+                            <span>↔ Horizontal Position (Left / Right)</span>
+                            <span id="val-pos-x" class="font-mono text-blue-600">{{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}%</span>
+                        </div>
+                        <input type="range" id="slider-pos-x" min="0" max="100" value="{{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}" class="w-full accent-blue-600 cursor-pointer">
+                    </div>
+
+                    {{-- Zoom Level --}}
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-extrabold text-slate-700 mb-1">
+                            <span>🔍 Zoom Level</span>
+                            <span id="val-zoom" class="font-mono text-blue-600">{{ old('photo_zoom', $teamMember->photo_zoom ?? 100) }}%</span>
+                        </div>
+                        <input type="range" id="slider-zoom" min="100" max="200" value="{{ old('photo_zoom', $teamMember->photo_zoom ?? 100) }}" class="w-full accent-blue-600 cursor-pointer">
+                    </div>
+
+                    {{-- Quick Preset Buttons --}}
+                    <div class="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
+                        <button type="button" id="btn-preset-center" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 text-[10px] font-extrabold uppercase transition-colors">Target Center</button>
+                        <button type="button" id="btn-preset-head" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 text-[10px] font-extrabold uppercase transition-colors">Head Focus (Top)</button>
+                        <button type="button" id="btn-preset-reset" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 text-[10px] font-extrabold uppercase transition-colors">Reset</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Bio / Description --}}
@@ -125,7 +190,7 @@
 
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.team.index') }}" class="px-5 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Cancel</a>
-                <button type="submit" class="btn-gold text-xs py-2.5 px-6 shadow-sm hover:shadow transition-all">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30">
                     {{ $isEdit ? 'Update Team Member' : 'Save Team Member' }}
                 </button>
             </div>
@@ -139,6 +204,39 @@
     const photoInput = document.getElementById('photo-input');
     const photoPreview = document.getElementById('photo-preview');
     const dropZone = document.getElementById('drop-zone');
+
+    const sliderX = document.getElementById('slider-pos-x');
+    const sliderY = document.getElementById('slider-pos-y');
+    const sliderZoom = document.getElementById('slider-zoom');
+
+    const inputX = document.getElementById('photo_position_x');
+    const inputY = document.getElementById('photo_position_y');
+    const inputZoom = document.getElementById('photo_zoom');
+
+    const valX = document.getElementById('val-pos-x');
+    const valY = document.getElementById('val-pos-y');
+    const valZoom = document.getElementById('val-zoom');
+
+    function updatePreview() {
+        const posX = sliderX.value;
+        const posY = sliderY.value;
+        const zoom = sliderZoom.value;
+
+        inputX.value = posX;
+        inputY.value = posY;
+        inputZoom.value = zoom;
+
+        valX.textContent = posX + '%';
+        valY.textContent = posY + '%';
+        valZoom.textContent = zoom + '%';
+
+        photoPreview.style.objectPosition = posX + '% ' + posY + '%';
+        photoPreview.style.transform = 'scale(' + (zoom / 100) + ')';
+    }
+
+    [sliderX, sliderY, sliderZoom].forEach(slider => {
+        slider?.addEventListener('input', updatePreview);
+    });
 
     photoInput?.addEventListener('change', function () {
         const file = this.files[0];
@@ -154,15 +252,50 @@
     ['dragenter', 'dragover'].forEach(eventName => {
         dropZone?.addEventListener(eventName, (e) => {
             e.preventDefault();
-            dropZone.classList.add('border-blue-500', 'bg-blue-50/50');
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
         }, false);
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
+    ['dragleave'].forEach(eventName => {
         dropZone?.addEventListener(eventName, (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-blue-500', 'bg-blue-50/50');
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
         }, false);
+    });
+
+    dropZone?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            photoInput.files = e.dataTransfer.files;
+            const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                photoPreview.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }, false);
+
+    document.getElementById('btn-preset-center')?.addEventListener('click', () => {
+        sliderX.value = 50;
+        sliderY.value = 50;
+        sliderZoom.value = 100;
+        updatePreview();
+    });
+
+    document.getElementById('btn-preset-head')?.addEventListener('click', () => {
+        sliderX.value = 50;
+        sliderY.value = 20;
+        sliderZoom.value = 110;
+        updatePreview();
+    });
+
+    document.getElementById('btn-preset-reset')?.addEventListener('click', () => {
+        sliderX.value = 50;
+        sliderY.value = 50;
+        sliderZoom.value = 100;
+        updatePreview();
     });
 })();
 </script>
