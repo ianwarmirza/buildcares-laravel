@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+    <!-- Circular Light Grey Background -->
+    <circle cx="256" cy="256" r="256" fill="#e5e7eb"/>
+
+    <!-- White Shirt & Collar -->
+    <path d="M 180 512 L 256 360 L 332 512 Z" fill="#ffffff"/>
+    <polygon points="190,360 256,430 220,380" fill="#e2e8f0"/>
+    <polygon points="322,360 256,430 292,380" fill="#cbd5e1"/>
+
+    <!-- Red Tie -->
+    <polygon points="244,375 268,375 274,470 256,510 238,470" fill="#dc2626"/>
+    <polygon points="242,365 270,365 266,380 246,380" fill="#b91c1c"/>
+
+    <!-- Black Suit Jacket & Lapels -->
+    <path d="M 60 512 C 60 410, 130 350, 200 350 L 256 460 L 190 512 Z" fill="#18181b"/>
+    <path d="M 452 512 C 452 410, 382 350, 312 350 L 256 460 L 322 512 Z" fill="#18181b"/>
+    <path d="M 110 512 C 125 410, 175 350, 256 460 Z" fill="#27272a"/>
+    <path d="M 402 512 C 387 410, 337 350, 256 460 Z" fill="#27272a"/>
+
+    <!-- Neck -->
+    <path d="M 216 270 L 296 270 L 296 370 L 216 370 Z" fill="#f8d7be"/>
+    <path d="M 216 330 C 236 360, 276 360, 296 330 L 296 370 L 216 370 Z" fill="#ecc0a2"/>
+
+    <!-- Ears -->
+    <circle cx="178" cy="225" r="26" fill="#f8d7be"/>
+    <circle cx="334" cy="225" r="26" fill="#f8d7be"/>
+
+    <!-- Face Oval -->
+    <path d="M 184 190 C 184 290, 210 325, 256 325 C 302 325, 328 290, 328 190 C 328 110, 302 110, 256 110 C 210 110, 184 110, 184 190 Z" fill="#f8d7be"/>
+
+    <!-- Dark Hair -->
+    <path d="M 166 190 C 166 90, 206 60, 256 60 C 306 60, 346 90, 346 190 C 346 180, 340 130, 326 120 C 310 110, 276 105, 246 125 C 220 140, 186 160, 174 195 Z" fill="#27272a"/>
+    <path d="M 166 185 C 168 120, 216 70, 270 70 C 320 70, 344 110, 346 180 C 326 115, 286 95, 240 115 C 205 130, 180 155, 166 185 Z" fill="#18181b"/>
+    <!-- Sideburns -->
+    <path d="M 178 180 L 186 180 L 184 220 L 176 215 Z" fill="#27272a"/>
+    <path d="M 334 180 L 326 180 L 328 220 L 336 215 Z" fill="#27272a"/>
+</svg>

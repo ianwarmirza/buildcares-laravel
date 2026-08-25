@@ -75,62 +75,21 @@ class TeamMember extends Model
 
     public static function getMaleAvatarSvg(): string
     {
-        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-            <defs>
-                <linearGradient id="maleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#0f172a"/>
-                    <stop offset="50%" stop-color="#1e293b"/>
-                    <stop offset="100%" stop-color="#334155"/>
-                </linearGradient>
-                <linearGradient id="maleAccent" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#38bdf8"/>
-                    <stop offset="100%" stop-color="#0284c7"/>
-                </linearGradient>
-            </defs>
-            <rect width="512" height="512" fill="url(#maleGrad)"/>
-            <circle cx="256" cy="256" r="210" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2" stroke-dasharray="8 8"/>
-            <path d="M 120 512 C 120 400, 180 340, 256 340 C 332 340, 392 400, 392 512 Z" fill="#475569"/>
-            <path d="M 150 512 C 150 420, 190 365, 256 365 C 322 365, 362 420, 362 512 Z" fill="#64748b"/>
-            <path d="M 215 365 L 256 440 L 297 365 Z" fill="#f8fafc"/>
-            <path d="M 246 365 L 256 425 L 266 365 Z" fill="url(#maleAccent)"/>
-            <rect x="226" y="275" width="60" height="95" rx="10" fill="#cbd5e1"/>
-            <ellipse cx="256" cy="210" rx="72" ry="90" fill="#e2e8f0"/>
-            <path d="M 175 190 C 175 110, 210 95, 256 95 C 302 95, 337 110, 337 190 C 337 150, 310 115, 256 115 C 202 115, 175 150, 175 190 Z" fill="#1e293b"/>
-            <path d="M 175 185 C 180 120, 220 100, 265 100 C 315 100, 335 125, 337 185 C 320 135, 280 120, 250 125 C 220 130, 190 150, 175 185 Z" fill="#0f172a"/>
-            <ellipse cx="182" cy="215" rx="12" ry="18" fill="#cbd5e1"/>
-            <ellipse cx="330" cy="215" rx="12" ry="18" fill="#cbd5e1"/>
-        </svg>';
+        $file = public_path('images/avatars/male.svg');
+        if (file_exists($file)) {
+            return asset('images/avatars/male.svg');
+        }
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%"><circle cx="256" cy="256" r="256" fill="#e5e7eb"/><path d="M 180 512 L 256 360 L 332 512 Z" fill="#ffffff"/><polygon points="190,360 256,430 220,380" fill="#e2e8f0"/><polygon points="322,360 256,430 292,380" fill="#cbd5e1"/><polygon points="244,375 268,375 274,470 256,510 238,470" fill="#dc2626"/><polygon points="242,365 270,365 266,380 246,380" fill="#b91c1c"/><path d="M 60 512 C 60 410, 130 350, 200 350 L 256 460 L 190 512 Z" fill="#18181b"/><path d="M 452 512 C 452 410, 382 350, 312 350 L 256 460 L 322 512 Z" fill="#18181b"/><path d="M 110 512 C 125 410, 175 350, 256 460 Z" fill="#27272a"/><path d="M 402 512 C 387 410, 337 350, 256 460 Z" fill="#27272a"/><path d="M 216 270 L 296 270 L 296 370 L 216 370 Z" fill="#f8d7be"/><path d="M 216 330 C 236 360, 276 360, 296 330 L 296 370 L 216 370 Z" fill="#ecc0a2"/><circle cx="178" cy="225" r="26" fill="#f8d7be"/><circle cx="334" cy="225" r="26" fill="#f8d7be"/><path d="M 184 190 C 184 290, 210 325, 256 325 C 302 325, 328 290, 328 190 C 328 110, 302 110, 256 110 C 210 110, 184 110, 184 190 Z" fill="#f8d7be"/><path d="M 166 190 C 166 90, 206 60, 256 60 C 306 60, 346 90, 346 190 C 346 180, 340 130, 326 120 C 310 110, 276 105, 246 125 C 220 140, 186 160, 174 195 Z" fill="#27272a"/><path d="M 166 185 C 168 120, 216 70, 270 70 C 320 70, 344 110, 346 180 C 326 115, 286 95, 240 115 C 205 130, 180 155, 166 185 Z" fill="#18181b"/><path d="M 178 180 L 186 180 L 184 220 L 176 215 Z" fill="#27272a"/><path d="M 334 180 L 326 180 L 328 220 L 336 215 Z" fill="#27272a"/></svg>';
         return 'data:image/svg+xml;base64,' . base64_encode($svg);
     }
 
     public static function getFemaleAvatarSvg(): string
     {
-        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-            <defs>
-                <linearGradient id="femaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#0f172a"/>
-                    <stop offset="50%" stop-color="#1e1b4b"/>
-                    <stop offset="100%" stop-color="#312e81"/>
-                </linearGradient>
-                <linearGradient id="femaleAccent" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#c084fc"/>
-                    <stop offset="100%" stop-color="#818cf8"/>
-                </linearGradient>
-            </defs>
-            <rect width="512" height="512" fill="url(#femaleGrad)"/>
-            <circle cx="256" cy="256" r="210" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2" stroke-dasharray="8 8"/>
-            <path d="M 155 200 C 155 380, 190 420, 210 512 L 302 512 C 322 420, 357 380, 357 200 Z" fill="#1e1b4b"/>
-            <path d="M 130 512 C 130 410, 185 355, 256 355 C 327 355, 382 410, 382 512 Z" fill="#4338ca"/>
-            <path d="M 160 512 C 160 425, 195 375, 256 375 C 317 375, 352 425, 352 512 Z" fill="#6366f1"/>
-            <path d="M 215 375 L 256 435 L 297 375 Z" fill="#f8fafc"/>
-            <path d="M 240 375 L 256 420 L 272 375 Z" fill="url(#femaleAccent)"/>
-            <rect x="230" y="270" width="52" height="100" rx="8" fill="#e2e8f0"/>
-            <ellipse cx="256" cy="210" rx="68" ry="85" fill="#f1f5f9"/>
-            <path d="M 172 200 C 172 105, 205 90, 256 90 C 307 90, 340 105, 340 200 C 340 260, 335 300, 325 330 C 305 230, 280 130, 256 130 C 232 130, 207 230, 187 330 C 177 300, 172 260, 172 200 Z" fill="#0f172a"/>
-            <path d="M 172 195 C 175 115, 210 95, 256 95 C 302 95, 337 115, 340 195 C 315 130, 275 115, 245 125 C 210 135, 185 160, 172 195 Z" fill="#311b92"/>
-            <circle cx="180" cy="235" r="7" fill="url(#femaleAccent)"/>
-            <circle cx="332" cy="235" r="7" fill="url(#femaleAccent)"/>
-        </svg>';
+        $file = public_path('images/avatars/female.svg');
+        if (file_exists($file)) {
+            return asset('images/avatars/female.svg');
+        }
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%"><circle cx="256" cy="256" r="256" fill="#e5e7eb"/><path d="M 140 210 C 130 310, 150 380, 185 410 C 200 420, 312 420, 327 410 C 362 380, 382 310, 372 210 C 370 120, 320 65, 256 65 C 192 65, 142 120, 140 210 Z" fill="#18181b"/><path d="M 200 512 L 256 360 L 312 512 Z" fill="#ffffff"/><path d="M 50 512 C 50 410, 120 350, 190 350 L 256 460 L 170 512 Z" fill="#18181b"/><path d="M 462 512 C 462 410, 392 350, 322 350 L 256 460 L 342 512 Z" fill="#18181b"/><path d="M 100 512 C 115 410, 165 350, 256 470 Z" fill="#27272a"/><path d="M 412 512 C 397 410, 347 350, 256 470 Z" fill="#27272a"/><path d="M 220 260 L 292 260 L 292 360 L 220 360 Z" fill="#f8d7be"/><path d="M 220 320 C 240 350, 272 350, 292 320 L 292 360 L 220 360 Z" fill="#ecc0a2"/><circle cx="182" cy="230" r="22" fill="#f8d7be"/><circle cx="330" cy="230" r="22" fill="#f8d7be"/><path d="M 188 190 C 188 280, 212 315, 256 315 C 300 315, 324 280, 324 190 C 324 120, 300 115, 256 115 C 212 115, 188 120, 188 190 Z" fill="#f8d7be"/><path d="M 148 210 C 148 300, 175 350, 200 360 C 210 320, 204 270, 194 220 C 210 160, 230 135, 275 140 C 310 145, 320 180, 318 220 C 308 270, 302 320, 312 360 C 337 350, 364 300, 364 210 C 364 110, 316 65, 256 65 C 196 65, 148 110, 148 210 Z" fill="#27272a"/><path d="M 152 205 C 152 285, 176 335, 198 345 C 205 310, 200 265, 192 215 C 210 155, 230 135, 272 140 C 305 145, 314 180, 312 215 C 304 265, 299 310, 306 345 C 328 335, 360 285, 360 205 C 360 115, 314 70, 256 70 C 198 70, 152 115, 152 205 Z" fill="#18181b"/></svg>';
         return 'data:image/svg+xml;base64,' . base64_encode($svg);
     }
 }
