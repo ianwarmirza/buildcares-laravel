@@ -199,7 +199,7 @@
             <h2 class="section-title">Our Simple Process</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            @foreach([['Send Enquiry','Fill in the form above or WhatsApp us with your project details.','1'],['Free Consultation','We discuss your requirements and provide a lowest rate quote.','2'],['Drawing Production','Our team produces your drawings to UK planning/building control standards.','3'],['Delivery','Receive your completed drawings ready for submission, typically in 3–5 days.','4']] as [$title, $desc, $num])
+            @foreach([['Send Enquiry','Fill in the form above or WhatsApp us with your project details.','1'],['Free Consultation','We discuss your requirements and provide an affordable price quote.','2'],['Drawing Production','Our team produces your drawings to UK planning/building control standards.','3'],['Delivery','Receive your completed drawings ready for submission, typically in 3–5 days.','4']] as [$title, $desc, $num])
             <div class="text-center reveal">
                 <div class="w-14 h-14 flex items-center justify-center mx-auto mb-4 relative" style="border:2px solid #2563eb; background:#eff6ff;">
                     <span class="font-bold text-xl" style="color:#2563eb;">{{ $num }}</span>

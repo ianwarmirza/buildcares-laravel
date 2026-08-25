@@ -279,7 +279,7 @@
                         'Building regulations compliance drawings',
                         '3D visualisations & photorealistic renders',
                         'Fast 3–5 day turnaround & clear communication',
-                        'Lowest rates with no compromise on quality',
+                        'Affordable Price with no compromise on quality',
                         'Subcontractor support for UK architects & builders'
                     ];
                     @endphp
@@ -568,7 +568,7 @@
                     </div>
                     <div class="flex items-center gap-2 mb-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Lowest Rates & Fast Turnaround</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Affordable Price & Fast Turnaround</span>
                     </div>
                     <h4 class="font-bold text-base text-white mb-1">UK Planning & Building Regs Ready</h4>
                     <p class="text-xs text-slate-400 leading-relaxed">
@@ -604,8 +604,8 @@
                 ],
                 [
                     'title' => 'Cost-Effective',
-                    'stat' => 'Lowest Rates',
-                    'desc' => 'Competitive quotes with lowest rates and no hidden fees. Professional architectural drawing sets at fair, transparent pricing.',
+                    'stat' => 'Affordable Price',
+                    'desc' => 'Competitive quotes with affordable price and no hidden fees. Professional architectural drawing sets at fair, transparent pricing.',
                     'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
                 ],
                 [
@@ -644,7 +644,7 @@
 
         {{-- Bottom Trust Strip --}}
         <div class="mt-14 p-4 rounded-xl bg-slate-900 text-white flex flex-wrap items-center justify-around gap-4 text-xs font-semibold shadow-md border border-slate-800 text-center">
-            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Lowest Rates Guarantee</span>
+            <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Affordable Price Guarantee</span>
             <span class="hidden sm:inline text-slate-700">•</span>
             <span class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Minor Revisions Included</span>
             <span class="hidden sm:inline text-slate-700">•</span>

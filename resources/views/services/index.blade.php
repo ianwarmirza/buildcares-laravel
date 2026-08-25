@@ -30,7 +30,7 @@
         </div>
         <h1 class="section-title-light text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">Our Services</h1>
         <p style="color:#94a3b8;" class="max-w-2xl text-base sm:text-lg mt-3 leading-relaxed">
-            Professional architectural drawing packages tailored for UK planning applications and building control compliance. Fast turnaround, lowest rates, and 100% approval focus.
+            Professional architectural drawing packages tailored for UK planning applications and building control compliance. Fast turnaround, affordable price, and 100% approval focus.
         </p>
     </div>
 </section>
