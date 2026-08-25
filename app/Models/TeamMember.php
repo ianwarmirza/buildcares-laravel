@@ -57,9 +57,9 @@ class TeamMember extends Model
 
     public function getPhotoStyleAttribute()
     {
-        $posX = $this->photo_position_x ?? 50;
-        $posY = $this->photo_position_y ?? 50;
+        $posX = ($this->photo_position_x ?? 50) - 50;
+        $posY = ($this->photo_position_y ?? 50) - 50;
         $zoom = ($this->photo_zoom ?? 100) / 100;
-        return "object-position: {$posX}% {$posY}%; transform: scale({$zoom});";
+        return "transform: translate({$posX}%, {$posY}%) scale({$zoom}); transform-origin: center center;";
     }
 }

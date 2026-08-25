@@ -262,9 +262,9 @@
     function updatePreview() {
         if (!sliderX || !sliderY || !sliderZoom || !photoPreview) return;
 
-        const posX = parseInt(sliderX.value, 10);
-        const posY = parseInt(sliderY.value, 10);
-        const zoom = parseInt(sliderZoom.value, 10);
+        const posX = parseInt(sliderX.value, 10) || 50;
+        const posY = parseInt(sliderY.value, 10) || 50;
+        const zoom = parseInt(sliderZoom.value, 10) || 100;
 
         if (inputX) inputX.value = posX;
         if (inputY) inputY.value = posY;
@@ -274,10 +274,12 @@
         if (valY) valY.textContent = posY + '%';
         if (valZoom) valZoom.textContent = zoom + '%';
 
-        // Apply style to photoPreview immediately
-        photoPreview.style.objectPosition = posX + '% ' + posY + '%';
-        photoPreview.style.transformOrigin = posX + '% ' + posY + '%';
-        photoPreview.style.transform = 'scale(' + (zoom / 100) + ')';
+        const transX = posX - 50;
+        const transY = posY - 50;
+        const scaleVal = zoom / 100;
+
+        photoPreview.style.transformOrigin = 'center center';
+        photoPreview.style.transform = `translate(${transX}%, ${transY}%) scale(${scaleVal})`;
     }
 
     [sliderX, sliderY, sliderZoom].forEach(slider => {
@@ -288,46 +290,58 @@
         }
     });
 
-    // Direct Mouse Dragging & Scroll Wheel Zoom on Circle Preview Window
+    // Direct Mouse & Touch Dragging on Circle Preview Window
     const circleWrapper = document.getElementById('circle-preview-wrapper');
     if (circleWrapper) {
         let isDragging = false;
         let startX = 0, startY = 0;
         let startValX = 50, startValY = 50;
 
-        circleWrapper.addEventListener('mousedown', (e) => {
+        function onPointerDown(e) {
             isDragging = true;
             circleWrapper.style.cursor = 'grabbing';
-            startX = e.clientX;
-            startY = e.clientY;
-            startValX = parseInt(sliderX.value, 10);
-            startValY = parseInt(sliderY.value, 10);
-            e.preventDefault();
-        });
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            startX = clientX;
+            startY = clientY;
+            startValX = parseInt(sliderX.value, 10) || 50;
+            startValY = parseInt(sliderY.value, 10) || 50;
+        }
 
-        window.addEventListener('mousemove', (e) => {
+        function onPointerMove(e) {
             if (!isDragging) return;
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-            let newX = Math.min(100, Math.max(0, startValX - Math.round(deltaX * 0.4)));
-            let newY = Math.min(100, Math.max(0, startValY - Math.round(deltaY * 0.4)));
+            const deltaX = clientX - startX;
+            const deltaY = clientY - startY;
+
+            let newX = Math.min(100, Math.max(0, startValX + Math.round(deltaX * 0.8)));
+            let newY = Math.min(100, Math.max(0, startValY + Math.round(deltaY * 0.8)));
 
             sliderX.value = newX;
             sliderY.value = newY;
             updatePreview();
-        });
+        }
 
-        window.addEventListener('mouseup', () => {
+        function onPointerUp() {
             if (isDragging) {
                 isDragging = false;
                 circleWrapper.style.cursor = 'grab';
             }
-        });
+        }
+
+        circleWrapper.addEventListener('mousedown', onPointerDown);
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('mouseup', onPointerUp);
+
+        circleWrapper.addEventListener('touchstart', onPointerDown, { passive: true });
+        window.addEventListener('touchmove', onPointerMove, { passive: true });
+        window.addEventListener('touchend', onPointerUp);
 
         circleWrapper.addEventListener('wheel', (e) => {
             e.preventDefault();
-            let currentZoom = parseInt(sliderZoom.value, 10);
+            let currentZoom = parseInt(sliderZoom.value, 10) || 100;
             if (e.deltaY < 0) {
                 currentZoom = Math.min(200, currentZoom + 5);
             } else {
