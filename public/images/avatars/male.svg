@@ -1,37 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-    <!-- Circular Light Grey Background -->
-    <circle cx="256" cy="256" r="256" fill="#e5e7eb"/>
+    <defs>
+        <linearGradient id="mBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="60%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#334155"/>
+        </linearGradient>
+        <radialGradient id="mGlow" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="mSuit" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#0f172a"/>
+        </linearGradient>
+        <linearGradient id="mTie" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#1d4ed8"/>
+        </linearGradient>
+    </defs>
 
-    <!-- White Shirt & Collar -->
-    <path d="M 180 512 L 256 360 L 332 512 Z" fill="#ffffff"/>
-    <polygon points="190,360 256,430 220,380" fill="#e2e8f0"/>
-    <polygon points="322,360 256,430 292,380" fill="#cbd5e1"/>
+    <rect width="512" height="512" fill="url(#mBg)"/>
+    <circle cx="256" cy="200" r="220" fill="url(#mGlow)"/>
 
-    <!-- Red Tie -->
-    <polygon points="244,375 268,375 274,470 256,510 238,470" fill="#dc2626"/>
-    <polygon points="242,365 270,365 266,380 246,380" fill="#b91c1c"/>
+    <circle cx="256" cy="256" r="220" fill="none" stroke="rgba(56,189,248,0.15)" stroke-width="2" stroke-dasharray="6 6"/>
 
-    <!-- Black Suit Jacket & Lapels -->
-    <path d="M 60 512 C 60 410, 130 350, 200 350 L 256 460 L 190 512 Z" fill="#18181b"/>
-    <path d="M 452 512 C 452 410, 382 350, 312 350 L 256 460 L 322 512 Z" fill="#18181b"/>
-    <path d="M 110 512 C 125 410, 175 350, 256 460 Z" fill="#27272a"/>
-    <path d="M 402 512 C 387 410, 337 350, 256 460 Z" fill="#27272a"/>
+    <path d="M 60 512 Q 130 370 256 370 Q 382 370 452 512 Z" fill="url(#mSuit)"/>
+    <path d="M 120 512 L 205 385 L 256 460 L 190 512 Z" fill="#334155"/>
+    <path d="M 392 512 L 307 385 L 256 460 L 322 512 Z" fill="#334155"/>
 
-    <!-- Neck -->
-    <path d="M 216 270 L 296 270 L 296 370 L 216 370 Z" fill="#f8d7be"/>
-    <path d="M 216 330 C 236 360, 276 360, 296 330 L 296 370 L 216 370 Z" fill="#ecc0a2"/>
+    <path d="M 195 385 L 256 480 L 317 385 L 256 360 Z" fill="#ffffff"/>
+    <path d="M 210 380 L 256 440 L 225 390 Z" fill="#e2e8f0"/>
+    <path d="M 302 380 L 256 440 L 287 390 Z" fill="#cbd5e1"/>
 
-    <!-- Ears -->
-    <circle cx="178" cy="225" r="26" fill="#f8d7be"/>
-    <circle cx="334" cy="225" r="26" fill="#f8d7be"/>
+    <polygon points="244,380 268,380 274,480 256,512 238,480" fill="url(#mTie)"/>
+    <polygon points="240,370 272,370 268,385 244,385" fill="#1e40af"/>
 
-    <!-- Face Oval -->
-    <path d="M 184 190 C 184 290, 210 325, 256 325 C 302 325, 328 290, 328 190 C 328 110, 302 110, 256 110 C 210 110, 184 110, 184 190 Z" fill="#f8d7be"/>
+    <rect x="220" y="270" width="72" height="100" rx="12" fill="#fed7aa"/>
+    <path d="M 220 320 Q 256 360 292 320 L 292 370 L 220 370 Z" fill="#f97316" opacity="0.15"/>
 
-    <!-- Dark Hair -->
-    <path d="M 166 190 C 166 90, 206 60, 256 60 C 306 60, 346 90, 346 190 C 346 180, 340 130, 326 120 C 310 110, 276 105, 246 125 C 220 140, 186 160, 174 195 Z" fill="#27272a"/>
-    <path d="M 166 185 C 168 120, 216 70, 270 70 C 320 70, 344 110, 346 180 C 326 115, 286 95, 240 115 C 205 130, 180 155, 166 185 Z" fill="#18181b"/>
-    <!-- Sideburns -->
-    <path d="M 178 180 L 186 180 L 184 220 L 176 215 Z" fill="#27272a"/>
-    <path d="M 334 180 L 326 180 L 328 220 L 336 215 Z" fill="#27272a"/>
+    <ellipse cx="170" cy="220" rx="20" ry="30" fill="#fed7aa"/>
+    <ellipse cx="342" cy="220" rx="20" ry="30" fill="#fed7aa"/>
+    <ellipse cx="172" cy="220" rx="10" ry="16" fill="#fbcfe8" opacity="0.3"/>
+    <ellipse cx="340" cy="220" rx="10" ry="16" fill="#fbcfe8" opacity="0.3"/>
+
+    <path d="M 180 180 Q 180 300 256 300 Q 332 300 332 180 Q 332 100 256 100 Q 180 100 180 180 Z" fill="#ffedd5"/>
+
+    <path d="M 185 220 Q 256 305 327 220 Q 327 265 256 295 Q 185 265 185 220 Z" fill="#f97316" opacity="0.12"/>
+
+    <path d="M 205 175 Q 225 168 240 174" stroke="#1e293b" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M 307 175 Q 287 168 272 174" stroke="#1e293b" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+
+    <path d="M 158 175 C 154 90 200 55 256 55 C 316 55 354 90 354 175 C 354 170 348 120 330 105 C 310 90 270 85 238 105 C 205 125 175 145 158 175 Z" fill="#0f172a"/>
+    <path d="M 160 165 C 165 105 210 65 265 65 C 315 65 348 95 350 165 C 330 105 285 85 240 105 C 205 120 178 140 160 165 Z" fill="#1e293b"/>
+    <path d="M 172 165 L 180 165 L 178 215 L 170 210 Z" fill="#0f172a"/>
+    <path d="M 340 165 L 332 165 L 334 215 L 342 210 Z" fill="#0f172a"/>
 </svg>
