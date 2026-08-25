@@ -451,8 +451,8 @@
             {{-- Left Column: What We Deliver --}}
             <div class="lg:col-span-7 space-y-6">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-700 bg-blue-100/80 rounded-full mb-3">
-                        <span>📋</span> Specialist Architectural Packages
+                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-700 bg-blue-50 border border-blue-200/80 rounded-full mb-3">
+                        <span>📐</span> Specialist Architectural Packages
                     </div>
                     <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">What We Deliver</h2>
                     <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed max-w-xl">
@@ -466,43 +466,62 @@
                         [
                             'title' => 'Planning Drawings',
                             'badge' => 'Planning Ready',
+                            'color' => '#2563eb',
                             'desc' => 'Full planning application packages including location site plans, block plans, floor layouts, elevations and sections.',
-                            'icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'
+                            'icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+                            'features' => ['Location & Block Plans', 'Floor Layouts & Elevations', 'Council Application Ready']
                         ],
                         [
                             'title' => 'Building Control',
                             'badge' => 'Regs Compliant',
+                            'color' => '#059669',
                             'desc' => 'Detailed technical construction drawings meeting UK building regulations for structural, insulation & drainage sign-off.',
-                            'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
+                            'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+                            'features' => ['Part A–R Regs Compliance', 'Structural & Insulation Notes', 'Inspector Sign-off Ready']
                         ],
                         [
                             'title' => '3D Visualisation',
                             'badge' => 'BIM & Renders',
+                            'color' => '#7c3aed',
                             'desc' => 'Realistic SketchUp models, Revit BIM representations, and Photoshop renders for client presentations and council reviews.',
-                            'icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'
+                            'icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
+                            'features' => ['3D SketchUp & Revit BIM', 'Photorealistic Renders', 'Client Presentation Visuals']
                         ],
                         [
                             'title' => 'Design Modifications',
                             'badge' => 'Fast Revisions',
+                            'color' => '#d97706',
                             'desc' => 'Continuous design iteration and updates — we collaborate with you until your architectural vision is realized.',
-                            'icon' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+                            'icon' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
+                            'features' => ['Minor Revisions Included', 'Council Feedback Updates', 'Fast 24-48h Iteration']
                         ],
                     ];
                     @endphp
 
                     @foreach($deliverables as $i => $item)
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-500/60 hover:-translate-y-1 transition-all group duration-300 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="flex items-center justify-between gap-2 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $item['icon'] }}"/></svg>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-500/80 hover:-translate-y-1.5 transition-all group duration-300 relative overflow-hidden flex flex-col justify-between">
+                        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-4">
+                                <div class="w-11 h-11 rounded-xl flex items-center justify-center border transition-all duration-300 shadow-xs group-hover:scale-105" style="background-color: {{ $item['color'] }}10; border-color: {{ $item['color'] }}30; color: {{ $item['color'] }};">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $item['icon'] }}"/></svg>
+                                </div>
+                                <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full border shadow-2xs" style="background-color: {{ $item['color'] }}0D; color: {{ $item['color'] }}; border-color: {{ $item['color'] }}30;">
+                                    {{ $item['badge'] }}
+                                </span>
                             </div>
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                                {{ $item['badge'] }}
-                            </span>
+                            <h3 class="font-extrabold text-base text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $item['title'] }}</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">{{ $item['desc'] }}</p>
+
+                            <div class="space-y-1.5 pt-3 border-t border-slate-100">
+                                @foreach($item['features'] as $f)
+                                <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-700">
+                                    <span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-200">✓</span>
+                                    <span>{{ $f }}</span>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
-                        <h3 class="font-bold text-base text-slate-900 mb-1.5 group-hover:text-blue-600 transition-colors">{{ $item['title'] }}</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">{{ $item['desc'] }}</p>
                     </div>
                     @endforeach
                 </div>
@@ -511,68 +530,84 @@
             {{-- Right Column: Software We Use & Professional Standards --}}
             <div class="lg:col-span-5 space-y-6">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-slate-700 bg-slate-200/80 rounded-full mb-3">
-                        <span>🛠️</span> Professional CAD Suite
+                    <div class="inline-flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-700 bg-blue-50 rounded-full border border-blue-200/80 mb-3">
+                        <span>💻</span> Professional CAD Suite
                     </div>
                     <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Software We Use</h3>
                     <p class="text-slate-600 text-sm mt-1">Industry-standard tools for maximum precision and compatibility.</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    @php
-                    $softwareList = [
-                        [
-                            'name' => 'SketchUp Pro',
-                            'type' => '3D Spatial Modelling',
-                            'color' => '#0097D4',
-                            'short' => 'SKP'
-                        ],
-                        [
-                            'name' => 'Autodesk Revit',
-                            'type' => 'BIM & Structural 3D',
-                            'color' => '#0696D7',
-                            'short' => 'RVT'
-                        ],
-                        [
-                            'name' => 'AutoCAD Architecture',
-                            'type' => '2D Technical Drafting',
-                            'color' => '#D2232A',
-                            'short' => 'CAD'
-                        ],
-                        [
-                            'name' => 'Adobe Photoshop',
-                            'type' => 'Photorealistic Renders',
-                            'color' => '#31A8FF',
-                            'short' => 'PSD'
-                        ],
-                    ];
-                    @endphp
-
-                    @foreach($softwareList as $sw)
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-slate-300 transition-all">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-white font-extrabold text-xs shadow-sm" style="background-color: {{ $sw['color'] }};">
-                            {{ $sw['short'] }}
+                <div class="grid grid-cols-2 gap-3.5">
+                    {{-- SketchUp Pro --}}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-blue-500/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 8 12 L 24 4 L 40 12 L 40 36 L 24 44 L 8 36 Z" fill="#EA212D"/>
+                                <path d="M 24 4 L 40 12 L 24 20 L 8 12 Z" fill="#0097D4"/>
+                                <path d="M 24 20 L 40 12 L 40 36 L 24 44 Z" fill="#0072A3" opacity="0.85"/>
+                                <path d="M 16 20 L 24 16 L 32 20 L 32 30 L 24 34 L 16 30 Z" fill="#ffffff" opacity="0.9"/>
+                            </svg>
                         </div>
                         <div>
-                            <div class="font-bold text-xs sm:text-sm text-slate-900 leading-snug">{{ $sw['name'] }}</div>
-                            <div class="text-[11px] font-medium text-slate-400 mt-0.5">{{ $sw['type'] }}</div>
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">SketchUp Pro</div>
+                            <div class="text-[11px] font-medium text-slate-500 mt-0.5">3D Spatial Modelling</div>
                         </div>
                     </div>
-                    @endforeach
+
+                    {{-- Autodesk Revit --}}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-blue-500/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="48" height="48" rx="10" fill="#005080"/>
+                                <path d="M 12 36 L 12 12 L 24 12 C 30 12 34 15 34 20 C 34 24 31 27 26 27 L 36 36 L 28 36 L 20 28 L 18 28 L 18 36 Z M 18 17 L 18 23 L 24 23 C 27 23 28 18 27 17 Z" fill="#00C4FF"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">Autodesk Revit</div>
+                            <div class="text-[11px] font-medium text-slate-500 mt-0.5">BIM & Structural 3D</div>
+                        </div>
+                    </div>
+
+                    {{-- AutoCAD Architecture --}}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-blue-500/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="48" height="48" rx="10" fill="#E51937"/>
+                                <path d="M 24 9 L 10 38 L 17 38 L 20 31 L 28 31 L 31 38 L 38 38 Z M 22 25 L 26 25 L 24 17 Z" fill="#ffffff"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">AutoCAD Architecture</div>
+                            <div class="text-[11px] font-medium text-slate-500 mt-0.5">2D Technical Drafting</div>
+                        </div>
+                    </div>
+
+                    {{-- Adobe Photoshop --}}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5 hover:border-blue-500/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="48" height="48" rx="10" fill="#001E36" stroke="#31A8FF" stroke-width="2"/>
+                                <text x="11" y="32" fill="#31A8FF" font-family="Arial, sans-serif" font-weight="900" font-size="22">Ps</text>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">Adobe Photoshop</div>
+                            <div class="text-[11px] font-medium text-slate-500 mt-0.5">Photorealistic Renders</div>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Highlights Card --}}
-                <div class="p-6 rounded-xl bg-slate-900 text-white shadow-lg relative overflow-hidden border border-slate-800">
+                {{-- Standards Card --}}
+                <div class="p-6 rounded-2xl bg-slate-900 text-white shadow-xl relative overflow-hidden border border-slate-800">
                     <div class="absolute -right-6 -bottom-6 opacity-10 text-blue-400 pointer-events-none">
                         <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.57l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.57l7-10a1 1 0 011.12-.384z" clip-rule="evenodd"/></svg>
                     </div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Affordable Price & Fast Turnaround</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-400">🛡️ UK Council & Building Control Standard</span>
                     </div>
-                    <h4 class="font-bold text-base text-white mb-1">UK Planning & Building Regs Ready</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Every drawing is formatted to exact UK council standards (scale bars, block plans, notes, and key dimensions) ensuring smooth approval.
+                    <h4 class="font-extrabold text-base text-white mb-1.5">UK Planning & Building Regs Ready</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Every drawing package is formatted to exact UK council standards (scale bars, block plans, notes, and key dimensions) ensuring smooth approval.
                     </p>
                 </div>
             </div>
