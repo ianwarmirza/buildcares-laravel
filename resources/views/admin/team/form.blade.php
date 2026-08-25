@@ -83,14 +83,17 @@
                 {{-- Left: Circle Preview --}}
                 <div class="md:col-span-5 flex flex-col items-center justify-center text-center">
                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-2">Live Website Circle Preview</span>
-                    <div class="w-36 h-36 rounded-full overflow-hidden bg-slate-900 border-4 border-blue-600 shadow-xl relative">
+                    <div id="circle-preview-wrapper" class="w-36 h-36 rounded-full overflow-hidden bg-slate-900 border-4 border-blue-600 shadow-xl relative cursor-grab group select-none">
                         <img id="photo-preview" 
                              src="{{ $isEdit ? $teamMember->photo_url : 'https://ui-avatars.com/api/?name=User&background=0F172A&color=ffffff&size=512' }}" 
                              alt="Avatar Preview" 
-                             class="w-full h-full object-cover transition-all duration-75"
+                             class="w-full h-full object-cover pointer-events-none"
                              style="object-position: {{ old('photo_position_x', $teamMember->photo_position_x ?? 50) }}% {{ old('photo_position_y', $teamMember->photo_position_y ?? 50) }}%; transform: scale({{ (old('photo_zoom', $teamMember->photo_zoom ?? 100)) / 100 }});">
+                        <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
+                            <span class="bg-slate-900/80 text-white text-[9px] font-extrabold uppercase px-2 py-1 rounded shadow">Drag photo to adjust</span>
+                        </div>
                     </div>
-                    <span class="text-[10px] font-bold text-blue-600 mt-2">Adjust position sliders below ⬇</span>
+                    <span class="text-[10px] font-bold text-blue-600 mt-2">Drag circle above or use sliders ➡</span>
                 </div>
 
                 {{-- Right: Adjuster Sliders --}}
@@ -257,25 +260,86 @@
     const progressStatus = document.getElementById('progress-status');
 
     function updatePreview() {
-        const posX = sliderX.value;
-        const posY = sliderY.value;
-        const zoom = sliderZoom.value;
+        if (!sliderX || !sliderY || !sliderZoom || !photoPreview) return;
 
-        inputX.value = posX;
-        inputY.value = posY;
-        inputZoom.value = zoom;
+        const posX = parseInt(sliderX.value, 10);
+        const posY = parseInt(sliderY.value, 10);
+        const zoom = parseInt(sliderZoom.value, 10);
 
-        valX.textContent = posX + '%';
-        valY.textContent = posY + '%';
-        valZoom.textContent = zoom + '%';
+        if (inputX) inputX.value = posX;
+        if (inputY) inputY.value = posY;
+        if (inputZoom) inputZoom.value = zoom;
 
+        if (valX) valX.textContent = posX + '%';
+        if (valY) valY.textContent = posY + '%';
+        if (valZoom) valZoom.textContent = zoom + '%';
+
+        // Apply style to photoPreview immediately
         photoPreview.style.objectPosition = posX + '% ' + posY + '%';
+        photoPreview.style.transformOrigin = posX + '% ' + posY + '%';
         photoPreview.style.transform = 'scale(' + (zoom / 100) + ')';
     }
 
     [sliderX, sliderY, sliderZoom].forEach(slider => {
-        slider?.addEventListener('input', updatePreview);
+        if (slider) {
+            slider.addEventListener('input', updatePreview);
+            slider.addEventListener('change', updatePreview);
+            slider.addEventListener('mousemove', updatePreview);
+        }
     });
+
+    // Direct Mouse Dragging & Scroll Wheel Zoom on Circle Preview Window
+    const circleWrapper = document.getElementById('circle-preview-wrapper');
+    if (circleWrapper) {
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let startValX = 50, startValY = 50;
+
+        circleWrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            circleWrapper.style.cursor = 'grabbing';
+            startX = e.clientX;
+            startY = e.clientY;
+            startValX = parseInt(sliderX.value, 10);
+            startValY = parseInt(sliderY.value, 10);
+            e.preventDefault();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+
+            let newX = Math.min(100, Math.max(0, startValX - Math.round(deltaX * 0.4)));
+            let newY = Math.min(100, Math.max(0, startValY - Math.round(deltaY * 0.4)));
+
+            sliderX.value = newX;
+            sliderY.value = newY;
+            updatePreview();
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                circleWrapper.style.cursor = 'grab';
+            }
+        });
+
+        circleWrapper.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            let currentZoom = parseInt(sliderZoom.value, 10);
+            if (e.deltaY < 0) {
+                currentZoom = Math.min(200, currentZoom + 5);
+            } else {
+                currentZoom = Math.max(100, currentZoom - 5);
+            }
+            sliderZoom.value = currentZoom;
+            updatePreview();
+        }, { passive: false });
+    }
+
+    // Initial update on page load
+    updatePreview();
 
     function handleFile(file) {
         if (!file) return;
