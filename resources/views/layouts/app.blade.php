@@ -18,7 +18,7 @@
 </head>
 <body class="antialiased" style="background-color:#ffffff; color:#1e293b;">
 
-    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-out">
         {{-- Top bar --}}
         <div id="topbar" class="bg-slate-900 text-slate-300 border-b border-slate-800 transition-all duration-400 text-xs py-2">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
@@ -297,23 +297,35 @@
 
     @stack('scripts')
     <script>
+        const navbar = document.getElementById('navbar');
         const topbar = document.getElementById('topbar');
         const mainNav = document.getElementById('main-nav');
         const backToTop = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 60) {
-                topbar.style.height = '0'; topbar.style.overflow = 'hidden'; topbar.style.opacity = '0';
-                mainNav.style.boxShadow = '0 2px 16px rgba(15,23,42,0.1)';
-                backToTop.classList.remove('opacity-0','translate-y-4');
-                backToTop.classList.add('opacity-100','translate-y-0');
+
+        function handleHeaderScroll() {
+            const topbarHeight = topbar ? topbar.offsetHeight : 0;
+            if (window.scrollY > 20) {
+                navbar.style.transform = `translateY(-${topbarHeight}px)`;
+                if (mainNav) mainNav.style.boxShadow = '0 4px 20px rgba(15, 23, 42, 0.08)';
+                if (backToTop) {
+                    backToTop.classList.remove('opacity-0', 'translate-y-4');
+                    backToTop.classList.add('opacity-100', 'translate-y-0');
+                }
             } else {
-                topbar.style.height = ''; topbar.style.overflow = ''; topbar.style.opacity = '1';
-                mainNav.style.boxShadow = '';
-                backToTop.classList.add('opacity-0','translate-y-4');
-                backToTop.classList.remove('opacity-100','translate-y-0');
+                navbar.style.transform = 'translateY(0)';
+                if (mainNav) mainNav.style.boxShadow = '';
+                if (backToTop) {
+                    backToTop.classList.add('opacity-0', 'translate-y-4');
+                    backToTop.classList.remove('opacity-100', 'translate-y-0');
+                }
             }
-        });
-        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+        window.addEventListener('resize', handleHeaderScroll, { passive: true });
+        if (backToTop) {
+            backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
         const mobileBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const menuIcon = document.getElementById('menu-icon');
