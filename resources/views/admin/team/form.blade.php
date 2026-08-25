@@ -530,6 +530,15 @@
             window.location.replace("{{ route('admin.team.index') }}");
         });
 
+        // Click outside modal card to close & redirect
+        uploadModal?.addEventListener('click', (e) => {
+            if (e.target === uploadModal) {
+                uploadModal.classList.add('hidden');
+                uploadModal.classList.remove('flex');
+                window.location.replace("{{ route('admin.team.index') }}");
+            }
+        });
+
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 400) {
                 progressBarFill.style.width = '100%';
