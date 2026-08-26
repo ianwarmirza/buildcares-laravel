@@ -258,29 +258,46 @@
                     <span>🏢</span> About BuildCares
                 </div>
 
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
-                    Architectural Designer & <br class="hidden sm:inline">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">CAD Technician</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">Who We Are?</span>
                 </h2>
 
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                    BuildCares is a dedicated freelance architectural drawing service specialising in <strong class="text-white">UK residential construction projects</strong>. We act as a trusted, highly skilled subcontractor — working directly with architects, property developers, builders, and homeowners.
-                </p>
+                <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
+                    <p>
+                        We are a dedicated team of CAD Technicians, Architectural Designers and Visualisation Specialists with extensive experience in delivering professional architectural drawing and design services. Since 2016, we have been working with clients and architectural professionals to turn ideas and concepts into accurate, practical and visually impressive designs.
+                    </p>
 
-                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-8">
-                    Using industry-leading software — <span class="text-blue-300 font-semibold">AutoCAD, Revit, SketchUp, and Photoshop</span> — we produce precise, professional drawings formatted to meet strict UK council planning and building control regulations, delivered with fast turnaround times.
-                </p>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Our expertise covers the complete range of architectural drawing services, from initial concepts and existing-site drawings through to detailed technical documentation. We specialise in <strong class="text-white">Planning Drawings, Building Regulation Drawings, CAD Drafting, 3D CGI and Photorealistic Renders</strong>, as well as professional Photoshop visualisations and presentation drawings.
+                    </p>
+
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Using industry-standard software such as <span class="text-blue-300 font-semibold">AutoCAD, Revit, SketchUp</span> and professional 3D visualisation tools, we combine technical accuracy with creative design to produce drawings that are clear, detailed and professionally presented.
+                    </p>
+
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Over the years, we have worked on a wide variety of residential and architectural projects, including <strong class="text-white">house extensions, loft conversions, garage conversions, HMOs, refurbishments and new-build houses and flats</strong>.
+                    </p>
+
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Our approach is simple: understand the project, pay attention to every detail and deliver high-quality work that our clients can rely on. We believe that good architectural drawings are more than lines on a page — they are the foundation for turning ideas into successful projects.
+                    </p>
+
+                    <p class="text-blue-200 text-sm font-semibold leading-relaxed pt-2 border-t border-slate-800/80">
+                        With a growing team, years of experience and a strong commitment to quality, we continue to provide reliable, efficient and professional CAD and architectural visualisation services to clients across the UK and beyond.
+                    </p>
+                </div>
 
                 {{-- Feature Bullet Grid --}}
                 <div class="grid sm:grid-cols-2 gap-3 mb-10">
                     @php
                     $points = [
-                        'Technical drawings for planning applications',
-                        'Building regulations compliance drawings',
-                        '3D visualisations & photorealistic renders',
-                        'Fast 3–5 day turnaround & clear communication',
-                        'Affordable Price with no compromise on quality',
-                        'Subcontractor support for UK architects & builders'
+                        'Established & trusted since 2016',
+                        'Full Planning & Building Regs drawings',
+                        '3D CGI & photorealistic renders',
+                        'AutoCAD, Revit & SketchUp experts',
+                        'Extensions, lofts, HMOs & new builds',
+                        'Reliable service for UK & international clients'
                     ];
                     @endphp
 
