@@ -39,7 +39,7 @@ class PortfolioController extends Controller
         ]);
 
         $validated['slug'] = $this->makeUniqueSlug($validated['title']);
-        $validated['cover_image'] = $request->file('cover_image')->store('portfolio', 'public');
+        $validated['cover_image'] = $this->storeFileConvertingPdfIfNeeded($request->file('cover_image'), 'portfolio');
         $validated['featured']  = $request->boolean('featured');
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['sort_order'] = (int) ($validated['sort_order'] ?? 0);
@@ -47,7 +47,7 @@ class PortfolioController extends Controller
         $gallery = [];
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $img) {
-                $gallery[] = $img->store('portfolio/gallery', 'public');
+                $gallery[] = $this->storeFileConvertingPdfIfNeeded($img, 'portfolio/gallery');
             }
         }
         $validated['gallery_images'] = $gallery;
@@ -70,7 +70,7 @@ class PortfolioController extends Controller
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $title = !empty($validated['title']) ? $validated['title'] : Str::title(str_replace(['-', '_'], ' ', $originalName));
 
-        $path = $file->store('portfolio', 'public');
+        $path = $this->storeFileConvertingPdfIfNeeded($file, 'portfolio');
 
         PortfolioItem::create([
             'title'       => $title,
@@ -195,5 +195,37 @@ class PortfolioController extends Controller
             $slug = $base . '-' . $i++;
         }
         return $slug;
+    }
+
+    private function storeFileConvertingPdfIfNeeded(\Illuminate\Http\UploadedFile $file, string $folder = 'portfolio'): string
+    {
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if ($extension === 'pdf' && extension_loaded('imagick') && class_exists('\Imagick')) {
+            try {
+                $imagick = new \Imagick();
+                $imagick->setResolution(200, 200);
+                $imagick->readImage($file->getRealPath() . '[0]');
+                $imagick->setImageFormat('jpg');
+                $imagick->setImageCompressionQuality(85);
+
+                $filename = $folder . '/' . Str::uuid() . '.jpg';
+                Storage::disk('public')->put($filename, $imagick->getImageBlob());
+                $imagick->clear();
+                $imagick->destroy();
+
+                @mkdir(public_path('storage/' . $folder), 0777, true);
+                @copy(storage_path('app/public/' . $filename), public_path('storage/' . $filename));
+
+                return $filename;
+            } catch (\Throwable $e) {
+                // Fallback to standard file storage
+            }
+        }
+
+        $path = $file->store($folder, 'public');
+        @mkdir(public_path('storage/' . $folder), 0777, true);
+        @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
+        return $path;
     }
 }
