@@ -25,10 +25,10 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $this->processAndEncodeImage($request->file('photo'));
-
-            // Secondary disk backup
             $path = $request->file('photo')->store('team', 'public');
+            $validated['photo'] = $path;
+
+            // Copy to public_path for direct web server static serving
             @mkdir(public_path('storage/team'), 0777, true);
             @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
         }
@@ -54,12 +54,17 @@ class TeamController extends Controller
         $validated = $this->validateRequest($request, $team);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = $this->processAndEncodeImage($request->file('photo'));
-
-            // Secondary disk backup
+            if ($team->photo && !str_starts_with($team->photo, 'http') && !str_starts_with($team->photo, 'data:image')) {
+                Storage::disk('public')->delete($team->photo);
+            }
             $path = $request->file('photo')->store('team', 'public');
+            $validated['photo'] = $path;
+
+            // Copy to public_path for direct web server static serving
             @mkdir(public_path('storage/team'), 0777, true);
             @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
+        } else {
+            unset($validated['photo']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -75,7 +80,7 @@ class TeamController extends Controller
 
     public function destroy(TeamMember $team)
     {
-        if ($team->photo && !str_starts_with($team->photo, 'http') && Storage::disk('public')->exists($team->photo)) {
+        if ($team->photo && !str_starts_with($team->photo, 'http') && !str_starts_with($team->photo, 'data:image') && Storage::disk('public')->exists($team->photo)) {
             Storage::disk('public')->delete($team->photo);
         }
         $team->delete();
@@ -96,7 +101,7 @@ class TeamController extends Controller
 
         $members = TeamMember::whereIn('id', $ids)->get();
         foreach ($members as $member) {
-            if ($member->photo && !str_starts_with($member->photo, 'http') && Storage::disk('public')->exists($member->photo)) {
+            if ($member->photo && !str_starts_with($member->photo, 'http') && !str_starts_with($member->photo, 'data:image') && Storage::disk('public')->exists($member->photo)) {
                 Storage::disk('public')->delete($member->photo);
             }
             $member->delete();
@@ -121,56 +126,5 @@ class TeamController extends Controller
             'linkedin'         => 'nullable|url|max:255',
             'sort_order'       => 'nullable|integer|min:0',
         ]);
-    }
-
-    private function processAndEncodeImage(\Illuminate\Http\UploadedFile $file): string
-    {
-        $realPath = $file->getRealPath();
-
-        // If GD extension is loaded, resize & compress to lightweight WebP / JPEG (max 600px width/height, ~35KB)
-        if (extension_loaded('gd') && function_exists('imagecreatefromstring')) {
-            $image = @imagecreatefromstring(file_get_contents($realPath));
-            if ($image !== false) {
-                $width = imagesx($image);
-                $height = imagesy($image);
-                $maxDim = 600;
-
-                if ($width > $maxDim || $height > $maxDim) {
-                    if ($width >= $height) {
-                        $newWidth = $maxDim;
-                        $newHeight = (int) round(($height / $width) * $maxDim);
-                    } else {
-                        $newHeight = $maxDim;
-                        $newWidth = (int) round(($width / $height) * $maxDim);
-                    }
-                    $resized = imagecreatetruecolor($newWidth, $newHeight);
-                    imagealphablending($resized, false);
-                    imagesavealpha($resized, true);
-                    imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                    imagedestroy($image);
-                    $image = $resized;
-                }
-
-                ob_start();
-                if (function_exists('imagewebp')) {
-                    imagewebp($image, null, 80);
-                    $mime = 'image/webp';
-                } else {
-                    imagejpeg($image, null, 82);
-                    $mime = 'image/jpeg';
-                }
-                $imageData = ob_get_clean();
-                imagedestroy($image);
-
-                if (!empty($imageData)) {
-                    return 'data:' . $mime . ';base64,' . base64_encode($imageData);
-                }
-            }
-        }
-
-        // Fallback to raw base64
-        $mime = $file->getMimeType();
-        $contents = file_get_contents($realPath);
-        return 'data:' . $mime . ';base64,' . base64_encode($contents);
     }
 }
