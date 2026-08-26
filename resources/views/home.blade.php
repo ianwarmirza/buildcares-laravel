@@ -330,59 +330,18 @@
         </div>
 
         @php
-        $services = [
-            [
-                'img' => 'portfolio/cat-garage-conversion.jpg',
-                'title' => 'Garage Conversion',
-                'badge' => 'Permitted Dev & Regs',
-                'desc' => 'Transform your garage into valuable living space with detailed planning and building control drawings.',
-                'slug' => 'garage-conversion'
-            ],
-            [
-                'img' => 'portfolio/cat-loft-conversion.jpg',
-                'title' => 'Loft Conversion',
-                'badge' => 'Dormer & Hip-to-Gable',
-                'desc' => 'Unlock your loft\'s potential with dormer or hip-to-gable conversions, fully drawn to approval standard.',
-                'slug' => 'loft-conversion'
-            ],
-            [
-                'img' => 'portfolio/cat-extension.jpg',
-                'title' => 'Extensions',
-                'badge' => 'Single & Double Storey',
-                'desc' => 'Single, double or wrap-around extensions designed to maximise space and comply with planning regulations.',
-                'slug' => 'extension'
-            ],
-            [
-                'img' => 'portfolio/cat-new-build.jpg',
-                'title' => 'New Build',
-                'badge' => 'Full CAD Package',
-                'desc' => 'Complete architectural packages for new residential builds from concept through to planning submission.',
-                'slug' => 'new-build'
-            ],
-            [
-                'img' => 'portfolio/cat-outbuilding.jpg',
-                'title' => 'Outbuilding',
-                'badge' => 'Garden Rooms & Studios',
-                'desc' => 'Garden rooms, home offices, studios and annexes — full drawings for permitted development or planning.',
-                'slug' => 'outbuilding'
-            ],
-            [
-                'img' => 'portfolio/cat-internal-changes.jpg',
-                'title' => 'Internal Changes',
-                'badge' => 'Structural & Layouts',
-                'desc' => 'Structural internal alterations, wall removals and reconfigurations with precise building control drawings.',
-                'slug' => 'internal-changes'
-            ],
-        ];
+        $dbServices = \App\Models\Service::active()->orderBy('sort_order')->orderBy('id')->get();
         @endphp
 
         {{-- Distinct Card Grid with Alternating White and Light Blue Theme --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($services as $i => $svc)
+            @foreach($dbServices as $i => $svc)
             @php
                 $isBlue = ($i % 2 === 1);
+                $imgUrl = $svc->cover_image_url;
+                $badgeText = $svc->icon ? strtoupper($svc->icon) : 'CAD PACKAGE';
             @endphp
-            <a href="{{ route('portfolio.index', ['category' => $svc['slug']]) }}" 
+            <a href="{{ route('services.index') }}#{{ $svc->slug }}" 
                class="{{ $isBlue ? 'bg-gradient-to-b from-blue-50/90 via-sky-50/60 to-blue-50/80 border-blue-200/90' : 'bg-white border-slate-200/90' }} rounded-2xl border shadow-sm hover:shadow-2xl hover:border-blue-500/80 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
                 {{-- Top Blue Gradient Accent Line --}}
                 <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
@@ -394,7 +353,7 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> CAD Package
                         </span>
                         <span class="text-[10px] font-extrabold uppercase tracking-widest {{ $isBlue ? 'bg-blue-600 text-white shadow-xs border border-blue-600' : 'text-blue-700 bg-blue-100/90 border border-blue-200/90' }} px-2.5 py-1 rounded-full shadow-xs">
-                            {{ $svc['badge'] }}
+                            {{ $badgeText }}
                         </span>
                     </div>
 
@@ -409,16 +368,16 @@
                         </div>
 
                         {{-- 3D Isometric CAD House Image --}}
-                        <img src="{{ Storage::url($svc['img']) }}" alt="{{ $svc['title'] }}" class="h-full w-auto max-w-full object-contain filter drop-shadow-md group-hover:scale-108 transition-transform duration-500 z-10">
+                        <img src="{{ $imgUrl }}" alt="{{ $svc->name }}" class="h-full w-auto max-w-full object-contain filter drop-shadow-md group-hover:scale-108 transition-transform duration-500 z-10">
                     </div>
 
                     {{-- Content Details --}}
                     <div class="p-6">
                         <h3 class="font-extrabold text-xl text-slate-900 mb-2 group-hover:text-blue-600 transition-colors tracking-tight">
-                            {{ $svc['title'] }}
+                            {{ $svc->name }}
                         </h3>
                         <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                            {{ $svc['desc'] }}
+                            {{ $svc->short_description ?: \Illuminate\Support\Str::limit($svc->full_description, 100) }}
                         </p>
                     </div>
                 </div>
@@ -426,7 +385,7 @@
                 {{-- Interactive Bottom Button Strip --}}
                 <div class="px-6 pb-6 pt-2">
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between font-bold text-xs text-blue-600 group-hover:text-blue-700">
-                        <span>View Projects</span>
+                        <span>View Details</span>
                         <span class="w-7 h-7 rounded-full bg-blue-50 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </span>
