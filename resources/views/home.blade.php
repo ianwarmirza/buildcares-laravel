@@ -183,7 +183,9 @@
         </svg>
     </div>
     <div class="absolute top-0 left-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 70%);"></div>
-    <div class="absolute bottom-0 right-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rg    <div class="max-w-5xl mx-auto px-6 relative z-10">
+    <div class="absolute bottom-0 right-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);"></div>
+
+    <div class="max-w-5xl mx-auto px-6 relative z-10">
         <div class="text-center mb-10">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-950/90 border border-blue-500/30 text-blue-400 text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
                 <span>🏢</span> About BuildCares
@@ -258,11 +260,6 @@
             <a href="{{ route('portfolio.index') }}" class="px-8 py-4 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-blue-200 hover:text-white border border-blue-500/40 font-extrabold text-sm transition-all inline-flex items-center gap-2">
                 <span>See Portfolio</span>
             </a>
-        </div>
-    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
