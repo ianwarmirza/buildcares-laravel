@@ -183,141 +183,83 @@
         </svg>
     </div>
     <div class="absolute top-0 left-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 70%);"></div>
-    <div class="absolute bottom-0 right-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);"></div>
-
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-
-            {{-- Left Column: Interactive CAD Technical Card --}}
-            <div class="lg:col-span-5 relative">
-                <div class="relative rounded-3xl p-7 bg-slate-900/90 border border-blue-500/30 shadow-2xl backdrop-blur-xl overflow-hidden group">
-                    {{-- Top Accent Glow Line --}}
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500"></div>
-
-                    {{-- Background Blueprint Icon --}}
-                    <div class="absolute -right-8 -bottom-8 opacity-10 text-blue-400 pointer-events-none group-hover:opacity-20 transition-opacity">
-                        <svg class="w-48 h-48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
-
-                    {{-- Card Header --}}
-                    <div class="flex items-center justify-between gap-3 mb-6">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-blue-600/40">
-                                B
-                            </div>
-                            <div>
-                                <h4 class="font-extrabold text-sm text-white">BuildCares Studio</h4>
-                                <p class="text-[11px] text-blue-400 font-semibold">CAD & Architectural Technicians</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> UK Standard
-                        </span>
-                    </div>
-
-                    {{-- CAD Capability Metrics --}}
-                    <div class="space-y-4 mb-6 relative z-10">
-                        @php
-                        $capabilities = [
-                            ['name' => 'UK Planning Applications', 'perc' => 98],
-                            ['name' => 'Building Control Drawings', 'perc' => 96],
-                            ['name' => '3D SketchUp & Revit Models', 'perc' => 94],
-                            ['name' => 'Photorealistic Renders', 'perc' => 92],
-                        ];
-                        @endphp
-
-                        @foreach($capabilities as $cap)
-                        <div>
-                            <div class="flex justify-between text-xs font-bold mb-1.5">
-                                <span class="text-slate-200">{{ $cap['name'] }}</span>
-                                <span class="text-blue-400">{{ $cap['perc'] }}%</span>
-                            </div>
-                            <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/60">
-                                <div class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-500 rounded-full transition-all duration-1000" style="width: {{ $cap['perc'] }}%"></div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-
-                    {{-- Software Badges --}}
-                    <div class="pt-5 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Software Suite:</span>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="px-2 py-0.5 rounded bg-blue-950/90 text-blue-300 border border-blue-800/60 text-[10px] font-extrabold">AutoCAD</span>
-                            <span class="px-2 py-0.5 rounded bg-blue-950/90 text-blue-300 border border-blue-800/60 text-[10px] font-extrabold">Revit</span>
-                            <span class="px-2 py-0.5 rounded bg-blue-950/90 text-blue-300 border border-blue-800/60 text-[10px] font-extrabold">SketchUp</span>
-                            <span class="px-2 py-0.5 rounded bg-blue-950/90 text-blue-300 border border-blue-800/60 text-[10px] font-extrabold">Photoshop</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="absolute bottom-0 right-1/4 w-[600px] h-[400px] pointer-events-none" style="background:radial-gradient(circle, rg    <div class="max-w-5xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-950/90 border border-blue-500/30 text-blue-400 text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
+                <span>🏢</span> About BuildCares
             </div>
 
-            {{-- Right Column: About Us Content --}}
-            <div class="lg:col-span-7">
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-950/90 border border-blue-500/30 text-blue-400 text-xs font-extrabold uppercase tracking-widest mb-4">
-                    <span>🏢</span> About BuildCares
-                </div>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">Who We Are?</span>
+            </h2>
+        </div>
 
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">Who We Are?</span>
-                </h2>
+        <div class="bg-slate-900/60 rounded-3xl p-8 sm:p-12 border border-blue-500/20 shadow-2xl backdrop-blur-xl space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed mb-10">
+            <p class="text-base sm:text-lg text-slate-200 leading-relaxed font-medium">
+                We are a dedicated team of CAD Technicians, Architectural Designers and Visualisation Specialists with extensive experience in delivering professional architectural drawing and design services. Since 2016, we have been working with clients and architectural professionals to turn ideas and concepts into accurate, practical and visually impressive designs.
+            </p>
 
-                <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
+            <div class="grid md:grid-cols-2 gap-6 pt-2 border-t border-slate-800/80">
+                <div class="space-y-4">
                     <p>
-                        We are a dedicated team of CAD Technicians, Architectural Designers and Visualisation Specialists with extensive experience in delivering professional architectural drawing and design services. Since 2016, we have been working with clients and architectural professionals to turn ideas and concepts into accurate, practical and visually impressive designs.
-                    </p>
-
-                    <p class="text-slate-300 text-sm leading-relaxed">
                         Our expertise covers the complete range of architectural drawing services, from initial concepts and existing-site drawings through to detailed technical documentation. We specialise in <strong class="text-white">Planning Drawings, Building Regulation Drawings, CAD Drafting, 3D CGI and Photorealistic Renders</strong>, as well as professional Photoshop visualisations and presentation drawings.
                     </p>
 
-                    <p class="text-slate-300 text-sm leading-relaxed">
+                    <p>
                         Using industry-standard software such as <span class="text-blue-300 font-semibold">AutoCAD, Revit, SketchUp</span> and professional 3D visualisation tools, we combine technical accuracy with creative design to produce drawings that are clear, detailed and professionally presented.
                     </p>
+                </div>
 
-                    <p class="text-slate-300 text-sm leading-relaxed">
+                <div class="space-y-4">
+                    <p>
                         Over the years, we have worked on a wide variety of residential and architectural projects, including <strong class="text-white">house extensions, loft conversions, garage conversions, HMOs, refurbishments and new-build houses and flats</strong>.
                     </p>
 
-                    <p class="text-slate-300 text-sm leading-relaxed">
+                    <p>
                         Our approach is simple: understand the project, pay attention to every detail and deliver high-quality work that our clients can rely on. We believe that good architectural drawings are more than lines on a page — they are the foundation for turning ideas into successful projects.
                     </p>
-
-                    <p class="text-blue-200 text-sm font-semibold leading-relaxed pt-2 border-t border-slate-800/80">
-                        With a growing team, years of experience and a strong commitment to quality, we continue to provide reliable, efficient and professional CAD and architectural visualisation services to clients across the UK and beyond.
-                    </p>
                 </div>
+            </div>
 
-                {{-- Feature Bullet Grid --}}
-                <div class="grid sm:grid-cols-2 gap-3 mb-10">
-                    @php
-                    $points = [
-                        'Established & trusted since 2016',
-                        'Full Planning & Building Regs drawings',
-                        '3D CGI & photorealistic renders',
-                        'AutoCAD, Revit & SketchUp experts',
-                        'Extensions, lofts, HMOs & new builds',
-                        'Reliable service for UK & international clients'
-                    ];
-                    @endphp
+            <div class="pt-4 border-t border-slate-800/80 text-center">
+                <p class="text-blue-200 text-sm sm:text-base font-semibold leading-relaxed">
+                    With a growing team, years of experience and a strong commitment to quality, we continue to provide reliable, efficient and professional CAD and architectural visualisation services to clients across the UK and beyond.
+                </p>
+            </div>
+        </div>
 
-                    @foreach($points as $point)
-                    <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-blue-900/40 text-xs text-slate-200">
-                        <span class="w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-xs flex-shrink-0">✓</span>
-                        <span>{{ $point }}</span>
-                    </div>
-                    @endforeach
-                </div>
+        {{-- 3-Column Feature Bullet Grid --}}
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-10">
+            @php
+            $points = [
+                'Established & trusted since 2016',
+                'Full Planning & Building Regs drawings',
+                '3D CGI & photorealistic renders',
+                'AutoCAD, Revit & SketchUp experts',
+                'Extensions, lofts, HMOs & new builds',
+                'Reliable service for UK & international clients'
+            ];
+            @endphp
 
-                {{-- CTAs --}}
-                <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('contact') }}" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-blue-600/30 border border-blue-400/30 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
-                        <span>Start a Project</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                    </a>
-                    <a href="{{ route('portfolio.index') }}" class="px-7 py-3.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-blue-200 hover:text-white border border-blue-500/40 font-extrabold text-sm transition-all inline-flex items-center gap-2">
-                        <span>See Portfolio</span>
-                    </a>
+            @foreach($points as $point)
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/80 border border-blue-900/50 text-xs sm:text-sm text-slate-200 shadow-sm">
+                <span class="w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-xs flex-shrink-0">✓</span>
+                <span class="font-semibold">{{ $point }}</span>
+            </div>
+            @endforeach
+        </div>
+
+        {{-- Centered CTAs --}}
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="{{ route('contact') }}" class="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-blue-600/30 border border-blue-400/30 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+                <span>Start a Project</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="{{ route('portfolio.index') }}" class="px-8 py-4 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-blue-200 hover:text-white border border-blue-500/40 font-extrabold text-sm transition-all inline-flex items-center gap-2">
+                <span>See Portfolio</span>
+            </a>
+        </div>
+    </div>
                 </div>
             </div>
 
